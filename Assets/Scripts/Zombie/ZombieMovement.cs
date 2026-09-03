@@ -26,8 +26,7 @@ public class ZombieMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float distToPlayer = Vector3.Distance(gameObject.transform.position, player.transform.position);
-        if (distToPlayer <= attackRange)
+        if (PlayerDetectionState() == DetectionState.Attacking && isDetected)
         {
             Attack();
         }
@@ -41,36 +40,45 @@ public class ZombieMovement : MonoBehaviour
     {
         if (stealthMechanics)
         {
+            //set movement speed to walk speed if unaware
             if(PlayerDetectionState() == DetectionState.Unaware)
             {
                 //temp
                 gameObject.GetComponent<Renderer>().material.color = Color.blue;
                 //temp
+                //isDetected = false on losing the player
                 isDetected = false;
                 agent.speed = walkSpeed;
                 return;
             }
+            //move the zombie towards player in walkspeed
             if(PlayerDetectionState() == DetectionState.Suspicious)
             {
                 //temp
                 gameObject.GetComponent<Renderer>().material.color = Color.yellow;
-                Debug.Log("investigating"); 
+                //Debug.Log("investigating"); 
                 //temp
                 agent.SetDestination(player.transform.position);
             }
+            //on player detection make isDetected=True
             if(PlayerDetectionState() == DetectionState.Detected)
+            {
+                isDetected = true;
+                agent.isStopped = false;
+            }
+            //chase player in runspeed until zombie becomes unaware of player location
+            if (isDetected)
             {
                 //temp
                 gameObject.GetComponent<Renderer>().material.color = Color.red;
                 //temp
-                isDetected = true;
                 agent.speed = chaseSpeed;
-                agent.isStopped = false;
                 agent.SetDestination(player.transform.position);
             }
         }
         else
         {
+            //initiate chase permanently if player in suspicious distance
             if(PlayerDetectionState() == DetectionState.Suspicious)
             {
                 isDetected = true;
@@ -86,24 +94,29 @@ public class ZombieMovement : MonoBehaviour
     }
     void Attack()
     {
-        if(isDetected)
-        {
-            //attack code
+        //attack code
+    
+        //temp
+        agent.velocity = Vector3.zero;
+        agent.isStopped = true;
         
-            //temp
-            agent.velocity = Vector3.zero;
-            agent.isStopped = true;
-            gameObject.GetComponent<Renderer>().material.color = Color.black;
-            //temp
-        }
+        Vector3 direction = player.transform.position - transform.position;
+        direction.y = 0;
+        transform.rotation = Quaternion.LookRotation(direction);
+
+        gameObject.GetComponent<Renderer>().material.color = Color.black;
+        //temp
     }
 
     public enum DetectionState
     {
         Unaware,
         Suspicious,
-        Detected
+        Detected,
+        Attacking
     }
+    
+    //Player detection logic
     DetectionState PlayerDetectionState()
     {
         Vector3 directionToPlayer = player.transform.position - transform.position;
@@ -128,6 +141,10 @@ public class ZombieMovement : MonoBehaviour
             {
                 if (distanceToPlayer <= detectionDist)
                 {
+                    if(distanceToPlayer <= attackRange)
+                    {
+                        return DetectionState.Attacking;
+                    }
                     return DetectionState.Detected;
                 }
 
