@@ -7,8 +7,7 @@ public class ZombieMovement : MonoBehaviour
     public bool stealthMechanics = false;
     private GameObject player;
     private NavMeshAgent agent;
-    [SerializeField]
-    private bool isDetected;
+    public bool isDetected;
 
     [SerializeField]
     private float walkSpeed, chaseSpeed;
@@ -26,7 +25,7 @@ public class ZombieMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerDetectionState() == DetectionState.Attacking && isDetected)
+        if (ZombieCurrentState() == ZombieStates.Attacking && isDetected)
         {
             Attack();
         }
@@ -41,7 +40,7 @@ public class ZombieMovement : MonoBehaviour
         if (stealthMechanics)
         {
             //set movement speed to walk speed if unaware
-            if(PlayerDetectionState() == DetectionState.Unaware)
+            if(ZombieCurrentState() == ZombieStates.Unaware)
             {
                 //temp
                 gameObject.GetComponent<Renderer>().material.color = Color.blue;
@@ -52,7 +51,7 @@ public class ZombieMovement : MonoBehaviour
                 return;
             }
             //move the zombie towards player in walkspeed
-            if(PlayerDetectionState() == DetectionState.Suspicious)
+            if(ZombieCurrentState() == ZombieStates.Suspicious)
             {
                 //temp
                 gameObject.GetComponent<Renderer>().material.color = Color.yellow;
@@ -61,7 +60,7 @@ public class ZombieMovement : MonoBehaviour
                 agent.SetDestination(player.transform.position);
             }
             //on player detection make isDetected=True
-            if(PlayerDetectionState() == DetectionState.Detected)
+            if(ZombieCurrentState() == ZombieStates.Detected)
             {
                 isDetected = true;
                 agent.isStopped = false;
@@ -79,12 +78,15 @@ public class ZombieMovement : MonoBehaviour
         else
         {
             //initiate chase permanently if player in suspicious distance
-            if(PlayerDetectionState() == DetectionState.Suspicious)
+            if(ZombieCurrentState() == ZombieStates.Suspicious)
             {
                 isDetected = true;
             }
             if (isDetected)
             {
+                //temp
+                gameObject.GetComponent<Renderer>().material.color = Color.red;
+                                //temp
                 agent.speed = chaseSpeed;
                 agent.isStopped = false;
                 agent.SetDestination(player.transform.position);
@@ -108,7 +110,7 @@ public class ZombieMovement : MonoBehaviour
         //temp
     }
 
-    public enum DetectionState
+    public enum ZombieStates
     {
         Unaware,
         Suspicious,
@@ -117,14 +119,14 @@ public class ZombieMovement : MonoBehaviour
     }
     
     //Player detection logic
-    DetectionState PlayerDetectionState()
+    ZombieStates ZombieCurrentState()
     {
         Vector3 directionToPlayer = player.transform.position - transform.position;
         float distanceToPlayer = directionToPlayer.magnitude;
 
         if (distanceToPlayer > viewDist)
         {
-            return DetectionState.Unaware;
+            return ZombieStates.Unaware;
         }
 
         directionToPlayer.Normalize();
@@ -132,7 +134,7 @@ public class ZombieMovement : MonoBehaviour
         
         if (angle > viewAngle / 2)
         {
-            return DetectionState.Unaware;
+            return ZombieStates.Unaware;
         }
     
         if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, viewDist, obstructionMask))
@@ -143,15 +145,15 @@ public class ZombieMovement : MonoBehaviour
                 {
                     if(distanceToPlayer <= attackRange)
                     {
-                        return DetectionState.Attacking;
+                        return ZombieStates.Attacking;
                     }
-                    return DetectionState.Detected;
+                    return ZombieStates.Detected;
                 }
 
-                return DetectionState.Suspicious;
+                return ZombieStates.Suspicious;
             }
         }
 
-        return DetectionState.Unaware;
+        return ZombieStates.Unaware;
     }
 }
