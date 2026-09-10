@@ -8,18 +8,38 @@ public class ZombieMovement : MonoBehaviour
     private GameObject player;
     private NavMeshAgent agent;
     public bool isDetected;
+    public bool isAttacking;
 
     [SerializeField]
     private float walkSpeed, chaseSpeed;
 
     [SerializeField]
     private float attackRange, detectionDist, viewDist, viewAngle;
+    [SerializeField]
+    private float attackInterval;
+    private float attackTimer;
     public LayerMask obstructionMask;
+    
+    [SerializeField]
+    private Animator animator;
+    int stealthLayer;
+    int normalLayer;
     
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         agent = gameObject.GetComponent<NavMeshAgent>();
+
+        if (stealthMechanics)
+        {
+            animator.SetLayerWeight(stealthLayer, 1f);
+            animator.SetLayerWeight(normalLayer, 0f);
+        }
+        else
+        {
+            animator.SetLayerWeight(stealthLayer, 0f);
+            animator.SetLayerWeight(normalLayer, 1f);
+        }
     }
 
     // Update is called once per frame
@@ -27,12 +47,26 @@ public class ZombieMovement : MonoBehaviour
     {
         if (ZombieCurrentState() == ZombieStates.Attacking && isDetected)
         {
-            Attack();
+            RotateToPlayer();
+            if(attackTimer <= 0)
+            {
+                Attack();
+                attackTimer = attackInterval;
+            }
+            else
+            {
+                attackTimer -= Time.deltaTime;
+            }
         }
         else
         {
-            Movement();
+            if(!isAttacking)
+            {
+                attackTimer = 0;
+                Movement();
+            }
         }        
+        Debug.Log(ZombieCurrentState());
     }
 
     void Movement()
@@ -42,35 +76,30 @@ public class ZombieMovement : MonoBehaviour
             //set movement speed to walk speed if unaware
             if(ZombieCurrentState() == ZombieStates.Unaware)
             {
-                //temp
-                gameObject.GetComponent<Renderer>().material.color = Color.blue;
-                //temp
-                //isDetected = false on losing the player
                 isDetected = false;
                 agent.speed = walkSpeed;
+                animator.SetBool("isSuspiciousState", false);
+                animator.SetBool("isDetectedState", false);
                 return;
             }
             //move the zombie towards player in walkspeed
             if(ZombieCurrentState() == ZombieStates.Suspicious)
             {
-                //temp
-                gameObject.GetComponent<Renderer>().material.color = Color.yellow;
-                //Debug.Log("investigating"); 
-                //temp
                 agent.SetDestination(player.transform.position);
+                animator.SetBool("isSuspiciousState", true);
+                animator.SetBool("isDetectedState", false);
             }
             //on player detection make isDetected=True
             if(ZombieCurrentState() == ZombieStates.Detected)
             {
                 isDetected = true;
                 agent.isStopped = false;
+                animator.SetBool("isSuspiciousState", false);
+                animator.SetBool("isDetectedState", true);
             }
             //chase player in runspeed until zombie becomes unaware of player location
             if (isDetected)
             {
-                //temp
-                gameObject.GetComponent<Renderer>().material.color = Color.red;
-                //temp
                 agent.speed = chaseSpeed;
                 agent.SetDestination(player.transform.position);
             }
@@ -84,12 +113,13 @@ public class ZombieMovement : MonoBehaviour
             }
             if (isDetected)
             {
-                //temp
-                gameObject.GetComponent<Renderer>().material.color = Color.red;
-                                //temp
-                agent.speed = chaseSpeed;
-                agent.isStopped = false;
-                agent.SetDestination(player.transform.position);
+                if(ZombieCurrentState() != ZombieStates.Attacking)
+                {
+                    agent.speed = chaseSpeed;
+                    agent.isStopped = false;
+                    agent.SetDestination(player.transform.position); 
+                    animator.SetBool("isDetectedState", true);
+                }            
             }
         }
 
@@ -97,17 +127,18 @@ public class ZombieMovement : MonoBehaviour
     void Attack()
     {
         //attack code
-    
-        //temp
+        animator.SetBool("isSuspiciousState", false);
+        animator.SetBool("isDetectedState", false);
+        animator.SetTrigger("Attack");
+        //gameObject.GetComponent<Renderer>().material.color = Color.black;
+    }
+    void RotateToPlayer()
+    {
         agent.velocity = Vector3.zero;
         agent.isStopped = true;
-        
         Vector3 direction = player.transform.position - transform.position;
         direction.y = 0;
         transform.rotation = Quaternion.LookRotation(direction);
-
-        gameObject.GetComponent<Renderer>().material.color = Color.black;
-        //temp
     }
 
     public enum ZombieStates
