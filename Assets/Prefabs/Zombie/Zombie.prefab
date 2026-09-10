@@ -103,23 +103,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1684219333739215470}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 213e61245396ed540a9db829132ecaea, type: 3}
+  m_Script: {fileID: 11500000, guid: f56cfaaa16e812e468930ea07a20bdd3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
-  stealthMechanics: 0
+  m_EditorClassIdentifier: Assembly-CSharp::Zombie
+  currentState: 0
+  stealthMechanics: 1
   isDetected: 0
-  walkSpeed: 3
-  chaseSpeed: 8
+  attackInProgress: 0
+  animator: {fileID: 0}
+  walkSpeed: 2
+  chaseSpeed: 5
   attackRange: 2
-  detectionDist: 5
-  viewDist: 15
+  detectionDist: 10
+  viewDist: 20
   viewAngle: 180
+  attackInterval: 0.7
   obstructionMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  animator: {fileID: 5401066061843102382}
---- !u!95 &5401066061843102382 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 1dd9c954362f1eb4a86dcc2c3013fd91, type: 3}
-  m_PrefabInstance: {fileID: 1990280278900459327}
-  m_PrefabAsset: {fileID: 0}
