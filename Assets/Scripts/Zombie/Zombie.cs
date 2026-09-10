@@ -68,8 +68,7 @@ public class Zombie : MonoBehaviour
                 AttackingState();
                 break;
         }
-
-        Debug.Log(currentState);
+        //Debug.Log(currentState);
     }
 
 
@@ -267,6 +266,6 @@ public class Zombie : MonoBehaviour
     //to check if attacking is finished
     public void AttackAnimationFinished()
     {
-                attackInProgress = false;
+        attackInProgress = false;
     }
 }
