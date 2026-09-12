@@ -5,6 +5,10 @@ using UnityEngine.AI;
 
 public class Zombie : MonoBehaviour
 {
+    //todo:
+    //Add sound
+    //Add attack event at the end of attack animation
+    
     public enum ZombieState
     {
         Unaware,
@@ -57,7 +61,7 @@ public class Zombie : MonoBehaviour
         {
             Death();        
         }
-        else
+        else //add player null check later
         {
             switch (currentState)
             {
@@ -214,7 +218,7 @@ public class Zombie : MonoBehaviour
     void Attack()
     {
         // Attack code
-        animator.SetTrigger("Attack");
+        animator.SetTrigger("Attack"); //need to add attack event at the end of zombie attack animation
     }
 
 
