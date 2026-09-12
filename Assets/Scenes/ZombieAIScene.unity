@@ -1111,6 +1111,10 @@ PrefabInstance:
       value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 1231421321597773701, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1231421321597773701, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
       propertyPath: m_StoppingDistance
       value: 0.5
       objectReference: {fileID: 0}
@@ -1157,6 +1161,10 @@ PrefabInstance:
     - target: {fileID: 2023343438491984084, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2586960953027652266, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: health
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2586960953027652266, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
       propertyPath: animator

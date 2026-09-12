@@ -22,7 +22,6 @@ public class Zombie : MonoBehaviour
 
     public bool stealthMechanics = false;
     private bool attackInProgress;
-    [SerializeField]
     private bool isDead;
 
     private GameObject player;
