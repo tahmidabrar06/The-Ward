@@ -1,3 +1,5 @@
+using System;
+using NUnit.Framework.Constraints;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,8 +17,9 @@ public class Zombie : MonoBehaviour
     private ZombieState currentState;
 
     public bool stealthMechanics = false;
-    public bool isDetected;
-    public bool attackInProgress;
+    private bool attackInProgress;
+    [SerializeField]
+    private bool isDead;
 
     private GameObject player;
     private NavMeshAgent agent;
@@ -25,7 +28,7 @@ public class Zombie : MonoBehaviour
     private Animator animator;
 
     [SerializeField]
-    private float walkSpeed, chaseSpeed;
+    private float health, damage, walkSpeed, chaseSpeed;
 
     [SerializeField]
     private float attackRange, detectionDist, viewDist, viewAngle;
@@ -37,36 +40,43 @@ public class Zombie : MonoBehaviour
 
     [SerializeField]
     private LayerMask obstructionMask;
+    
 
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
-
         currentState = ZombieState.Unaware;
     }
 
 
     void Update()
     {
-        switch (currentState)
+        if(health<= 0)
         {
-            case ZombieState.Unaware:
-                UnawareState();
-                break;
+            Death();        
+        }
+        else
+        {
+            switch (currentState)
+            {
+                case ZombieState.Unaware:
+                    UnawareState();
+                    break;
 
-            case ZombieState.Suspicious:
-                SuspiciousState();
-                break;
+                case ZombieState.Suspicious:
+                    SuspiciousState();
+                    break;
 
-            case ZombieState.Detected:
-                DetectedState();
-                break;
+                case ZombieState.Detected:
+                    DetectedState();
+                    break;
 
-            case ZombieState.Attacking:
-                AttackingState();
-                break;
+                case ZombieState.Attacking:
+                    AttackingState();
+                    break;
+            }
         }
         //Debug.Log(currentState);
     }
@@ -80,7 +90,6 @@ public class Zombie : MonoBehaviour
 
         if (stealthMechanics)
         {
-            isDetected = false;
             agent.speed = walkSpeed;
             agent.isStopped = false;
 
@@ -125,8 +134,6 @@ public class Zombie : MonoBehaviour
         }
         else
         {
-            isDetected = true;
-
             agent.speed = chaseSpeed;
             agent.isStopped = false;
             agent.SetDestination(player.transform.position);
@@ -149,7 +156,6 @@ public class Zombie : MonoBehaviour
     void DetectedState()
     {
         attackTimer = 0;
-        isDetected = true;
 
         agent.speed = chaseSpeed;
         agent.isStopped = false;
@@ -267,5 +273,24 @@ public class Zombie : MonoBehaviour
     public void AttackAnimationFinished()
     {
         attackInProgress = false;
+    }
+
+    void Death()
+    {
+        if(!isDead)
+        {
+            agent.enabled = false;
+            animator.SetTrigger("isDead");
+            isDead = true;
+        }
+    }
+
+    public void TakeDamage(float damageAmount)
+    {
+        if (!stealthMechanics)
+        {
+            health -= damageAmount;
+        }
+        currentState = ZombieState.Detected;
     }
 }
