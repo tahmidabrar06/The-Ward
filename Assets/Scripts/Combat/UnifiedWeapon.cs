@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +29,8 @@ namespace TheWard.Combat
 
         [Header("Melee")]
         [SerializeField, Min(0f)] private float meleeRadius = 0.75f;
+        [SerializeField] private Vector3 meleeSwingEuler = new Vector3(55f, -20f, -25f);
+        [SerializeField, Min(0.05f)] private float meleeSwingDuration = 0.25f;
 
         [Header("Grenade")]
         [SerializeField] private GameObject grenadePrefab;
@@ -39,6 +42,12 @@ namespace TheWard.Combat
         [SerializeField, Min(0f)] private float explosionDamage = 90f;
         [SerializeField] private GameObject explosionEffectPrefab;
 
+        [Header("Grenade View Animation")]
+        [SerializeField] private Vector3 grenadeChargeOffset = new Vector3(0f, -0.08f, -0.12f);
+        [SerializeField] private Vector3 grenadeChargeEuler = new Vector3(18f, 0f, -12f);
+        [SerializeField] private Vector3 grenadeReleaseOffset = new Vector3(0f, 0.04f, 0.18f);
+        [SerializeField, Min(0.05f)] private float grenadeReleaseDuration = 0.2f;
+
         [Header("Animation")]
         [SerializeField] private Animator animator;
         [SerializeField] private string attackTrigger = "Attack";
@@ -49,6 +58,10 @@ namespace TheWard.Combat
         private bool charging;
         private int ammo;
         private int reserveAmmo;
+        private Quaternion restLocalRotation;
+        private Vector3 restLocalPosition;
+        private Coroutine meleeSwingRoutine;
+        private Coroutine grenadeReleaseRoutine;
 
         public string DisplayName => displayName;
         public int Ammo => ammo;
@@ -59,6 +72,8 @@ namespace TheWard.Combat
         {
             ammo = magazineSize;
             reserveAmmo = startingReserveAmmo;
+            restLocalRotation = transform.localRotation;
+            restLocalPosition = transform.localPosition;
             if (animator == null) animator = GetComponentInChildren<Animator>();
         }
 
@@ -68,9 +83,11 @@ namespace TheWard.Combat
             {
                 if (pressed && Time.time >= nextAttackTime)
                 {
+                    if (grenadeReleaseRoutine != null) StopCoroutine(grenadeReleaseRoutine);
                     chargeStartTime = Time.time;
                     charging = true;
                 }
+                if (held && charging) AnimateGrenadeCharge();
                 if (released && charging) ThrowGrenade(owner);
                 return;
             }
@@ -92,7 +109,15 @@ namespace TheWard.Combat
                 Fire(owner);
                 if (muzzleFlash != null) muzzleFlash.Play();
             }
-            else Melee(owner);
+            else
+            {
+                Melee(owner);
+                if (animator == null)
+                {
+                    if (meleeSwingRoutine != null) StopCoroutine(meleeSwingRoutine);
+                    meleeSwingRoutine = StartCoroutine(AnimateMeleeSwing());
+                }
+            }
 
             TriggerAnimation(attackTrigger);
             return true;
@@ -164,6 +189,7 @@ namespace TheWard.Combat
             projectile.Configure(owner, explosionDamage, explosionRadius, explosionForce, explosionEffectPrefab);
             body.AddForce((origin.forward + Vector3.up * 0.18f).normalized * force, ForceMode.Impulse);
             TriggerAnimation(attackTrigger);
+            grenadeReleaseRoutine = StartCoroutine(AnimateGrenadeRelease());
         }
 
         private void Damage(Collider hit, GameObject owner)
@@ -176,6 +202,77 @@ namespace TheWard.Combat
         private void TriggerAnimation(string trigger)
         {
             if (animator != null && !string.IsNullOrWhiteSpace(trigger)) animator.SetTrigger(trigger);
+        }
+
+        private IEnumerator AnimateMeleeSwing()
+        {
+            Quaternion swingRotation = restLocalRotation * Quaternion.Euler(meleeSwingEuler);
+            float halfDuration = meleeSwingDuration * 0.5f;
+
+            for (float elapsed = 0f; elapsed < halfDuration; elapsed += Time.deltaTime)
+            {
+                transform.localRotation = Quaternion.Slerp(restLocalRotation, swingRotation,
+                    elapsed / halfDuration);
+                yield return null;
+            }
+
+            for (float elapsed = 0f; elapsed < halfDuration; elapsed += Time.deltaTime)
+            {
+                transform.localRotation = Quaternion.Slerp(swingRotation, restLocalRotation,
+                    elapsed / halfDuration);
+                yield return null;
+            }
+
+            transform.localRotation = restLocalRotation;
+            meleeSwingRoutine = null;
+        }
+
+        private void AnimateGrenadeCharge()
+        {
+            float charge = Mathf.Clamp01((Time.time - chargeStartTime) / maximumChargeTime);
+            float easedCharge = Mathf.SmoothStep(0f, 1f, charge);
+            transform.localPosition = Vector3.Lerp(restLocalPosition,
+                restLocalPosition + grenadeChargeOffset, easedCharge);
+            transform.localRotation = Quaternion.Slerp(restLocalRotation,
+                restLocalRotation * Quaternion.Euler(grenadeChargeEuler), easedCharge);
+        }
+
+        private IEnumerator AnimateGrenadeRelease()
+        {
+            Vector3 chargedPosition = transform.localPosition;
+            Quaternion chargedRotation = transform.localRotation;
+            Vector3 releasePosition = restLocalPosition + grenadeReleaseOffset;
+            float halfDuration = grenadeReleaseDuration * 0.5f;
+
+            for (float elapsed = 0f; elapsed < halfDuration; elapsed += Time.deltaTime)
+            {
+                float t = elapsed / halfDuration;
+                transform.localPosition = Vector3.Lerp(chargedPosition, releasePosition, t);
+                transform.localRotation = Quaternion.Slerp(chargedRotation, restLocalRotation, t);
+                yield return null;
+            }
+
+            for (float elapsed = 0f; elapsed < halfDuration; elapsed += Time.deltaTime)
+            {
+                transform.localPosition = Vector3.Lerp(releasePosition, restLocalPosition,
+                    elapsed / halfDuration);
+                yield return null;
+            }
+
+            transform.localPosition = restLocalPosition;
+            transform.localRotation = restLocalRotation;
+            grenadeReleaseRoutine = null;
+        }
+
+        private void OnDisable()
+        {
+            if (meleeSwingRoutine != null) StopCoroutine(meleeSwingRoutine);
+            if (grenadeReleaseRoutine != null) StopCoroutine(grenadeReleaseRoutine);
+            meleeSwingRoutine = null;
+            grenadeReleaseRoutine = null;
+            transform.localPosition = restLocalPosition;
+            transform.localRotation = restLocalRotation;
+            charging = false;
         }
 
         private void OnDrawGizmosSelected()

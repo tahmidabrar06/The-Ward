@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,7 +10,11 @@ namespace TheWard.Combat
         [SerializeField] private UnityEvent onDeath;
 
         public float CurrentHealth { get; private set; }
+        public float MaxHealth => maxHealth;
+        public float NormalizedHealth => maxHealth > 0f ? CurrentHealth / maxHealth : 0f;
         public bool IsAlive => CurrentHealth > 0f;
+        public event Action<float, float> HealthChanged;
+        public event Action<float> Damaged;
 
         private void Awake()
         {
@@ -24,6 +29,8 @@ namespace TheWard.Combat
             }
 
             CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);
+            Damaged?.Invoke(amount);
+            HealthChanged?.Invoke(CurrentHealth, maxHealth);
             if (!IsAlive)
             {
                 onDeath?.Invoke();
@@ -33,6 +40,7 @@ namespace TheWard.Combat
         public void RestoreFullHealth()
         {
             CurrentHealth = maxHealth;
+            HealthChanged?.Invoke(CurrentHealth, maxHealth);
         }
     }
 }

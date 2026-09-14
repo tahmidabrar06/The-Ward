@@ -13,10 +13,12 @@ namespace TheWard.Character
         [SerializeField, Min(0f)] private float walkSpeed = 4f;
         [SerializeField, Min(0f)] private float sprintSpeed = 7f;
         [SerializeField, Min(0f)] private float jumpHeight = 1.2f;
+        [SerializeField, Min(0)] private int extraAirJumps = 1;
         [SerializeField] private float gravity = -20f;
 
         private CharacterController characterController;
         private float verticalVelocity;
+        private int airJumpsRemaining;
 
         private void Awake()
         {
@@ -48,10 +50,14 @@ namespace TheWard.Character
             if (characterController.isGrounded)
             {
                 verticalVelocity = -2f;
-                if (jumpAction != null && jumpAction.action.WasPressedThisFrame())
-                {
-                    verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
-                }
+                airJumpsRemaining = extraAirJumps;
+            }
+
+            if (jumpAction != null && jumpAction.action.WasPressedThisFrame() &&
+                (characterController.isGrounded || airJumpsRemaining > 0))
+            {
+                verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                if (!characterController.isGrounded) airJumpsRemaining--;
             }
 
             verticalVelocity += gravity * Time.deltaTime;
