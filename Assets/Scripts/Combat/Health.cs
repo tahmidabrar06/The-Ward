@@ -4,16 +4,21 @@ using UnityEngine.Events;
 
 namespace TheWard.Combat
 {
-    public sealed class Health : MonoBehaviour, IDamageable
+    // Put this component on anything that can lose health.
+    public class Health : MonoBehaviour, IDamageable
     {
-        [SerializeField, Min(1f)] private float maxHealth = 100f;
+        [SerializeField] private float maxHealth = 100f;
+
+        // These events can be connected in the Unity Inspector.
+        [SerializeField] private UnityEvent onDamage;
         [SerializeField] private UnityEvent onDeath;
 
         public float CurrentHealth { get; private set; }
         public float MaxHealth => maxHealth;
-        public float NormalizedHealth => maxHealth > 0f ? CurrentHealth / maxHealth : 0f;
+        public float NormalizedHealth => CurrentHealth / maxHealth;
         public bool IsAlive => CurrentHealth > 0f;
-        public event Action<float, float> HealthChanged;
+
+        // The health UI listens to this event.
         public event Action<float> Damaged;
 
         private void Awake()
@@ -21,17 +26,21 @@ namespace TheWard.Combat
             CurrentHealth = maxHealth;
         }
 
-        public void TakeDamage(float amount, GameObject source)
+        // Weapons call this method when they hit this object.
+        public void TakeDamage(float damage)
         {
-            if (!IsAlive || amount <= 0f)
+            if (!IsAlive || damage <= 0f)
             {
                 return;
             }
 
-            CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);
-            Damaged?.Invoke(amount);
-            HealthChanged?.Invoke(CurrentHealth, maxHealth);
-            if (!IsAlive)
+            CurrentHealth -= damage;
+            CurrentHealth = Mathf.Max(CurrentHealth, 0f);
+
+            onDamage?.Invoke();
+            Damaged?.Invoke(damage);
+
+            if (CurrentHealth <= 0f)
             {
                 onDeath?.Invoke();
             }
@@ -40,7 +49,6 @@ namespace TheWard.Combat
         public void RestoreFullHealth()
         {
             CurrentHealth = maxHealth;
-            HealthChanged?.Invoke(CurrentHealth, maxHealth);
         }
     }
 }

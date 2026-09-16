@@ -1,11 +1,8 @@
-using UnityEngine;
-
 namespace TheWard.Combat
 {
+    // Any object with this interface can receive damage.
     public interface IDamageable
     {
-        bool IsAlive { get; }
-
-        void TakeDamage(float amount, GameObject source);
+        void TakeDamage(float damage);
     }
 }

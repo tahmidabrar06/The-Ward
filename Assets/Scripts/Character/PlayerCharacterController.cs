@@ -1,4 +1,3 @@
-using TheWard.Combat;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -41,6 +40,7 @@ namespace TheWard.Character
 
         private void Update()
         {
+            // Read WASD input and move relative to the direction the player faces.
             Vector2 input = moveAction != null ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
             Vector3 horizontalMovement = transform.right * input.x + transform.forward * input.y;
             horizontalMovement = Vector3.ClampMagnitude(horizontalMovement, 1f);
@@ -49,17 +49,23 @@ namespace TheWard.Character
 
             if (characterController.isGrounded)
             {
+                // A small downward speed keeps the controller touching the floor.
                 verticalVelocity = -2f;
                 airJumpsRemaining = extraAirJumps;
             }
 
+            // The first jump works on the ground. One extra jump works in the air.
             if (jumpAction != null && jumpAction.action.WasPressedThisFrame() &&
                 (characterController.isGrounded || airJumpsRemaining > 0))
             {
                 verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
-                if (!characterController.isGrounded) airJumpsRemaining--;
+                if (!characterController.isGrounded)
+                {
+                    airJumpsRemaining--;
+                }
             }
 
+            // Gravity and horizontal movement are sent to the CharacterController together.
             verticalVelocity += gravity * Time.deltaTime;
             Vector3 movement = horizontalMovement * speed;
             movement.y = verticalVelocity;

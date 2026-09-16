@@ -3,82 +3,204 @@ using UnityEngine.InputSystem;
 
 namespace TheWard.Combat
 {
-    public sealed class UnifiedWeaponController : MonoBehaviour
+    // This component reads player input and sends it to the equipped weapon.
+    public class UnifiedWeaponController : MonoBehaviour
     {
+        [Header("Input Actions")]
         [SerializeField] private InputActionReference attackAction;
         [SerializeField] private InputActionReference reloadAction;
         [SerializeField] private InputActionReference previousWeaponAction;
         [SerializeField] private InputActionReference nextWeaponAction;
-        [SerializeField] private UnifiedWeapon[] weapons;
-        [SerializeField, Min(0)] private int startingWeaponIndex;
-        private int activeIndex;
 
-        public UnifiedWeapon ActiveWeapon => weapons != null && weapons.Length > 0 ? weapons[activeIndex] : null;
+        [Header("Player Weapons")]
+        [SerializeField] private UnifiedWeapon[] weapons;
+        [SerializeField] private int startingWeaponIndex;
+
+        private int activeWeaponIndex;
 
         private void Awake()
         {
-            if (weapons == null || weapons.Length == 0) return;
-            activeIndex = Mathf.Clamp(startingWeaponIndex, 0, weapons.Length - 1);
-            RefreshModels();
+            if (weapons == null || weapons.Length == 0)
+            {
+                return;
+            }
+
+            // Make sure the starting number fits inside the weapons array.
+            activeWeaponIndex = Mathf.Clamp(startingWeaponIndex, 0, weapons.Length - 1);
+            ShowSelectedWeapon();
         }
 
         private void OnEnable()
         {
-            SetAction(attackAction, true); SetAction(reloadAction, true);
-            SetAction(previousWeaponAction, true); SetAction(nextWeaponAction, true);
+            // Unity Input Actions only work while they are enabled.
+            EnableAction(attackAction);
+            EnableAction(reloadAction);
+            EnableAction(previousWeaponAction);
+            EnableAction(nextWeaponAction);
         }
 
         private void OnDisable()
         {
-            SetAction(attackAction, false); SetAction(reloadAction, false);
-            SetAction(previousWeaponAction, false); SetAction(nextWeaponAction, false);
+            DisableAction(attackAction);
+            DisableAction(reloadAction);
+            DisableAction(previousWeaponAction);
+            DisableAction(nextWeaponAction);
         }
 
         private void Update()
         {
-            if (ActiveWeapon != null && attackAction != null)
-                ActiveWeapon.ReadAttack(gameObject, attackAction.action.WasPressedThisFrame(),
-                    attackAction.action.IsPressed(), attackAction.action.WasReleasedThisFrame());
-            if (reloadAction != null && reloadAction.action.WasPressedThisFrame()) ActiveWeapon?.Reload();
-            if (previousWeaponAction != null && previousWeaponAction.action.WasPressedThisFrame()) Cycle(-1);
-            if (nextWeaponAction != null && nextWeaponAction.action.WasPressedThisFrame()) Cycle(1);
-
-            Keyboard keyboard = Keyboard.current;
-            if (keyboard == null) return;
-            if (keyboard.digit1Key.wasPressedThisFrame) Select(0);
-            else if (keyboard.digit2Key.wasPressedThisFrame) Select(1);
-            else if (keyboard.digit3Key.wasPressedThisFrame) Select(2);
-            else if (keyboard.digit4Key.wasPressedThisFrame) Select(3);
-            else if (keyboard.digit5Key.wasPressedThisFrame) Select(4);
+            ReadAttackInput();
+            ReadReloadInput();
+            ReadWeaponSwitchInput();
         }
 
-        public void Select(int index)
+        private void ReadAttackInput()
         {
-            if (weapons == null || index < 0 || index >= weapons.Length || weapons[index] == null) return;
-            activeIndex = index;
-            RefreshModels();
-        }
+            UnifiedWeapon activeWeapon = GetActiveWeapon();
 
-        private void Cycle(int direction)
-        {
-            if (weapons == null || weapons.Length == 0) return;
-            for (int step = 1; step <= weapons.Length; step++)
+            if (activeWeapon == null || attackAction == null)
             {
-                int index = (activeIndex + direction * step + weapons.Length) % weapons.Length;
-                if (weapons[index] != null) { Select(index); return; }
+                return;
+            }
+
+            bool pressed = attackAction.action.WasPressedThisFrame();
+            bool held = attackAction.action.IsPressed();
+            bool released = attackAction.action.WasReleasedThisFrame();
+
+            // Different weapons use these values differently. For example,
+            // the machine gun uses held and the grenade uses released.
+            activeWeapon.HandleInput(pressed, held, released);
+        }
+
+        private void ReadReloadInput()
+        {
+            if (reloadAction != null && reloadAction.action.WasPressedThisFrame())
+            {
+                UnifiedWeapon activeWeapon = GetActiveWeapon();
+
+                if (activeWeapon != null)
+                {
+                    activeWeapon.Reload();
+                }
             }
         }
 
-        private void RefreshModels()
+        private void ReadWeaponSwitchInput()
         {
-            for (int i = 0; i < weapons.Length; i++)
-                if (weapons[i] != null) weapons[i].gameObject.SetActive(i == activeIndex);
+            if (previousWeaponAction != null && previousWeaponAction.action.WasPressedThisFrame())
+            {
+                ChangeWeapon(-1);
+            }
+
+            if (nextWeaponAction != null && nextWeaponAction.action.WasPressedThisFrame())
+            {
+                ChangeWeapon(1);
+            }
+
+            // Number keys select a weapon directly.
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null)
+            {
+                return;
+            }
+
+            if (keyboard.digit1Key.wasPressedThisFrame)
+            {
+                SelectWeapon(0);
+            }
+            else if (keyboard.digit2Key.wasPressedThisFrame)
+            {
+                SelectWeapon(1);
+            }
+            else if (keyboard.digit3Key.wasPressedThisFrame)
+            {
+                SelectWeapon(2);
+            }
+            else if (keyboard.digit4Key.wasPressedThisFrame)
+            {
+                SelectWeapon(3);
+            }
+            else if (keyboard.digit5Key.wasPressedThisFrame)
+            {
+                SelectWeapon(4);
+            }
         }
 
-        private static void SetAction(InputActionReference reference, bool enabled)
+        private void ChangeWeapon(int direction)
         {
-            if (reference == null) return;
-            if (enabled) reference.action.Enable(); else reference.action.Disable();
+            if (weapons == null || weapons.Length == 0)
+            {
+                return;
+            }
+
+            int newIndex = activeWeaponIndex + direction;
+
+            // Wrap around when moving past either end of the list.
+            if (newIndex < 0)
+            {
+                newIndex = weapons.Length - 1;
+            }
+            else if (newIndex >= weapons.Length)
+            {
+                newIndex = 0;
+            }
+
+            SelectWeapon(newIndex);
+        }
+
+        public void SelectWeapon(int index)
+        {
+            // Ignore invalid weapon numbers.
+            if (weapons == null || index < 0 || index >= weapons.Length)
+            {
+                return;
+            }
+
+            if (weapons[index] == null)
+            {
+                return;
+            }
+
+            activeWeaponIndex = index;
+            ShowSelectedWeapon();
+        }
+
+        private UnifiedWeapon GetActiveWeapon()
+        {
+            if (weapons == null || weapons.Length == 0)
+            {
+                return null;
+            }
+
+            return weapons[activeWeaponIndex];
+        }
+
+        private void ShowSelectedWeapon()
+        {
+            // Hide every weapon except the selected one.
+            for (int index = 0; index < weapons.Length; index++)
+            {
+                if (weapons[index] != null)
+                {
+                    weapons[index].gameObject.SetActive(index == activeWeaponIndex);
+                }
+            }
+        }
+
+        private void EnableAction(InputActionReference actionReference)
+        {
+            if (actionReference != null)
+            {
+                actionReference.action.Enable();
+            }
+        }
+
+        private void DisableAction(InputActionReference actionReference)
+        {
+            if (actionReference != null)
+            {
+                actionReference.action.Disable();
+            }
         }
     }
 }

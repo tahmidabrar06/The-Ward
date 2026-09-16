@@ -3,19 +3,22 @@ using UnityEngine.InputSystem;
 
 namespace TheWard.Combat
 {
-    public sealed class WeaponController : MonoBehaviour
+    // Reads the player's input and decides which weapon is active.
+    public class WeaponController : MonoBehaviour
     {
+        [Header("Input Actions")]
         [SerializeField] private InputActionReference attackAction;
         [SerializeField] private InputActionReference previousWeaponAction;
         [SerializeField] private InputActionReference nextWeaponAction;
+
+        [Header("Player Weapons")]
         [SerializeField] private Weapon[] weapons;
 
         private int activeWeaponIndex;
 
-        public Weapon ActiveWeapon => weapons != null && weapons.Length > 0 ? weapons[activeWeaponIndex] : null;
-
         private void OnEnable()
         {
+            // Input actions must be enabled before Unity can read them.
             EnableAction(attackAction);
             EnableAction(previousWeaponAction);
             EnableAction(nextWeaponAction);
@@ -30,30 +33,85 @@ namespace TheWard.Combat
 
         private void Update()
         {
+            ReadAttackInput();
+            ReadWeaponSwitchInput();
+        }
+
+        private void ReadAttackInput()
+        {
             if (attackAction != null && attackAction.action.WasPressedThisFrame())
             {
-                ActiveWeapon?.TryAttack(gameObject);
-            }
+                Weapon activeWeapon = GetActiveWeapon();
 
+                if (activeWeapon != null)
+                {
+                    activeWeapon.TryAttack(gameObject);
+                }
+            }
+        }
+
+        private void ReadWeaponSwitchInput()
+        {
             if (previousWeaponAction != null && previousWeaponAction.action.WasPressedThisFrame())
             {
-                SelectWeapon(-1);
+                SelectPreviousWeapon();
             }
 
             if (nextWeaponAction != null && nextWeaponAction.action.WasPressedThisFrame())
             {
-                SelectWeapon(1);
+                SelectNextWeapon();
             }
         }
 
-        private void SelectWeapon(int direction)
+        private Weapon GetActiveWeapon()
+        {
+            if (weapons == null || weapons.Length == 0)
+            {
+                return null;
+            }
+
+            return weapons[activeWeaponIndex];
+        }
+
+        private void SelectPreviousWeapon()
         {
             if (weapons == null || weapons.Length == 0)
             {
                 return;
             }
 
-            activeWeaponIndex = (activeWeaponIndex + direction + weapons.Length) % weapons.Length;
+            activeWeaponIndex--;
+
+            // Move from the first weapon to the last weapon.
+            if (activeWeaponIndex < 0)
+            {
+                activeWeaponIndex = weapons.Length - 1;
+            }
+
+            ShowActiveWeapon();
+        }
+
+        private void SelectNextWeapon()
+        {
+            if (weapons == null || weapons.Length == 0)
+            {
+                return;
+            }
+
+            activeWeaponIndex++;
+
+            // Move from the last weapon back to the first weapon.
+            if (activeWeaponIndex >= weapons.Length)
+            {
+                activeWeaponIndex = 0;
+            }
+
+            ShowActiveWeapon();
+        }
+
+        private void ShowActiveWeapon()
+        {
+            // Only the selected weapon should be visible.
             for (int index = 0; index < weapons.Length; index++)
             {
                 if (weapons[index] != null)
@@ -65,12 +123,18 @@ namespace TheWard.Combat
 
         private static void EnableAction(InputActionReference actionReference)
         {
-            actionReference?.action.Enable();
+            if (actionReference != null)
+            {
+                actionReference.action.Enable();
+            }
         }
 
         private static void DisableAction(InputActionReference actionReference)
         {
-            actionReference?.action.Disable();
+            if (actionReference != null)
+            {
+                actionReference.action.Disable();
+            }
         }
     }
 }

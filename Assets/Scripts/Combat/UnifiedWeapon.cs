@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TheWard.Combat
@@ -7,281 +6,366 @@ namespace TheWard.Combat
     public enum WeaponMode { Firearm, Melee, Grenade }
     public enum TriggerMode { PressOnce, HoldAutomatic }
 
-    public sealed class UnifiedWeapon : MonoBehaviour
+    // One simple weapon script is used for the pistol, machine gun, bat and grenade.
+    public class UnifiedWeapon : MonoBehaviour
     {
-        [Header("Weapon")]
+        [Header("Basic Weapon Settings")]
         [SerializeField] private string displayName = "Weapon";
         [SerializeField] private WeaponMode mode = WeaponMode.Melee;
         [SerializeField] private TriggerMode triggerMode = TriggerMode.PressOnce;
         [SerializeField] private Transform attackOrigin;
         [SerializeField] private LayerMask hitMask = ~0;
-        [SerializeField, Min(0f)] private float damage = 25f;
-        [SerializeField, Min(0.01f)] private float cooldown = 0.35f;
-        [SerializeField, Min(0f)] private float range = 2f;
-        [SerializeField, Min(0f)] private float impactForce = 4f;
+        [SerializeField] private float damage = 25f;
+        [SerializeField] private float cooldown = 0.35f;
+        [SerializeField] private float range = 2f;
+        [SerializeField] private float impactForce = 4f;
 
-        [Header("Firearm")]
-        [SerializeField, Min(0f)] private float spreadDegrees = 0.5f;
-        [SerializeField, Min(0)] private int magazineSize = 12;
-        [SerializeField, Min(0)] private int startingReserveAmmo = 48;
+        [Header("Gun Settings")]
+        [SerializeField] private float spreadDegrees = 0.5f;
+        [SerializeField] private int magazineSize = 12;
+        [SerializeField] private int startingReserveAmmo = 48;
         [SerializeField] private ParticleSystem muzzleFlash;
         [SerializeField] private GameObject bulletImpactPrefab;
 
-        [Header("Melee")]
-        [SerializeField, Min(0f)] private float meleeRadius = 0.75f;
+        [Header("Bat Settings")]
+        [SerializeField] private float meleeRadius = 0.75f;
         [SerializeField] private Vector3 meleeSwingEuler = new Vector3(55f, -20f, -25f);
-        [SerializeField, Min(0.05f)] private float meleeSwingDuration = 0.25f;
+        [SerializeField] private float meleeSwingDuration = 0.25f;
 
-        [Header("Grenade")]
+        [Header("Grenade Settings")]
         [SerializeField] private GameObject grenadePrefab;
-        [SerializeField, Min(0f)] private float minimumThrowForce = 6f;
-        [SerializeField, Min(0f)] private float maximumThrowForce = 18f;
-        [SerializeField, Min(0.01f)] private float maximumChargeTime = 1.5f;
-        [SerializeField, Min(0f)] private float explosionRadius = 5f;
-        [SerializeField, Min(0f)] private float explosionForce = 650f;
-        [SerializeField, Min(0f)] private float explosionDamage = 90f;
+        [SerializeField] private float minimumThrowForce = 6f;
+        [SerializeField] private float maximumThrowForce = 18f;
+        [SerializeField] private float maximumChargeTime = 1.5f;
+        [SerializeField] private float explosionRadius = 5f;
+        [SerializeField] private float explosionForce = 650f;
+        [SerializeField] private float explosionDamage = 90f;
         [SerializeField] private GameObject explosionEffectPrefab;
 
-        [Header("Grenade View Animation")]
+        [Header("Simple View Animations")]
         [SerializeField] private Vector3 grenadeChargeOffset = new Vector3(0f, -0.08f, -0.12f);
         [SerializeField] private Vector3 grenadeChargeEuler = new Vector3(18f, 0f, -12f);
         [SerializeField] private Vector3 grenadeReleaseOffset = new Vector3(0f, 0.04f, 0.18f);
-        [SerializeField, Min(0.05f)] private float grenadeReleaseDuration = 0.2f;
-
-        [Header("Animation")]
-        [SerializeField] private Animator animator;
-        [SerializeField] private string attackTrigger = "Attack";
-        [SerializeField] private string reloadTrigger = "Reload";
+        [SerializeField] private float grenadeReleaseDuration = 0.2f;
 
         private float nextAttackTime;
         private float chargeStartTime;
-        private bool charging;
+        private bool isCharging;
         private int ammo;
         private int reserveAmmo;
-        private Quaternion restLocalRotation;
-        private Vector3 restLocalPosition;
-        private Coroutine meleeSwingRoutine;
-        private Coroutine grenadeReleaseRoutine;
+        private Vector3 startingPosition;
+        private Quaternion startingRotation;
 
         public string DisplayName => displayName;
         public int Ammo => ammo;
         public int ReserveAmmo => reserveAmmo;
-        public bool UsesAmmo => mode == WeaponMode.Firearm;
 
         private void Awake()
         {
             ammo = magazineSize;
             reserveAmmo = startingReserveAmmo;
-            restLocalRotation = transform.localRotation;
-            restLocalPosition = transform.localPosition;
-            if (animator == null) animator = GetComponentInChildren<Animator>();
+            startingPosition = transform.localPosition;
+            startingRotation = transform.localRotation;
         }
 
-        public void ReadAttack(GameObject owner, bool pressed, bool held, bool released)
+        // The weapon controller calls this method every frame.
+        public void HandleInput(bool pressed, bool held, bool released)
         {
             if (mode == WeaponMode.Grenade)
             {
-                if (pressed && Time.time >= nextAttackTime)
-                {
-                    if (grenadeReleaseRoutine != null) StopCoroutine(grenadeReleaseRoutine);
-                    chargeStartTime = Time.time;
-                    charging = true;
-                }
-                if (held && charging) AnimateGrenadeCharge();
-                if (released && charging) ThrowGrenade(owner);
+                HandleGrenadeInput(pressed, held, released);
                 return;
             }
 
-            if ((triggerMode == TriggerMode.PressOnce && pressed) ||
-                (triggerMode == TriggerMode.HoldAutomatic && held))
-                TryAttack(owner);
+            bool shouldAttack = false;
+
+            if (triggerMode == TriggerMode.PressOnce && pressed)
+            {
+                shouldAttack = true;
+            }
+            else if (triggerMode == TriggerMode.HoldAutomatic && held)
+            {
+                shouldAttack = true;
+            }
+
+            if (shouldAttack)
+            {
+                Attack();
+            }
         }
 
-        public bool TryAttack(GameObject owner)
+        private void Attack()
         {
-            if (owner == null || Time.time < nextAttackTime ||
-                (mode == WeaponMode.Firearm && ammo <= 0)) return false;
+            if (Time.time < nextAttackTime)
+            {
+                return;
+            }
+
+            if (mode == WeaponMode.Firearm && ammo <= 0)
+            {
+                return;
+            }
 
             nextAttackTime = Time.time + cooldown;
+
             if (mode == WeaponMode.Firearm)
             {
                 ammo--;
-                Fire(owner);
-                if (muzzleFlash != null) muzzleFlash.Play();
+                Shoot();
             }
-            else
+            else if (mode == WeaponMode.Melee)
             {
-                Melee(owner);
-                if (animator == null)
-                {
-                    if (meleeSwingRoutine != null) StopCoroutine(meleeSwingRoutine);
-                    meleeSwingRoutine = StartCoroutine(AnimateMeleeSwing());
-                }
+                MeleeAttack();
+                StartCoroutine(SwingBat());
+            }
+        }
+
+        private void Shoot()
+        {
+            Transform origin = attackOrigin != null ? attackOrigin : transform;
+
+            // The random angle gives the machine gun its spread.
+            Vector2 spread = Random.insideUnitCircle * spreadDegrees;
+            Vector3 direction = Quaternion.Euler(-spread.y, spread.x, 0f) * origin.forward;
+
+            RaycastHit hit;
+            bool hitSomething = Physics.Raycast(
+                origin.position,
+                direction,
+                out hit,
+                range,
+                hitMask,
+                QueryTriggerInteraction.Ignore);
+
+            if (muzzleFlash != null)
+            {
+                muzzleFlash.Play();
             }
 
-            TriggerAnimation(attackTrigger);
-            return true;
+            if (!hitSomething)
+            {
+                return;
+            }
+
+            // Damage the enemy if it has a Health component.
+            Health enemyHealth = hit.collider.GetComponentInParent<Health>();
+            if (enemyHealth != null && enemyHealth.transform.root != transform.root)
+            {
+                enemyHealth.TakeDamage(damage);
+            }
+
+            // Push barrels and other physics objects.
+            if (hit.rigidbody != null)
+            {
+                hit.rigidbody.AddForceAtPosition(direction * impactForce, hit.point, ForceMode.Impulse);
+            }
+
+            if (bulletImpactPrefab != null)
+            {
+                Quaternion effectRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+                GameObject effect = Instantiate(bulletImpactPrefab, hit.point, effectRotation);
+                Destroy(effect, 2f);
+            }
+        }
+
+        private void MeleeAttack()
+        {
+            Transform origin = attackOrigin != null ? attackOrigin : transform;
+            Vector3 attackPosition = origin.position + origin.forward * range;
+
+            Collider[] objectsHit = Physics.OverlapSphere(
+                attackPosition,
+                meleeRadius,
+                hitMask,
+                QueryTriggerInteraction.Ignore);
+
+            foreach (Collider objectHit in objectsHit)
+            {
+                Health enemyHealth = objectHit.GetComponentInParent<Health>();
+
+                if (enemyHealth != null && enemyHealth.transform.root != transform.root)
+                {
+                    enemyHealth.TakeDamage(damage);
+                    break;
+                }
+            }
+        }
+
+        private void HandleGrenadeInput(bool pressed, bool held, bool released)
+        {
+            if (pressed && Time.time >= nextAttackTime)
+            {
+                chargeStartTime = Time.time;
+                isCharging = true;
+            }
+
+            if (held && isCharging)
+            {
+                ShowGrenadeCharge();
+            }
+
+            if (released && isCharging)
+            {
+                ThrowGrenade();
+            }
+        }
+
+        private void ThrowGrenade()
+        {
+            isCharging = false;
+
+            if (grenadePrefab == null)
+            {
+                Debug.LogWarning("The grenade prefab has not been assigned.");
+                return;
+            }
+
+            float chargeTime = Time.time - chargeStartTime;
+            float chargeAmount = Mathf.Clamp01(chargeTime / maximumChargeTime);
+            float throwForce = Mathf.Lerp(minimumThrowForce, maximumThrowForce, chargeAmount);
+
+            Transform origin = attackOrigin != null ? attackOrigin : transform;
+            Vector3 spawnPosition = origin.position + origin.forward * 0.4f;
+            GameObject grenade = Instantiate(grenadePrefab, spawnPosition, origin.rotation);
+
+            Rigidbody grenadeBody = grenade.GetComponent<Rigidbody>();
+            if (grenadeBody == null)
+            {
+                grenadeBody = grenade.AddComponent<Rigidbody>();
+            }
+
+            if (grenade.GetComponentInChildren<Collider>() == null)
+            {
+                grenade.AddComponent<SphereCollider>();
+            }
+
+            UnifiedGrenadeProjectile projectile = grenade.GetComponent<UnifiedGrenadeProjectile>();
+            if (projectile == null)
+            {
+                projectile = grenade.AddComponent<UnifiedGrenadeProjectile>();
+            }
+
+            Health playerHealth = transform.root.GetComponent<Health>();
+            projectile.Setup(
+                explosionDamage,
+                explosionRadius,
+                explosionForce,
+                explosionEffectPrefab,
+                playerHealth);
+
+            grenadeBody.useGravity = true;
+            grenadeBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            Vector3 throwDirection = (origin.forward + Vector3.up * 0.18f).normalized;
+            grenadeBody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+
+            nextAttackTime = Time.time + cooldown;
+            StartCoroutine(ReleaseGrenadeAnimation());
         }
 
         public void Reload()
         {
-            if (!UsesAmmo || ammo >= magazineSize || reserveAmmo <= 0) return;
-            int loaded = Mathf.Min(magazineSize - ammo, reserveAmmo);
-            ammo += loaded;
-            reserveAmmo -= loaded;
-            TriggerAnimation(reloadTrigger);
-        }
-
-        private void Fire(GameObject owner)
-        {
-            Transform origin = attackOrigin != null ? attackOrigin : transform;
-            Vector2 spread = Random.insideUnitCircle * spreadDegrees;
-            Vector3 direction = Quaternion.Euler(-spread.y, spread.x, 0f) * origin.forward;
-            if (!Physics.Raycast(origin.position, direction, out RaycastHit hit,
-                    range, hitMask, QueryTriggerInteraction.Ignore)) return;
-
-            Damage(hit.collider, owner);
-            Rigidbody body = hit.rigidbody != null ? hit.rigidbody : hit.collider.GetComponentInParent<Rigidbody>();
-            if (body != null && !body.isKinematic)
-                body.AddForceAtPosition(direction * impactForce, hit.point, ForceMode.Impulse);
-            if (bulletImpactPrefab != null)
-                Destroy(Instantiate(bulletImpactPrefab, hit.point,
-                    Quaternion.FromToRotation(Vector3.up, hit.normal)), 2f);
-        }
-
-        private void Melee(GameObject owner)
-        {
-            Transform origin = attackOrigin != null ? attackOrigin : transform;
-            Collider[] hits = Physics.OverlapSphere(origin.position + origin.forward * range,
-                meleeRadius, hitMask, QueryTriggerInteraction.Ignore);
-            HashSet<IDamageable> damaged = new HashSet<IDamageable>();
-            foreach (Collider hit in hits)
+            if (mode != WeaponMode.Firearm || ammo >= magazineSize || reserveAmmo <= 0)
             {
-                IDamageable target = hit.GetComponentInParent<IDamageable>();
-                if (target == null || !target.IsAlive || damaged.Contains(target) ||
-                    hit.transform.root == owner.transform.root) continue;
-                damaged.Add(target);
-                target.TakeDamage(damage, owner);
-                Rigidbody body = hit.attachedRigidbody;
-                if (body != null && !body.isKinematic)
-                    body.AddForce((hit.bounds.center - origin.position).normalized * impactForce,
-                        ForceMode.Impulse);
+                return;
             }
+
+            int bulletsNeeded = magazineSize - ammo;
+            int bulletsToLoad = Mathf.Min(bulletsNeeded, reserveAmmo);
+
+            ammo += bulletsToLoad;
+            reserveAmmo -= bulletsToLoad;
         }
 
-        private void ThrowGrenade(GameObject owner)
+        private IEnumerator SwingBat()
         {
-            charging = false;
-            if (grenadePrefab == null) { Debug.LogWarning("Assign a grenade prefab.", this); return; }
-            float charge = Mathf.Clamp01((Time.time - chargeStartTime) / maximumChargeTime);
-            float force = Mathf.Lerp(minimumThrowForce, maximumThrowForce, charge);
-            nextAttackTime = Time.time + cooldown;
-            Transform origin = attackOrigin != null ? attackOrigin : transform;
-            GameObject grenade = Instantiate(grenadePrefab, origin.position + origin.forward * 0.4f, origin.rotation);
-            Rigidbody body = grenade.GetComponent<Rigidbody>();
-            if (body == null) body = grenade.AddComponent<Rigidbody>();
-            body.isKinematic = false;
-            body.useGravity = true;
-            body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            if (grenade.GetComponentInChildren<Collider>() == null) grenade.AddComponent<SphereCollider>();
-            UnifiedGrenadeProjectile projectile = grenade.GetComponent<UnifiedGrenadeProjectile>();
-            if (projectile == null) projectile = grenade.AddComponent<UnifiedGrenadeProjectile>();
-            projectile.Configure(owner, explosionDamage, explosionRadius, explosionForce, explosionEffectPrefab);
-            body.AddForce((origin.forward + Vector3.up * 0.18f).normalized * force, ForceMode.Impulse);
-            TriggerAnimation(attackTrigger);
-            grenadeReleaseRoutine = StartCoroutine(AnimateGrenadeRelease());
+            Quaternion swingRotation = startingRotation * Quaternion.Euler(meleeSwingEuler);
+            float halfTime = meleeSwingDuration / 2f;
+
+            yield return RotateWeapon(startingRotation, swingRotation, halfTime);
+            yield return RotateWeapon(swingRotation, startingRotation, halfTime);
+
+            transform.localRotation = startingRotation;
         }
 
-        private void Damage(Collider hit, GameObject owner)
+        private IEnumerator RotateWeapon(Quaternion from, Quaternion to, float duration)
         {
-            IDamageable target = hit.GetComponentInParent<IDamageable>();
-            if (target != null && target.IsAlive && hit.transform.root != owner.transform.root)
-                target.TakeDamage(damage, owner);
-        }
+            float timer = 0f;
 
-        private void TriggerAnimation(string trigger)
-        {
-            if (animator != null && !string.IsNullOrWhiteSpace(trigger)) animator.SetTrigger(trigger);
-        }
-
-        private IEnumerator AnimateMeleeSwing()
-        {
-            Quaternion swingRotation = restLocalRotation * Quaternion.Euler(meleeSwingEuler);
-            float halfDuration = meleeSwingDuration * 0.5f;
-
-            for (float elapsed = 0f; elapsed < halfDuration; elapsed += Time.deltaTime)
+            while (timer < duration)
             {
-                transform.localRotation = Quaternion.Slerp(restLocalRotation, swingRotation,
-                    elapsed / halfDuration);
+                timer += Time.deltaTime;
+                transform.localRotation = Quaternion.Lerp(from, to, timer / duration);
                 yield return null;
             }
-
-            for (float elapsed = 0f; elapsed < halfDuration; elapsed += Time.deltaTime)
-            {
-                transform.localRotation = Quaternion.Slerp(swingRotation, restLocalRotation,
-                    elapsed / halfDuration);
-                yield return null;
-            }
-
-            transform.localRotation = restLocalRotation;
-            meleeSwingRoutine = null;
         }
 
-        private void AnimateGrenadeCharge()
+        private void ShowGrenadeCharge()
         {
-            float charge = Mathf.Clamp01((Time.time - chargeStartTime) / maximumChargeTime);
-            float easedCharge = Mathf.SmoothStep(0f, 1f, charge);
-            transform.localPosition = Vector3.Lerp(restLocalPosition,
-                restLocalPosition + grenadeChargeOffset, easedCharge);
-            transform.localRotation = Quaternion.Slerp(restLocalRotation,
-                restLocalRotation * Quaternion.Euler(grenadeChargeEuler), easedCharge);
+            float chargeTime = Time.time - chargeStartTime;
+            float chargeAmount = Mathf.Clamp01(chargeTime / maximumChargeTime);
+
+            transform.localPosition = Vector3.Lerp(
+                startingPosition,
+                startingPosition + grenadeChargeOffset,
+                chargeAmount);
+
+            transform.localRotation = Quaternion.Lerp(
+                startingRotation,
+                startingRotation * Quaternion.Euler(grenadeChargeEuler),
+                chargeAmount);
         }
 
-        private IEnumerator AnimateGrenadeRelease()
+        private IEnumerator ReleaseGrenadeAnimation()
         {
             Vector3 chargedPosition = transform.localPosition;
-            Quaternion chargedRotation = transform.localRotation;
-            Vector3 releasePosition = restLocalPosition + grenadeReleaseOffset;
-            float halfDuration = grenadeReleaseDuration * 0.5f;
+            Vector3 releasePosition = startingPosition + grenadeReleaseOffset;
+            float halfTime = grenadeReleaseDuration / 2f;
+            float timer = 0f;
 
-            for (float elapsed = 0f; elapsed < halfDuration; elapsed += Time.deltaTime)
+            while (timer < halfTime)
             {
-                float t = elapsed / halfDuration;
-                transform.localPosition = Vector3.Lerp(chargedPosition, releasePosition, t);
-                transform.localRotation = Quaternion.Slerp(chargedRotation, restLocalRotation, t);
+                timer += Time.deltaTime;
+                transform.localPosition = Vector3.Lerp(chargedPosition, releasePosition, timer / halfTime);
                 yield return null;
             }
 
-            for (float elapsed = 0f; elapsed < halfDuration; elapsed += Time.deltaTime)
+            timer = 0f;
+            while (timer < halfTime)
             {
-                transform.localPosition = Vector3.Lerp(releasePosition, restLocalPosition,
-                    elapsed / halfDuration);
+                timer += Time.deltaTime;
+                transform.localPosition = Vector3.Lerp(releasePosition, startingPosition, timer / halfTime);
                 yield return null;
             }
 
-            transform.localPosition = restLocalPosition;
-            transform.localRotation = restLocalRotation;
-            grenadeReleaseRoutine = null;
+            ResetWeaponTransform();
         }
 
         private void OnDisable()
         {
-            if (meleeSwingRoutine != null) StopCoroutine(meleeSwingRoutine);
-            if (grenadeReleaseRoutine != null) StopCoroutine(grenadeReleaseRoutine);
-            meleeSwingRoutine = null;
-            grenadeReleaseRoutine = null;
-            transform.localPosition = restLocalPosition;
-            transform.localRotation = restLocalRotation;
-            charging = false;
+            StopAllCoroutines();
+            isCharging = false;
+            ResetWeaponTransform();
+        }
+
+        private void ResetWeaponTransform()
+        {
+            transform.localPosition = startingPosition;
+            transform.localRotation = startingRotation;
         }
 
         private void OnDrawGizmosSelected()
         {
             Transform origin = attackOrigin != null ? attackOrigin : transform;
             Gizmos.color = Color.red;
+
             if (mode == WeaponMode.Melee)
+            {
                 Gizmos.DrawWireSphere(origin.position + origin.forward * range, meleeRadius);
-            else Gizmos.DrawRay(origin.position, origin.forward * range);
+            }
+            else
+            {
+                Gizmos.DrawRay(origin.position, origin.forward * range);
+            }
         }
     }
 }

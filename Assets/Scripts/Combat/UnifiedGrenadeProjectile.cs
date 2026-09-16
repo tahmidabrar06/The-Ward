@@ -1,43 +1,85 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TheWard.Combat
 {
-    public sealed class UnifiedGrenadeProjectile : MonoBehaviour
+    // Controls the grenade after the player throws it.
+    public class UnifiedGrenadeProjectile : MonoBehaviour
     {
-        [SerializeField, Min(0.1f)] private float lifetime = 10f;
-        private GameObject owner, effectPrefab;
-        private float damage, radius, force;
-        private bool exploded;
+        [SerializeField] private float lifetime = 10f;
 
-        public void Configure(GameObject source, float amount, float range,
-            float explosionForce, GameObject effect)
-        { owner = source; damage = amount; radius = range; force = explosionForce; effectPrefab = effect; }
+        private float damage;
+        private float explosionRadius;
+        private float explosionForce;
+        private GameObject explosionEffect;
+        private Health ownerHealth;
 
-        private void Start() { Destroy(gameObject, lifetime); }
-        private void OnCollisionEnter(Collision collision) { Explode(); }
+        // Gets the explosion values from the equipped grenade weapon.
+        public void Setup(
+            float newDamage,
+            float newRadius,
+            float newForce,
+            GameObject newEffect,
+            Health newOwnerHealth)
+        {
+            damage = newDamage;
+            explosionRadius = newRadius;
+            explosionForce = newForce;
+            explosionEffect = newEffect;
+            ownerHealth = newOwnerHealth;
+        }
+
+        private void Start()
+        {
+            Destroy(gameObject, lifetime);
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            Explode();
+        }
 
         private void Explode()
         {
-            if (exploded) return;
-            exploded = true;
-            HashSet<IDamageable> damaged = new HashSet<IDamageable>();
-            foreach (Collider hit in Physics.OverlapSphere(transform.position, radius,
-                         ~0, QueryTriggerInteraction.Ignore))
+            // Create the visible explosion.
+            if (explosionEffect != null)
             {
-                Rigidbody body = hit.attachedRigidbody;
-                if (body != null && body.gameObject != gameObject)
-                    body.AddExplosionForce(force, transform.position, radius, 0.8f, ForceMode.Impulse);
-                IDamageable target = hit.GetComponentInParent<IDamageable>();
-                if (target == null || !target.IsAlive || damaged.Contains(target)) continue;
-                MonoBehaviour component = target as MonoBehaviour;
-                if (component != null && owner != null && component.transform.root == owner.transform.root) continue;
-                float distance = Vector3.Distance(transform.position, hit.ClosestPoint(transform.position));
-                target.TakeDamage(damage * (1f - Mathf.Clamp01(distance / Mathf.Max(radius, 0.01f))), owner);
-                damaged.Add(target);
+                GameObject effect = Instantiate(explosionEffect, transform.position, Quaternion.identity);
+                Destroy(effect, 5f);
             }
-            if (effectPrefab != null) Destroy(Instantiate(effectPrefab, transform.position, Quaternion.identity), 5f);
+
+            // Find objects inside the explosion radius.
+            Collider[] objectsHit = Physics.OverlapSphere(transform.position, explosionRadius);
+
+            foreach (Collider objectHit in objectsHit)
+            {
+                Rigidbody body = objectHit.attachedRigidbody;
+
+                if (body != null && body.gameObject != gameObject)
+                {
+                    body.AddExplosionForce(
+                        explosionForce,
+                        transform.position,
+                        explosionRadius,
+                        1f,
+                        ForceMode.Impulse);
+                }
+
+                Health health = objectHit.GetComponentInParent<Health>();
+
+                // The player's own grenade must not damage the player.
+                if (health != null && health != ownerHealth)
+                {
+                    health.TakeDamage(damage);
+                }
+            }
+
             Destroy(gameObject);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, explosionRadius);
         }
     }
 }
