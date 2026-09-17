@@ -250,7 +250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Zombie
   currentState: 0
-  stealthMechanics: 1
+  stealthMechanics: 0
   damage: 10
   animator: {fileID: 8240646320786260113}
   walkSpeed: 2

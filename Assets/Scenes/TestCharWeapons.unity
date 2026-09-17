@@ -1943,6 +1943,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie
       objectReference: {fileID: 0}
+    - target: {fileID: 2859970565548042428, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: stealthMechanics
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3971354347184032866, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
       propertyPath: onDamage.m_PersistentCalls.m_Calls.Array.size
       value: 1
