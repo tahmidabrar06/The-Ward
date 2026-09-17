@@ -290,15 +290,16 @@ public class Zombie : MonoBehaviour
         {
             agent.enabled = false;
             animator.SetTrigger("isDead");
+            gameObject.GetComponent<CapsuleCollider>().enabled = false;
             isDead = true;
         }
     }
 
-    public void TakeDamage(float damageAmount)
+    public void TakeDamage()
     {
         if (!stealthMechanics)
         {
-            
+            health.RestoreFullHealth();
         }
         currentState = ZombieState.Detected;
     }
