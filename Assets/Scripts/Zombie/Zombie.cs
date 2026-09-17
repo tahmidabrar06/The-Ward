@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework.Constraints;
+using TheWard.Combat;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -26,12 +27,14 @@ public class Zombie : MonoBehaviour
 
     private GameObject player;
     private NavMeshAgent agent;
+    [SerializeField]
+    private float damage;
 
     [SerializeField]
     private Animator animator;
 
     [SerializeField]
-    private float health, damage, walkSpeed, chaseSpeed;
+    private float walkSpeed, chaseSpeed;
 
     [SerializeField]
     private float attackRange, detectionDist, viewDist, viewAngle;
@@ -43,6 +46,8 @@ public class Zombie : MonoBehaviour
 
     [SerializeField]
     private LayerMask obstructionMask;
+
+    private Health health;
     
 
 
@@ -50,17 +55,15 @@ public class Zombie : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
+        health = GetComponent<Health>();
         currentState = ZombieState.Unaware;
     }
 
 
     void Update()
     {
-        if(health<= 0)
-        {
-            Death();        
-        }
-        else //add player null check later
+        
+        if(!isDead)
         {
             switch (currentState)
             {
@@ -81,6 +84,7 @@ public class Zombie : MonoBehaviour
                     break;
             }
         }
+    
         //Debug.Log(currentState);
     }
 
@@ -218,6 +222,8 @@ public class Zombie : MonoBehaviour
     {
         // Attack code
         animator.SetTrigger("Attack"); //need to add attack event at the end of zombie attack animation
+        Health playerHealth = player.GetComponent<Health>();
+        playerHealth.TakeDamage(damage);
     }
 
 
@@ -278,21 +284,22 @@ public class Zombie : MonoBehaviour
         attackInProgress = false;
     }
 
-    void Death()
+    public void Death()
     {
         if(!isDead)
         {
             agent.enabled = false;
             animator.SetTrigger("isDead");
+            gameObject.GetComponent<CapsuleCollider>().enabled = false;
             isDead = true;
         }
     }
 
-    public void TakeDamage(float damageAmount)
+    public void TakeDamage()
     {
         if (!stealthMechanics)
         {
-            health -= damageAmount;
+            health.RestoreFullHealth();
         }
         currentState = ZombieState.Detected;
     }
