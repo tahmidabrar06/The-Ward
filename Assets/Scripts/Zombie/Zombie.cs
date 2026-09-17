@@ -297,7 +297,8 @@ public class Zombie : MonoBehaviour
 
     public void TakeDamage()
     {
-        if (!stealthMechanics)
+        //make zombie immortal, by restoring health every hit
+        if (stealthMechanics)
         {
             health.RestoreFullHealth();
         }
