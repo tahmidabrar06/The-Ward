@@ -20,6 +20,7 @@ namespace TheWard.Combat
 
         // The health UI listens to this event.
         public event Action<float> Damaged;
+        public event Action<float, float> HealthChanged;
 
         private void Awake()
         {
@@ -39,6 +40,7 @@ namespace TheWard.Combat
 
             onDamage?.Invoke();
             Damaged?.Invoke(damage);
+            HealthChanged?.Invoke(CurrentHealth, maxHealth); 
 
             if (CurrentHealth <= 0f)
             {
@@ -49,6 +51,7 @@ namespace TheWard.Combat
         public void RestoreFullHealth()
         {
             CurrentHealth = maxHealth;
+            HealthChanged?.Invoke(CurrentHealth, maxHealth);
         }
     }
 }
