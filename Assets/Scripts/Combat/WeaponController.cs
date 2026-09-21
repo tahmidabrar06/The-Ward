@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 namespace TheWard.Combat
 {
     [DefaultExecutionOrder(100)]
-    public class WeaponController : MonoBehaviour
+    public sealed class WeaponController : MonoBehaviour
     {
         [Header("Input Actions")]
         [SerializeField] private InputActionReference attackAction;
@@ -16,9 +16,11 @@ namespace TheWard.Combat
         [SerializeField] private Weapon[] weapons;
         [SerializeField] private int startingWeaponIndex;
 
-        public Weapon ActiveWeapon => GetActiveWeapon();
-
         private int activeWeaponIndex;
+
+        public Weapon ActiveWeapon => weapons != null && activeWeaponIndex >= 0 && activeWeaponIndex < weapons.Length
+            ? weapons[activeWeaponIndex]
+            : null;
 
         private void Awake()
         {
@@ -33,18 +35,18 @@ namespace TheWard.Combat
 
         private void OnEnable()
         {
-            EnableAction(attackAction);
-            EnableAction(reloadAction);
-            EnableAction(previousWeaponAction);
-            EnableAction(nextWeaponAction);
+            attackAction?.action.Enable();
+            reloadAction?.action.Enable();
+            previousWeaponAction?.action.Enable();
+            nextWeaponAction?.action.Enable();
         }
 
         private void OnDisable()
         {
-            DisableAction(attackAction);
-            DisableAction(reloadAction);
-            DisableAction(previousWeaponAction);
-            DisableAction(nextWeaponAction);
+            attackAction?.action.Disable();
+            reloadAction?.action.Disable();
+            previousWeaponAction?.action.Disable();
+            nextWeaponAction?.action.Disable();
         }
 
         private void Update()
@@ -56,14 +58,23 @@ namespace TheWard.Combat
         private void LateUpdate()
         {
             // Aim after mouse look and the head's eye anchor have moved the camera.
-            ReadAttackInput();
-            ReadReloadInput();
+            Weapon weapon = ActiveWeapon;
+            if (weapon == null) return;
+
+            if (attackAction != null)
+            {
+                weapon.HandleInput(attackAction.action.WasPressedThisFrame(),
+                    attackAction.action.IsPressed(), attackAction.action.WasReleasedThisFrame());
+            }
+
+            if (reloadAction != null && reloadAction.action.WasPressedThisFrame())
+                weapon.Reload();
         }
 
         private void OnGUI()
         {
             Weapon weapon = ActiveWeapon;
-            if (weapon == null || !(weapon is GunWeapon) || weapon.AimCamera == null) return;
+            if (!(weapon is GunWeapon) || weapon.AimCamera == null) return;
 
             Vector2 center = weapon.AimCamera.pixelRect.center;
             center.y = Screen.height - center.y;
@@ -73,35 +84,6 @@ namespace TheWard.Combat
             GUI.color = Color.white;
             GUI.DrawTexture(new Rect(center.x - 1f, center.y - 1f, 2f, 2f), Texture2D.whiteTexture);
             GUI.color = previousColor;
-        }
-
-        private void ReadAttackInput()
-        {
-            Weapon activeWeapon = GetActiveWeapon();
-
-            if (activeWeapon == null || attackAction == null)
-            {
-                return;
-            }
-
-            bool pressed = attackAction.action.WasPressedThisFrame();
-            bool held = attackAction.action.IsPressed();
-            bool released = attackAction.action.WasReleasedThisFrame();
-
-            activeWeapon.HandleInput(pressed, held, released);
-        }
-
-        private void ReadReloadInput()
-        {
-            if (reloadAction != null && reloadAction.action.WasPressedThisFrame())
-            {
-                Weapon activeWeapon = GetActiveWeapon();
-
-                if (activeWeapon != null)
-                {
-                    activeWeapon.Reload();
-                }
-            }
         }
 
         private void ReadWeaponSwitchInput()
@@ -117,31 +99,13 @@ namespace TheWard.Combat
             }
 
             Keyboard keyboard = Keyboard.current;
-            if (keyboard == null)
-            {
-                return;
-            }
+            if (keyboard == null) return;
 
-            if (keyboard.digit1Key.wasPressedThisFrame)
-            {
-                SelectWeapon(0);
-            }
-            else if (keyboard.digit2Key.wasPressedThisFrame)
-            {
-                SelectWeapon(1);
-            }
-            else if (keyboard.digit3Key.wasPressedThisFrame)
-            {
-                SelectWeapon(2);
-            }
-            else if (keyboard.digit4Key.wasPressedThisFrame)
-            {
-                SelectWeapon(3);
-            }
-            else if (keyboard.digit5Key.wasPressedThisFrame)
-            {
-                SelectWeapon(4);
-            }
+            if (keyboard.digit1Key.wasPressedThisFrame) SelectWeapon(0);
+            else if (keyboard.digit2Key.wasPressedThisFrame) SelectWeapon(1);
+            else if (keyboard.digit3Key.wasPressedThisFrame) SelectWeapon(2);
+            else if (keyboard.digit4Key.wasPressedThisFrame) SelectWeapon(3);
+            else if (keyboard.digit5Key.wasPressedThisFrame) SelectWeapon(4);
         }
 
         private void ChangeWeapon(int direction)
@@ -157,28 +121,13 @@ namespace TheWard.Combat
 
         public void SelectWeapon(int index)
         {
-            if (weapons == null || index < 0 || index >= weapons.Length)
-            {
-                return;
-            }
-
-            if (weapons[index] == null)
+            if (weapons == null || index < 0 || index >= weapons.Length || weapons[index] == null)
             {
                 return;
             }
 
             activeWeaponIndex = index;
             ShowSelectedWeapon();
-        }
-
-        private Weapon GetActiveWeapon()
-        {
-            if (weapons == null || weapons.Length == 0)
-            {
-                return null;
-            }
-
-            return weapons[activeWeaponIndex];
         }
 
         private void ShowSelectedWeapon()
@@ -190,16 +139,6 @@ namespace TheWard.Combat
                     weapons[index].gameObject.SetActive(index == activeWeaponIndex);
                 }
             }
-        }
-
-        private static void EnableAction(InputActionReference actionReference)
-        {
-            actionReference?.action.Enable();
-        }
-
-        private static void DisableAction(InputActionReference actionReference)
-        {
-            actionReference?.action.Disable();
         }
     }
 }

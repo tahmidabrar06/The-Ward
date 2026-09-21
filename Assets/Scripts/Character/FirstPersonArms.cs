@@ -6,6 +6,11 @@ namespace TheWard.Character
     [RequireComponent(typeof(Animator)), DefaultExecutionOrder(200)]
     public sealed class FirstPersonArms : MonoBehaviour
     {
+        private const int ActionLayer = 1;
+        private const int LeftFingerLayer = 2;
+        private const float BlendInDuration = 0.06f;
+        private const float BlendOutDuration = 0.12f;
+
         [SerializeField] private WeaponController weapons;
         [SerializeField] private Transform view;
         [SerializeField] private Vector3 actionOffset = new Vector3(0f, 0.07f, -0.45f);
@@ -33,8 +38,7 @@ namespace TheWard.Character
             readyRigPosition = transform.localPosition;
             rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
             leftHand = animator.GetBoneTransform(HumanBodyBones.LeftHand);
-            PlayerBodyAnimator body = GetComponentInParent<WeaponController>()
-                .GetComponentInChildren<PlayerBodyAnimator>();
+            PlayerBodyAnimator body = weapons != null ? weapons.GetComponentInChildren<PlayerBodyAnimator>() : null;
             if (body != null) bodyAnimator = body.GetComponent<Animator>();
         }
 
@@ -76,11 +80,7 @@ namespace TheWard.Character
                 bodyAnimator.ResetTrigger(actionTrigger);
                 if (cancelled) bodyAnimator.SetTrigger(CancelAction);
             }
-            actionWeight = 0f;
-            transform.localPosition = readyRigPosition;
-            animator.SetLayerWeight(1, 0f);
-            animator.SetLayerWeight(2, 1f);
-            if (bodyAnimator != null) bodyAnimator.SetLayerWeight(1, 0f);
+            ApplyActionWeight(0f);
         }
 
         // These are called by events on the imported action clips.
@@ -100,15 +100,21 @@ namespace TheWard.Character
         private void Update()
         {
             animator.SetBool(HoldingGun, weapons != null && weapons.ActiveWeapon is GunWeapon);
-            AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(1);
+            AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(ActionLayer);
             float elapsed = state.shortNameHash == actionTrigger ? state.normalizedTime * actionDuration : 0f;
-            actionWeight = actionWeapon == null ? 0f : Mathf.SmoothStep(0f, 1f,
-                Mathf.Min(elapsed / 0.06f, (actionDuration - elapsed) / 0.12f));
+            float weight = actionWeapon == null ? 0f : Mathf.SmoothStep(0f, 1f,
+                Mathf.Min(elapsed / BlendInDuration, (actionDuration - elapsed) / BlendOutDuration));
+            ApplyActionWeight(weight);
+        }
+
+        private void ApplyActionWeight(float weight)
+        {
+            actionWeight = weight;
             transform.localPosition = readyRigPosition + actionOffset * actionWeight;
             // A zero-weight layer stops delivering events. Keep it active until completion.
-            animator.SetLayerWeight(1, actionWeapon != null ? Mathf.Max(0.001f, actionWeight) : 0f);
-            animator.SetLayerWeight(2, 1f - actionWeight);
-            if (bodyAnimator != null) bodyAnimator.SetLayerWeight(1, actionWeight);
+            animator.SetLayerWeight(ActionLayer, actionWeapon != null ? Mathf.Max(0.001f, actionWeight) : 0f);
+            animator.SetLayerWeight(LeftFingerLayer, 1f - actionWeight);
+            if (bodyAnimator != null) bodyAnimator.SetLayerWeight(ActionLayer, actionWeight);
         }
 
         private void LateUpdate()
@@ -147,7 +153,7 @@ namespace TheWard.Character
             position.z = Mathf.Max(0.42f, position.z);
             position.y = Mathf.Min(0.05f, position.y);
             SetHand(goal, view.TransformPoint(Vector3.Lerp(readyPosition, position, actionWeight)),
-                Quaternion.Slerp(view.rotation * readyRotation, hand.rotation * gripRotation, actionWeight), 1f);
+                Quaternion.Slerp(view.rotation * readyRotation, hand.rotation * gripRotation, actionWeight));
         }
 
         private void UpdateElbow(AvatarIKHint elbow, Vector3 offset)
@@ -158,7 +164,7 @@ namespace TheWard.Character
 
         private void UpdateHand(AvatarIKGoal hand, Transform grip)
         {
-            if (grip != null) SetHand(hand, grip.position, grip.rotation, 1f);
+            if (grip != null) SetHand(hand, grip.position, grip.rotation);
             else
             {
                 animator.SetIKPositionWeight(hand, 0f);
@@ -166,10 +172,10 @@ namespace TheWard.Character
             }
         }
 
-        private void SetHand(AvatarIKGoal hand, Vector3 position, Quaternion rotation, float weight)
+        private void SetHand(AvatarIKGoal hand, Vector3 position, Quaternion rotation)
         {
-            animator.SetIKPositionWeight(hand, weight);
-            animator.SetIKRotationWeight(hand, weight);
+            animator.SetIKPositionWeight(hand, 1f);
+            animator.SetIKRotationWeight(hand, 1f);
             animator.SetIKPosition(hand, position);
             animator.SetIKRotation(hand, rotation);
         }

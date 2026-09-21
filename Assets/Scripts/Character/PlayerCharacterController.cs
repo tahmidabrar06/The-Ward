@@ -20,14 +20,14 @@ namespace TheWard.Character
 
         private void OnEnable()
         {
-            EnableAction(moveAction);
-            EnableAction(sprintAction);
+            moveAction?.action.Enable();
+            sprintAction?.action.Enable();
         }
 
         private void OnDisable()
         {
-            DisableAction(moveAction);
-            DisableAction(sprintAction);
+            moveAction?.action.Disable();
+            sprintAction?.action.Disable();
         }
 
         private void Update()
@@ -40,16 +40,6 @@ namespace TheWard.Character
 
             Vector3 movement = horizontalMovement * speed;
             characterController.Move(movement * Time.deltaTime);
-        }
-
-        private static void EnableAction(InputActionReference actionReference)
-        {
-            actionReference?.action.Enable();
-        }
-
-        private static void DisableAction(InputActionReference actionReference)
-        {
-            actionReference?.action.Disable();
         }
     }
 }

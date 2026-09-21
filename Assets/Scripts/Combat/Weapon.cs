@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace TheWard.Combat
 {
-    // The controller and hand rig only need these shared references and actions.
     public abstract class Weapon : MonoBehaviour
     {
         [SerializeField] private string displayName = "Weapon";
@@ -56,9 +55,9 @@ namespace TheWard.Combat
         }
 
         public virtual void OnAnimationContact() { }
-        public virtual void OnAnimationComplete() => FinishAnimation(false);
+        public virtual void OnAnimationComplete() => FinishAnimation(cancelled: false);
 
-        protected void FinishAnimation(bool cancelled = true)
+        private void FinishAnimation(bool cancelled)
         {
             arms?.StopAction(this, cancelled);
             isAnimating = false;
@@ -74,7 +73,7 @@ namespace TheWard.Combat
         protected virtual void OnDisable()
         {
             StopAllCoroutines();
-            FinishAnimation();
+            FinishAnimation(cancelled: true);
         }
     }
 }
