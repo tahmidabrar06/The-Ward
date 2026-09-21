@@ -39,6 +39,11 @@ namespace TheWard.Combat
             EnableAction(nextWeaponAction);
         }
 
+        private void Start()
+        {
+            UpdateMovementStyle();
+        }
+
         private void OnDisable()
         {
             DisableAction(attackAction);
@@ -163,6 +168,7 @@ namespace TheWard.Combat
 
             activeWeaponIndex = index;
             ShowSelectedWeapon();
+            UpdateMovementStyle();
         }
 
         private UnifiedWeapon GetActiveWeapon()
@@ -184,6 +190,18 @@ namespace TheWard.Combat
                 {
                     weapons[index].gameObject.SetActive(index == activeWeaponIndex);
                 }
+            }
+        }
+
+        private void UpdateMovementStyle()
+        {
+            TheWard.Character.PlayerCharacterController player =
+                GetComponent<TheWard.Character.PlayerCharacterController>();
+            UnifiedWeapon activeWeapon = GetActiveWeapon();
+            if (player != null && activeWeapon != null)
+            {
+                player.SetMeleeLocomotion(activeWeapon.Mode == WeaponMode.Melee);
+                player.SetGunEquipped(activeWeapon.Mode == WeaponMode.Firearm);
             }
         }
 

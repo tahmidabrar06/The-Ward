@@ -26,8 +26,15 @@ namespace TheWard.Combat
         [SerializeField] private int startingReserveAmmo = 48;
         [SerializeField] private ParticleSystem muzzleFlash;
         [SerializeField] private GameObject bulletImpactPrefab;
+        [SerializeField] private float gunRecoilDistance = 0.05f;
+        [SerializeField] private float gunRecoilAngle = 6f;
+        [SerializeField] private bool showShotTracer = true;
+        [SerializeField] private bool aimHeldGunAtCrosshair = true;
+        [SerializeField] private bool muzzlePointsBackward;
 
         [Header("Bat Settings")]
+        [SerializeField] private bool playBatStrike;
+        [SerializeField] private bool playSwordSlash;
         [SerializeField] private float meleeRadius = 0.75f;
         [SerializeField] private Vector3 meleeSwingEuler = new Vector3(55f, -20f, -25f);
         [SerializeField] private float meleeSwingDuration = 0.25f;
@@ -41,12 +48,11 @@ namespace TheWard.Combat
         [SerializeField] private float explosionForce = 650f;
         [SerializeField] private float explosionDamage = 90f;
         [SerializeField] private GameObject explosionEffectPrefab;
+        [SerializeField, Min(0f)] private float grenadeReleaseDelay = 0.9f;
 
         [Header("Simple View Animations")]
         [SerializeField] private Vector3 grenadeChargeOffset = new Vector3(0f, -0.08f, -0.12f);
         [SerializeField] private Vector3 grenadeChargeEuler = new Vector3(18f, 0f, -12f);
-        [SerializeField] private Vector3 grenadeReleaseOffset = new Vector3(0f, 0.04f, 0.18f);
-        [SerializeField] private float grenadeReleaseDuration = 0.2f;
 
         private float nextAttackTime;
         private float chargeStartTime;
@@ -55,8 +61,11 @@ namespace TheWard.Combat
         private int reserveAmmo;
         private Vector3 startingPosition;
         private Quaternion startingRotation;
+        private Coroutine recoilRoutine;
+        private Material tracerMaterial;
 
         public string DisplayName => displayName;
+        public WeaponMode Mode => mode;
         public int Ammo => ammo;
         public int ReserveAmmo => reserveAmmo;
 
@@ -66,6 +75,18 @@ namespace TheWard.Combat
             reserveAmmo = startingReserveAmmo;
             startingPosition = transform.localPosition;
             startingRotation = transform.localRotation;
+        }
+
+        private void LateUpdate()
+        {
+            // The animated hand controls the gun's position, but the gun barrel
+            // must still follow the camera aim. These two models face opposite
+            // directions in their source files, hence muzzlePointsBackward.
+            if (mode != WeaponMode.Firearm || !aimHeldGunAtCrosshair || attackOrigin == null)
+                return;
+
+            Vector3 forward = muzzlePointsBackward ? -attackOrigin.forward : attackOrigin.forward;
+            transform.rotation = Quaternion.LookRotation(forward, attackOrigin.up);
         }
 
         // The weapon controller calls this method every frame.
@@ -116,7 +137,28 @@ namespace TheWard.Combat
             else if (mode == WeaponMode.Melee)
             {
                 MeleeAttack();
-                StartCoroutine(SwingBat());
+                // A weapon held by the animated hand follows the arm swing.
+                // Do not rotate it a second time or the strike looks exaggerated.
+                if (playBatStrike)
+                {
+                    // The player owns the Animator so movement and attacks cannot compete.
+                    TheWard.Character.PlayerCharacterController player =
+                        transform.root.GetComponent<TheWard.Character.PlayerCharacterController>();
+                    if (player != null)
+                    {
+                        player.PlayAttackAnimation();
+                    }
+                }
+                else if (playSwordSlash)
+                {
+                    TheWard.Character.PlayerCharacterController player =
+                        transform.root.GetComponent<TheWard.Character.PlayerCharacterController>();
+                    if (player != null) player.PlaySwordSlash();
+                }
+                else
+                {
+                    StartCoroutine(SwingBat());
+                }
             }
         }
 
@@ -128,18 +170,43 @@ namespace TheWard.Combat
             Vector2 spread = Random.insideUnitCircle * spreadDegrees;
             Vector3 direction = Quaternion.Euler(-spread.y, spread.x, 0f) * origin.forward;
 
-            RaycastHit hit;
-            bool hitSomething = Physics.Raycast(
-                origin.position,
-                direction,
-                out hit,
-                range,
-                hitMask,
+            // Ignore the player's capsule and the gun itself. A held model can
+            // sit in front of the camera and otherwise absorb every shot.
+            RaycastHit hit = default;
+            bool hitSomething = false;
+            float nearestDistance = range;
+            RaycastHit[] candidates = Physics.RaycastAll(
+                origin.position, direction, range, hitMask,
                 QueryTriggerInteraction.Ignore);
+            foreach (RaycastHit candidate in candidates)
+            {
+                if (candidate.collider.transform.root == transform.root ||
+                    candidate.distance >= nearestDistance)
+                {
+                    continue;
+                }
+
+                hit = candidate;
+                nearestDistance = candidate.distance;
+                hitSomething = true;
+            }
 
             if (muzzleFlash != null)
             {
                 muzzleFlash.Play();
+            }
+
+            TheWard.Character.PlayerCharacterController player =
+                transform.root.GetComponent<TheWard.Character.PlayerCharacterController>();
+            if (player != null) player.PlayGunShot(triggerMode == TriggerMode.HoldAutomatic);
+            if (recoilRoutine != null) StopCoroutine(recoilRoutine);
+            recoilRoutine = StartCoroutine(GunRecoil());
+
+            // A raycast applies damage instantly, so show where the shot went.
+            if (showShotTracer)
+            {
+                Vector3 endPoint = hitSomething ? hit.point : origin.position + direction * range;
+                ShowShotTracer(origin, endPoint);
             }
 
             if (!hitSomething)
@@ -224,6 +291,19 @@ namespace TheWard.Combat
             float chargeAmount = Mathf.Clamp01(chargeTime / maximumChargeTime);
             float throwForce = Mathf.Lerp(minimumThrowForce, maximumThrowForce, chargeAmount);
 
+            // Start the arm motion now, but wait for its release pose before spawning.
+            TheWard.Character.PlayerCharacterController player =
+                transform.root.GetComponent<TheWard.Character.PlayerCharacterController>();
+            if (player != null) player.PlayGrenadeThrow();
+            ResetWeaponTransform();
+            nextAttackTime = Time.time + Mathf.Max(cooldown, grenadeReleaseDelay + 0.8f);
+            StartCoroutine(SpawnGrenadeAfterWindup(throwForce));
+        }
+
+        private IEnumerator SpawnGrenadeAfterWindup(float throwForce)
+        {
+            yield return new WaitForSeconds(grenadeReleaseDelay);
+
             Transform origin = attackOrigin != null ? attackOrigin : transform;
             Vector3 spawnPosition = origin.position + origin.forward * 0.4f;
             GameObject grenade = Instantiate(grenadePrefab, spawnPosition, origin.rotation);
@@ -258,8 +338,6 @@ namespace TheWard.Combat
             Vector3 throwDirection = (origin.forward + Vector3.up * 0.18f).normalized;
             grenadeBody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
 
-            nextAttackTime = Time.time + cooldown;
-            StartCoroutine(ReleaseGrenadeAnimation());
         }
 
         public void Reload()
@@ -274,6 +352,10 @@ namespace TheWard.Combat
 
             ammo += bulletsToLoad;
             reserveAmmo -= bulletsToLoad;
+
+            TheWard.Character.PlayerCharacterController player =
+                transform.root.GetComponent<TheWard.Character.PlayerCharacterController>();
+            if (player != null) player.PlayGunReload();
         }
 
         private IEnumerator SwingBat()
@@ -285,6 +367,53 @@ namespace TheWard.Combat
             yield return RotateWeapon(swingRotation, startingRotation, halfTime);
 
             transform.localRotation = startingRotation;
+        }
+
+        private IEnumerator GunRecoil()
+        {
+            // The arm clip animates the player; this short motion makes the gun
+            // itself visibly kick on each shot, including automatic fire.
+            Vector3 kickedPosition = startingPosition + Vector3.back * gunRecoilDistance;
+            Quaternion kickedRotation = startingRotation * Quaternion.Euler(-gunRecoilAngle, 0f, 0f);
+            transform.localPosition = kickedPosition;
+            if (!aimHeldGunAtCrosshair) transform.localRotation = kickedRotation;
+
+            float timer = 0f;
+            while (timer < 0.12f)
+            {
+                timer += Time.deltaTime;
+                float amount = Mathf.Clamp01(timer / 0.12f);
+                transform.localPosition = Vector3.Lerp(kickedPosition, startingPosition, amount);
+                if (!aimHeldGunAtCrosshair)
+                    transform.localRotation = Quaternion.Slerp(kickedRotation, startingRotation, amount);
+                yield return null;
+            }
+
+            ResetWeaponTransform();
+            recoilRoutine = null;
+        }
+
+        private void ShowShotTracer(Transform origin, Vector3 endPoint)
+        {
+            if (tracerMaterial == null)
+            {
+                Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
+                if (shader == null) return;
+                tracerMaterial = new Material(shader);
+                tracerMaterial.color = new Color(1f, 0.85f, 0.25f);
+            }
+
+            GameObject tracer = new GameObject("Shot Tracer");
+            LineRenderer line = tracer.AddComponent<LineRenderer>();
+            line.sharedMaterial = tracerMaterial;
+            line.positionCount = 2;
+            line.startWidth = 0.018f;
+            line.endWidth = 0.003f;
+            line.startColor = Color.yellow;
+            line.endColor = Color.yellow;
+            line.SetPosition(0, origin.position + origin.right * 0.22f - origin.up * 0.14f + origin.forward * 0.35f);
+            line.SetPosition(1, endPoint);
+            Destroy(tracer, 0.08f);
         }
 
         private IEnumerator RotateWeapon(Quaternion from, Quaternion to, float duration)
@@ -315,36 +444,17 @@ namespace TheWard.Combat
                 chargeAmount);
         }
 
-        private IEnumerator ReleaseGrenadeAnimation()
-        {
-            Vector3 chargedPosition = transform.localPosition;
-            Vector3 releasePosition = startingPosition + grenadeReleaseOffset;
-            float halfTime = grenadeReleaseDuration / 2f;
-            float timer = 0f;
-
-            while (timer < halfTime)
-            {
-                timer += Time.deltaTime;
-                transform.localPosition = Vector3.Lerp(chargedPosition, releasePosition, timer / halfTime);
-                yield return null;
-            }
-
-            timer = 0f;
-            while (timer < halfTime)
-            {
-                timer += Time.deltaTime;
-                transform.localPosition = Vector3.Lerp(releasePosition, startingPosition, timer / halfTime);
-                yield return null;
-            }
-
-            ResetWeaponTransform();
-        }
-
         private void OnDisable()
         {
             StopAllCoroutines();
+            recoilRoutine = null;
             isCharging = false;
             ResetWeaponTransform();
+        }
+
+        private void OnDestroy()
+        {
+            if (tracerMaterial != null) Destroy(tracerMaterial);
         }
 
         private void ResetWeaponTransform()
