@@ -15,7 +15,6 @@ namespace TheWard.Character
         [SerializeField, Min(0)] private int extraAirJumps = 1;
         [SerializeField] private float gravity = -20f;
 
-        // These names match the parameters in PlayerAnimator.controller.
         private static readonly int MovingHash = Animator.StringToHash("Moving");
         private static readonly int RunningHash = Animator.StringToHash("Running");
         private static readonly int MeleeEquippedHash = Animator.StringToHash("MeleeEquipped");
@@ -75,7 +74,6 @@ namespace TheWard.Character
 
         private void Update()
         {
-            // Read WASD input and move relative to the direction the player faces.
             Vector2 input = moveAction != null ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
             Vector3 horizontalMovement = transform.right * input.x + transform.forward * input.y;
             horizontalMovement = Vector3.ClampMagnitude(horizontalMovement, 1f);
@@ -89,7 +87,6 @@ namespace TheWard.Character
                 airJumpsRemaining = extraAirJumps;
             }
 
-            // The first jump works on the ground. One extra jump works in the air.
             if (jumpAction != null && jumpAction.action.WasPressedThisFrame() &&
                 (characterController.isGrounded || airJumpsRemaining > 0))
             {
@@ -100,7 +97,6 @@ namespace TheWard.Character
                 }
             }
 
-            // Gravity and horizontal movement are sent to the CharacterController together.
             verticalVelocity += gravity * Time.deltaTime;
             Vector3 movement = horizontalMovement * speed;
             movement.y = verticalVelocity;
@@ -109,7 +105,6 @@ namespace TheWard.Character
             UpdateAnimation(horizontalMovement.sqrMagnitude > 0.01f, sprinting);
         }
 
-        // Called by the baseball bat when the player attacks.
         public void PlayAttackAnimation()
         {
             if (characterAnimator == null)
@@ -128,7 +123,6 @@ namespace TheWard.Character
             // one recoil finish rather than restarting it for every bullet.
             if (!automatic)
             {
-                // Blend into the pistol pose instead of snapping the whole upper body.
                 characterAnimator.CrossFadeInFixedTime(ShootingStateHash, 0.12f, 1, 0f);
                 return;
             }
@@ -164,7 +158,6 @@ namespace TheWard.Character
                 return;
             }
 
-            // The Animator Controller uses these values to change states.
             characterAnimator.SetBool(MovingHash, moving);
             characterAnimator.SetBool(RunningHash, moving && sprinting);
 

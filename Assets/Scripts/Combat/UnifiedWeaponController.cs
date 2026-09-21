@@ -1,9 +1,9 @@
+using TheWard.Character;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace TheWard.Combat
 {
-    // This component reads player input and sends it to the equipped weapon.
     public class UnifiedWeaponController : MonoBehaviour
     {
         [Header("Input Actions")]
@@ -16,23 +16,23 @@ namespace TheWard.Combat
         [SerializeField] private UnifiedWeapon[] weapons;
         [SerializeField] private int startingWeaponIndex;
 
+        private PlayerCharacterController player;
         private int activeWeaponIndex;
 
         private void Awake()
         {
+            player = GetComponent<PlayerCharacterController>();
             if (weapons == null || weapons.Length == 0)
             {
                 return;
             }
 
-            // Make sure the starting number fits inside the weapons array.
             activeWeaponIndex = Mathf.Clamp(startingWeaponIndex, 0, weapons.Length - 1);
             ShowSelectedWeapon();
         }
 
         private void OnEnable()
         {
-            // Unity Input Actions only work while they are enabled.
             EnableAction(attackAction);
             EnableAction(reloadAction);
             EnableAction(previousWeaponAction);
@@ -72,8 +72,6 @@ namespace TheWard.Combat
             bool held = attackAction.action.IsPressed();
             bool released = attackAction.action.WasReleasedThisFrame();
 
-            // Different weapons use these values differently. For example,
-            // the machine gun uses held and the grenade uses released.
             activeWeapon.HandleInput(pressed, held, released);
         }
 
@@ -102,7 +100,6 @@ namespace TheWard.Combat
                 ChangeWeapon(1);
             }
 
-            // Number keys select a weapon directly.
             Keyboard keyboard = Keyboard.current;
             if (keyboard == null)
             {
@@ -138,24 +135,12 @@ namespace TheWard.Combat
                 return;
             }
 
-            int newIndex = activeWeaponIndex + direction;
-
-            // Wrap around when moving past either end of the list.
-            if (newIndex < 0)
-            {
-                newIndex = weapons.Length - 1;
-            }
-            else if (newIndex >= weapons.Length)
-            {
-                newIndex = 0;
-            }
-
+            int newIndex = (activeWeaponIndex + direction + weapons.Length) % weapons.Length;
             SelectWeapon(newIndex);
         }
 
         public void SelectWeapon(int index)
         {
-            // Ignore invalid weapon numbers.
             if (weapons == null || index < 0 || index >= weapons.Length)
             {
                 return;
@@ -183,7 +168,6 @@ namespace TheWard.Combat
 
         private void ShowSelectedWeapon()
         {
-            // Hide every weapon except the selected one.
             for (int index = 0; index < weapons.Length; index++)
             {
                 if (weapons[index] != null)
@@ -195,8 +179,6 @@ namespace TheWard.Combat
 
         private void UpdateMovementStyle()
         {
-            TheWard.Character.PlayerCharacterController player =
-                GetComponent<TheWard.Character.PlayerCharacterController>();
             UnifiedWeapon activeWeapon = GetActiveWeapon();
             if (player != null && activeWeapon != null)
             {
@@ -205,20 +187,14 @@ namespace TheWard.Combat
             }
         }
 
-        private void EnableAction(InputActionReference actionReference)
+        private static void EnableAction(InputActionReference actionReference)
         {
-            if (actionReference != null)
-            {
-                actionReference.action.Enable();
-            }
+            actionReference?.action.Enable();
         }
 
-        private void DisableAction(InputActionReference actionReference)
+        private static void DisableAction(InputActionReference actionReference)
         {
-            if (actionReference != null)
-            {
-                actionReference.action.Disable();
-            }
+            actionReference?.action.Disable();
         }
     }
 }

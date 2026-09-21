@@ -1,12 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using TheWard.Character;
 
 namespace TheWard.Combat
 {
     public enum WeaponMode { Firearm, Melee, Grenade }
     public enum TriggerMode { PressOnce, HoldAutomatic }
 
-    // One simple weapon script is used for the pistol, machine gun, bat and grenade.
     public class UnifiedWeapon : MonoBehaviour
     {
         [Header("Basic Weapon Settings")]
@@ -32,7 +32,7 @@ namespace TheWard.Combat
         [SerializeField] private bool aimHeldGunAtCrosshair = true;
         [SerializeField] private bool muzzlePointsBackward;
 
-        [Header("Bat Settings")]
+        [Header("Melee Settings")]
         [SerializeField] private bool playBatStrike;
         [SerializeField] private bool playSwordSlash;
         [SerializeField] private float meleeRadius = 0.75f;
@@ -50,10 +50,11 @@ namespace TheWard.Combat
         [SerializeField] private GameObject explosionEffectPrefab;
         [SerializeField, Min(0f)] private float grenadeReleaseDelay = 0.9f;
 
-        [Header("Simple View Animations")]
+        [Header("View Animation")]
         [SerializeField] private Vector3 grenadeChargeOffset = new Vector3(0f, -0.08f, -0.12f);
         [SerializeField] private Vector3 grenadeChargeEuler = new Vector3(18f, 0f, -12f);
 
+        private PlayerCharacterController player;
         private float nextAttackTime;
         private float chargeStartTime;
         private bool isCharging;
@@ -71,6 +72,7 @@ namespace TheWard.Combat
 
         private void Awake()
         {
+            player = GetComponentInParent<PlayerCharacterController>();
             ammo = magazineSize;
             reserveAmmo = startingReserveAmmo;
             startingPosition = transform.localPosition;
@@ -89,7 +91,6 @@ namespace TheWard.Combat
             transform.rotation = Quaternion.LookRotation(forward, attackOrigin.up);
         }
 
-        // The weapon controller calls this method every frame.
         public void HandleInput(bool pressed, bool held, bool released)
         {
             if (mode == WeaponMode.Grenade)
@@ -98,16 +99,7 @@ namespace TheWard.Combat
                 return;
             }
 
-            bool shouldAttack = false;
-
-            if (triggerMode == TriggerMode.PressOnce && pressed)
-            {
-                shouldAttack = true;
-            }
-            else if (triggerMode == TriggerMode.HoldAutomatic && held)
-            {
-                shouldAttack = true;
-            }
+            bool shouldAttack = triggerMode == TriggerMode.HoldAutomatic ? held : pressed;
 
             if (shouldAttack)
             {
@@ -141,9 +133,6 @@ namespace TheWard.Combat
                 // Do not rotate it a second time or the strike looks exaggerated.
                 if (playBatStrike)
                 {
-                    // The player owns the Animator so movement and attacks cannot compete.
-                    TheWard.Character.PlayerCharacterController player =
-                        transform.root.GetComponent<TheWard.Character.PlayerCharacterController>();
                     if (player != null)
                     {
                         player.PlayAttackAnimation();
@@ -151,8 +140,6 @@ namespace TheWard.Combat
                 }
                 else if (playSwordSlash)
                 {
-                    TheWard.Character.PlayerCharacterController player =
-                        transform.root.GetComponent<TheWard.Character.PlayerCharacterController>();
                     if (player != null) player.PlaySwordSlash();
                 }
                 else
@@ -166,7 +153,6 @@ namespace TheWard.Combat
         {
             Transform origin = attackOrigin != null ? attackOrigin : transform;
 
-            // The random angle gives the machine gun its spread.
             Vector2 spread = Random.insideUnitCircle * spreadDegrees;
             Vector3 direction = Quaternion.Euler(-spread.y, spread.x, 0f) * origin.forward;
 
@@ -196,13 +182,10 @@ namespace TheWard.Combat
                 muzzleFlash.Play();
             }
 
-            TheWard.Character.PlayerCharacterController player =
-                transform.root.GetComponent<TheWard.Character.PlayerCharacterController>();
             if (player != null) player.PlayGunShot(triggerMode == TriggerMode.HoldAutomatic);
             if (recoilRoutine != null) StopCoroutine(recoilRoutine);
             recoilRoutine = StartCoroutine(GunRecoil());
 
-            // A raycast applies damage instantly, so show where the shot went.
             if (showShotTracer)
             {
                 Vector3 endPoint = hitSomething ? hit.point : origin.position + direction * range;
@@ -214,14 +197,12 @@ namespace TheWard.Combat
                 return;
             }
 
-            // Damage the enemy if it has a Health component.
             Health enemyHealth = hit.collider.GetComponentInParent<Health>();
             if (enemyHealth != null && enemyHealth.transform.root != transform.root)
             {
                 enemyHealth.TakeDamage(damage);
             }
 
-            // Push barrels and other physics objects.
             if (hit.rigidbody != null)
             {
                 hit.rigidbody.AddForceAtPosition(direction * impactForce, hit.point, ForceMode.Impulse);
@@ -292,8 +273,6 @@ namespace TheWard.Combat
             float throwForce = Mathf.Lerp(minimumThrowForce, maximumThrowForce, chargeAmount);
 
             // Start the arm motion now, but wait for its release pose before spawning.
-            TheWard.Character.PlayerCharacterController player =
-                transform.root.GetComponent<TheWard.Character.PlayerCharacterController>();
             if (player != null) player.PlayGrenadeThrow();
             ResetWeaponTransform();
             nextAttackTime = Time.time + Mathf.Max(cooldown, grenadeReleaseDelay + 0.8f);
@@ -352,9 +331,6 @@ namespace TheWard.Combat
 
             ammo += bulletsToLoad;
             reserveAmmo -= bulletsToLoad;
-
-            TheWard.Character.PlayerCharacterController player =
-                transform.root.GetComponent<TheWard.Character.PlayerCharacterController>();
             if (player != null) player.PlayGunReload();
         }
 
