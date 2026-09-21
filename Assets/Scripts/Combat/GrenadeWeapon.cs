@@ -19,9 +19,9 @@ namespace TheWard.Combat
         [SerializeField] private GameObject explosionEffectPrefab;
 
         [Header("Throw Animation")]
-        [SerializeField, Min(0f)] private float grenadeReleaseDelay = 0.9f;
-        [SerializeField] private Vector3 grenadeChargeOffset = new Vector3(0f, -0.08f, -0.12f);
-        [SerializeField] private Vector3 grenadeChargeEuler = new Vector3(18f, 0f, -12f);
+        [SerializeField, Min(0f)] private float grenadeReleaseDelay = 0.45f;
+        [SerializeField] private AnimationClip throwAnimation;
+        [SerializeField, Min(0.1f)] private float throwDuration = 0.8f;
 
         private float nextAttackTime;
         private float chargeStartTime;
@@ -41,11 +41,6 @@ namespace TheWard.Combat
             {
                 chargeStartTime = Time.time;
                 isCharging = true;
-            }
-
-            if (held && isCharging)
-            {
-                ShowGrenadeCharge();
             }
 
             if (released && isCharging)
@@ -68,15 +63,14 @@ namespace TheWard.Combat
             float chargeAmount = Mathf.Clamp01(chargeTime / maximumChargeTime);
             float throwForce = Mathf.Lerp(minimumThrowForce, maximumThrowForce, chargeAmount);
 
-            nextAttackTime = Time.time + Mathf.Max(cooldown, grenadeReleaseDelay + 0.35f);
+            nextAttackTime = Time.time + Mathf.Max(cooldown, throwDuration);
             StartCoroutine(SpawnGrenadeAfterWindup(throwForce));
         }
 
         private IEnumerator SpawnGrenadeAfterWindup(float throwForce)
         {
-            isAnimating = true;
-            Vector3 releasePosition = startingPosition + new Vector3(-0.04f, 0.10f, 0.12f);
-            yield return MoveWeapon(releasePosition, startingRotation * Quaternion.Euler(-25f, 0f, 0f), grenadeReleaseDelay);
+            PlayAnimation(throwAnimation, throwDuration);
+            yield return new WaitForSeconds(grenadeReleaseDelay);
             SetGrenadeVisible(false);
 
             Transform origin = attackOrigin != null ? attackOrigin : transform;
@@ -112,26 +106,9 @@ namespace TheWard.Combat
             grenadeBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             Vector3 throwDirection = (origin.forward + Vector3.up * 0.18f).normalized;
             grenadeBody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
-            yield return MoveWeapon(startingPosition, startingRotation, 0.3f);
+            yield return new WaitForSeconds(Mathf.Max(0f, throwDuration - grenadeReleaseDelay));
             SetGrenadeVisible(true);
-            isAnimating = false;
-
-        }
-
-        private void ShowGrenadeCharge()
-        {
-            float chargeTime = Time.time - chargeStartTime;
-            float chargeAmount = Mathf.Clamp01(chargeTime / maximumChargeTime);
-
-            transform.localPosition = Vector3.Lerp(
-                startingPosition,
-                startingPosition + grenadeChargeOffset,
-                chargeAmount);
-
-            transform.localRotation = Quaternion.Lerp(
-                startingRotation,
-                startingRotation * Quaternion.Euler(grenadeChargeEuler),
-                chargeAmount);
+            FinishAnimation();
         }
 
         private void SetGrenadeVisible(bool visible)

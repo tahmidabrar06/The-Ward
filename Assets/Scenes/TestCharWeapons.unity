@@ -1070,6 +1070,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.FirstPersonArms
   weapons: {fileID: 1576639933}
   view: {fileID: 73656928}
+  actionOffset: {x: 0, y: 0.07, z: -0.45}
 --- !u!1 &381541079
 GameObject:
   m_ObjectHideFlags: 0
@@ -1234,14 +1235,15 @@ MonoBehaviour:
   leftHandGrip: {fileID: 1663679276}
   attackOrigin: {fileID: 73656928}
   damage: 30
-  cooldown: 0.35
+  cooldown: 0.5
   range: 2
   meleeRadius: 0.75
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  meleeSwingEuler: {x: 55, y: -20, z: -25}
-  meleeSwingDuration: 0.25
+  swingAnimation: {fileID: -203655887218126122, guid: 7531e54eba70a4583968a72b2e0752a5, type: 3}
+  hitDelay: 0.19
+  meleeSwingDuration: 0.5
 --- !u!43 &677239601
 Mesh:
   m_ObjectHideFlags: 0
@@ -1486,9 +1488,9 @@ MonoBehaviour:
   explosionForce: 650
   explosionDamage: 90
   explosionEffectPrefab: {fileID: 1998830269065593993, guid: b70fbea4bc8994749ba52e4f560f9f28, type: 3}
-  grenadeReleaseDelay: 0.22
-  grenadeChargeOffset: {x: 0, y: -0.03, z: -0.03}
-  grenadeChargeEuler: {x: 18, y: 0, z: -12}
+  grenadeReleaseDelay: 0.45
+  throwAnimation: {fileID: -203655887218126122, guid: 550dfd97d0a6641c3a3643d5d88a3207, type: 3}
+  throwDuration: 0.8
 --- !u!1 &1104831218
 GameObject:
   m_ObjectHideFlags: 0
@@ -2243,9 +2245,8 @@ MonoBehaviour:
   showShotTracer: 1
   gunRecoilDistance: 0.025
   gunRecoilAngle: 3
-  reloadDuration: 1.1
-  reloadEuler: {x: -12, y: 0, z: -20}
-  reloadHandOffset: {x: 0, y: -0.12, z: 0}
+  reloadDuration: 1.65
+  reloadAnimation: {fileID: -203655887218126122, guid: 9e462109982ff437f80d5063de447b38, type: 3}
 --- !u!1 &1712486025 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6705367872142520749, guid: b2c2eaa77adbe704690e52a50768f2a8, type: 3}
@@ -2273,14 +2274,15 @@ MonoBehaviour:
   leftHandGrip: {fileID: 1104831219}
   attackOrigin: {fileID: 73656928}
   damage: 15
-  cooldown: 0.45
+  cooldown: 0.55
   range: 2
   meleeRadius: 0.75
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  meleeSwingEuler: {x: 55, y: -20, z: -25}
-  meleeSwingDuration: 0.4
+  swingAnimation: {fileID: -203655887218126122, guid: 4ee593ee845484ba7878f23f73e2b8d3, type: 3}
+  hitDelay: 0.18
+  meleeSwingDuration: 0.55
 --- !u!1 &1801174388 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 6f966b9a7c817ed49973b4a8762cbbdf, type: 3}
@@ -2318,9 +2320,8 @@ MonoBehaviour:
   showShotTracer: 1
   gunRecoilDistance: 0.025
   gunRecoilAngle: 3
-  reloadDuration: 1.5
-  reloadEuler: {x: 8, y: 0, z: 16}
-  reloadHandOffset: {x: 0, y: -0.12, z: 0.12}
+  reloadDuration: 1.9
+  reloadAnimation: {fileID: -203655887218126122, guid: 9e462109982ff437f80d5063de447b38, type: 3}
 --- !u!1 &1862565082
 GameObject:
   m_ObjectHideFlags: 0
@@ -5756,7 +5757,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 918b3969164a94c1dbb43529064068b0, type: 3}
   m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.FirstPersonLegs
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.PlayerBodyAnimator
 --- !u!1 &7726507193675549705
 GameObject:
   m_ObjectHideFlags: 0

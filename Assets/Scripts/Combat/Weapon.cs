@@ -1,4 +1,4 @@
-using System.Collections;
+using TheWard.Character;
 using UnityEngine;
 
 namespace TheWard.Combat
@@ -14,6 +14,7 @@ namespace TheWard.Combat
         protected Vector3 startingPosition;
         protected Quaternion startingRotation;
         protected bool isAnimating;
+        private FirstPersonArms arms;
 
         public string DisplayName => displayName;
         public Transform RightHandGrip => rightHandGrip;
@@ -27,6 +28,7 @@ namespace TheWard.Combat
             AimCamera = attackOrigin != null
                 ? attackOrigin.GetComponent<Camera>()
                 : GetComponentInParent<Camera>();
+            if (AimCamera != null) arms = AimCamera.GetComponentInChildren<FirstPersonArms>();
             startingPosition = transform.localPosition;
             startingRotation = transform.localRotation;
         }
@@ -41,20 +43,17 @@ namespace TheWard.Combat
                 : new Ray(Origin.position, Origin.forward);
         }
 
-        protected IEnumerator MoveWeapon(Vector3 position, Quaternion rotation, float duration)
+        protected void PlayAnimation(AnimationClip clip, float duration)
         {
-            Vector3 fromPosition = transform.localPosition;
-            Quaternion fromRotation = transform.localRotation;
-            float elapsed = 0f;
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
-                transform.localPosition = Vector3.Lerp(fromPosition, position, t);
-                transform.localRotation = Quaternion.Slerp(fromRotation, rotation, t);
-                yield return null;
-            }
-            transform.SetLocalPositionAndRotation(position, rotation);
+            isAnimating = true;
+            arms?.PlayAction(this, clip, duration);
+        }
+
+        protected void FinishAnimation()
+        {
+            arms?.StopAction(this);
+            isAnimating = false;
+            ResetWeaponTransform();
         }
 
         protected void ResetWeaponTransform()
@@ -66,8 +65,7 @@ namespace TheWard.Combat
         protected virtual void OnDisable()
         {
             StopAllCoroutines();
-            isAnimating = false;
-            ResetWeaponTransform();
+            FinishAnimation();
         }
     }
 }

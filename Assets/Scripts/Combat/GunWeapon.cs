@@ -25,13 +25,11 @@ namespace TheWard.Combat
         [SerializeField] private float gunRecoilDistance = 0.05f;
         [SerializeField] private float gunRecoilAngle = 6f;
         [SerializeField, Min(0.1f)] private float reloadDuration = 1.2f;
-        [SerializeField] private Vector3 reloadEuler = new Vector3(-12f, 0f, -20f);
-        [SerializeField] private Vector3 reloadHandOffset = new Vector3(0f, -0.12f, 0f);
+        [SerializeField] private AnimationClip reloadAnimation;
 
         private int ammo;
         private int reserveAmmo;
         private float nextAttackTime;
-        private Vector3 startingLeftGrip;
         private Coroutine recoilRoutine;
         private Material tracerMaterial;
 
@@ -43,7 +41,6 @@ namespace TheWard.Combat
             base.Awake();
             ammo = magazineSize;
             reserveAmmo = startingReserveAmmo;
-            if (leftHandGrip != null) startingLeftGrip = leftHandGrip.localPosition;
         }
 
         public override void HandleInput(bool pressed, bool held, bool released)
@@ -134,27 +131,14 @@ namespace TheWard.Combat
 
         private IEnumerator ReloadWeapon()
         {
-            isAnimating = true;
-            yield return MoveWeapon(startingPosition + Vector3.down * 0.025f,
-                startingRotation * Quaternion.Euler(reloadEuler), reloadDuration * 0.2f);
-            float elapsed = 0f;
-            float handDuration = reloadDuration * 0.6f;
-            while (elapsed < handDuration)
-            {
-                elapsed += Time.deltaTime;
-                float reach = Mathf.Sin(Mathf.Clamp01(elapsed / handDuration) * Mathf.PI);
-                if (leftHandGrip != null)
-                    leftHandGrip.localPosition = startingLeftGrip + reloadHandOffset * reach;
-                yield return null;
-            }
-            if (leftHandGrip != null) leftHandGrip.localPosition = startingLeftGrip;
-            yield return MoveWeapon(startingPosition, startingRotation, reloadDuration * 0.2f);
+            PlayAnimation(reloadAnimation, reloadDuration);
+            yield return new WaitForSeconds(reloadDuration);
             int bulletsNeeded = magazineSize - ammo;
             int bulletsToLoad = Mathf.Min(bulletsNeeded, reserveAmmo);
 
             ammo += bulletsToLoad;
             reserveAmmo -= bulletsToLoad;
-            isAnimating = false;
+            FinishAnimation();
         }
 
         private IEnumerator GunRecoil()
@@ -210,7 +194,6 @@ namespace TheWard.Combat
         {
             base.OnDisable();
             recoilRoutine = null;
-            if (leftHandGrip != null) leftHandGrip.localPosition = startingLeftGrip;
         }
     }
 }

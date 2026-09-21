@@ -13,7 +13,8 @@ namespace TheWard.Combat
         [SerializeField] private LayerMask hitMask = ~0;
 
         [Header("Swing")]
-        [SerializeField] private Vector3 meleeSwingEuler = new Vector3(55f, -20f, -25f);
+        [SerializeField] private AnimationClip swingAnimation;
+        [SerializeField, Min(0f)] private float hitDelay = 0.15f;
         [SerializeField, Min(0.01f)] private float meleeSwingDuration = 0.25f;
 
         private float nextAttackTime;
@@ -27,13 +28,11 @@ namespace TheWard.Combat
 
         private IEnumerator Swing()
         {
-            isAnimating = true;
-            Quaternion swingRotation = startingRotation * Quaternion.Euler(meleeSwingEuler);
-            // A quick strike followed by recovery keeps contact close to the click.
-            yield return MoveWeapon(startingPosition, swingRotation, meleeSwingDuration * 0.25f);
+            PlayAnimation(swingAnimation, meleeSwingDuration);
+            yield return new WaitForSeconds(hitDelay);
             Hit();
-            yield return MoveWeapon(startingPosition, startingRotation, meleeSwingDuration * 0.75f);
-            isAnimating = false;
+            yield return new WaitForSeconds(Mathf.Max(0f, meleeSwingDuration - hitDelay));
+            FinishAnimation();
         }
 
         private void Hit()
