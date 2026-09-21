@@ -1200,8 +1200,6 @@ MonoBehaviour:
   showShotTracer: 1
   aimHeldGunAtCrosshair: 0
   muzzlePointsBackward: 0
-  playBatStrike: 0
-  playSwordSlash: 0
   meleeRadius: 0.75
   meleeSwingEuler: {x: 55, y: -20, z: -25}
   meleeSwingDuration: 0.25
@@ -1439,8 +1437,6 @@ MonoBehaviour:
   showShotTracer: 1
   aimHeldGunAtCrosshair: 0
   muzzlePointsBackward: 0
-  playBatStrike: 0
-  playSwordSlash: 0
   meleeRadius: 0.75
   meleeSwingEuler: {x: 55, y: -20, z: -25}
   meleeSwingDuration: 0.25
@@ -2180,8 +2176,6 @@ MonoBehaviour:
   showShotTracer: 1
   aimHeldGunAtCrosshair: 0
   muzzlePointsBackward: 0
-  playBatStrike: 0
-  playSwordSlash: 0
   meleeRadius: 0.75
   meleeSwingEuler: {x: 55, y: -20, z: -25}
   meleeSwingDuration: 0.25
@@ -2241,8 +2235,6 @@ MonoBehaviour:
   showShotTracer: 1
   aimHeldGunAtCrosshair: 0
   muzzlePointsBackward: 0
-  playBatStrike: 0
-  playSwordSlash: 0
   meleeRadius: 0.75
   meleeSwingEuler: {x: 55, y: -20, z: -25}
   meleeSwingDuration: 0.75
@@ -2297,8 +2289,6 @@ MonoBehaviour:
   showShotTracer: 1
   aimHeldGunAtCrosshair: 0
   muzzlePointsBackward: 1
-  playBatStrike: 0
-  playSwordSlash: 0
   meleeRadius: 0.75
   meleeSwingEuler: {x: 55, y: -20, z: -25}
   meleeSwingDuration: 0.25

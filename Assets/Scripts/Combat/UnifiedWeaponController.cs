@@ -1,4 +1,3 @@
-using TheWard.Character;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,12 +17,10 @@ namespace TheWard.Combat
 
         public UnifiedWeapon ActiveWeapon => GetActiveWeapon();
 
-        private PlayerCharacterController player;
         private int activeWeaponIndex;
 
         private void Awake()
         {
-            player = GetComponent<PlayerCharacterController>();
             if (weapons == null || weapons.Length == 0)
             {
                 return;
@@ -39,11 +36,6 @@ namespace TheWard.Combat
             EnableAction(reloadAction);
             EnableAction(previousWeaponAction);
             EnableAction(nextWeaponAction);
-        }
-
-        private void Start()
-        {
-            UpdateMovementStyle();
         }
 
         private void OnDisable()
@@ -155,7 +147,6 @@ namespace TheWard.Combat
 
             activeWeaponIndex = index;
             ShowSelectedWeapon();
-            UpdateMovementStyle();
         }
 
         private UnifiedWeapon GetActiveWeapon()
@@ -176,16 +167,6 @@ namespace TheWard.Combat
                 {
                     weapons[index].gameObject.SetActive(index == activeWeaponIndex);
                 }
-            }
-        }
-
-        private void UpdateMovementStyle()
-        {
-            UnifiedWeapon activeWeapon = GetActiveWeapon();
-            if (player != null && activeWeapon != null)
-            {
-                player.SetMeleeLocomotion(activeWeapon.Mode == WeaponMode.Melee);
-                player.SetGunEquipped(activeWeapon.Mode == WeaponMode.Firearm);
             }
         }
 

@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using TheWard.Character;
 
 namespace TheWard.Combat
 {
@@ -37,8 +36,6 @@ namespace TheWard.Combat
         [SerializeField] private bool muzzlePointsBackward;
 
         [Header("Melee Settings")]
-        [SerializeField] private bool playBatStrike;
-        [SerializeField] private bool playSwordSlash;
         [SerializeField] private float meleeRadius = 0.75f;
         [SerializeField] private Vector3 meleeSwingEuler = new Vector3(55f, -20f, -25f);
         [SerializeField] private float meleeSwingDuration = 0.25f;
@@ -58,7 +55,6 @@ namespace TheWard.Combat
         [SerializeField] private Vector3 grenadeChargeOffset = new Vector3(0f, -0.08f, -0.12f);
         [SerializeField] private Vector3 grenadeChargeEuler = new Vector3(18f, 0f, -12f);
 
-        private PlayerCharacterController player;
         private float nextAttackTime;
         private float chargeStartTime;
         private bool isCharging;
@@ -78,7 +74,6 @@ namespace TheWard.Combat
 
         private void Awake()
         {
-            player = GetComponentInParent<PlayerCharacterController>();
             ammo = magazineSize;
             reserveAmmo = startingReserveAmmo;
             startingPosition = transform.localPosition;
@@ -135,23 +130,7 @@ namespace TheWard.Combat
             else if (mode == WeaponMode.Melee)
             {
                 MeleeAttack();
-                // A weapon held by the animated hand follows the arm swing.
-                // Do not rotate it a second time or the strike looks exaggerated.
-                if (playBatStrike)
-                {
-                    if (player != null)
-                    {
-                        player.PlayAttackAnimation();
-                    }
-                }
-                else if (playSwordSlash)
-                {
-                    if (player != null) player.PlaySwordSlash();
-                }
-                else
-                {
-                    StartCoroutine(SwingBat());
-                }
+                StartCoroutine(SwingMelee());
             }
         }
 
@@ -188,7 +167,6 @@ namespace TheWard.Combat
                 muzzleFlash.Play();
             }
 
-            if (player != null) player.PlayGunShot(triggerMode == TriggerMode.HoldAutomatic);
             if (recoilRoutine != null) StopCoroutine(recoilRoutine);
             recoilRoutine = StartCoroutine(GunRecoil());
 
@@ -278,8 +256,6 @@ namespace TheWard.Combat
             float chargeAmount = Mathf.Clamp01(chargeTime / maximumChargeTime);
             float throwForce = Mathf.Lerp(minimumThrowForce, maximumThrowForce, chargeAmount);
 
-            // Start the arm motion now, but wait for its release pose before spawning.
-            if (player != null) player.PlayGrenadeThrow();
             ResetWeaponTransform();
             nextAttackTime = Time.time + Mathf.Max(cooldown, grenadeReleaseDelay + 0.8f);
             StartCoroutine(SpawnGrenadeAfterWindup(throwForce));
@@ -337,10 +313,9 @@ namespace TheWard.Combat
 
             ammo += bulletsToLoad;
             reserveAmmo -= bulletsToLoad;
-            if (player != null) player.PlayGunReload();
         }
 
-        private IEnumerator SwingBat()
+        private IEnumerator SwingMelee()
         {
             Quaternion swingRotation = startingRotation * Quaternion.Euler(meleeSwingEuler);
             float halfTime = meleeSwingDuration / 2f;
@@ -353,8 +328,6 @@ namespace TheWard.Combat
 
         private IEnumerator GunRecoil()
         {
-            // The arm clip animates the player; this short motion makes the gun
-            // itself visibly kick on each shot, including automatic fire.
             Vector3 kickedPosition = startingPosition + Vector3.back * gunRecoilDistance;
             Quaternion kickedRotation = startingRotation * Quaternion.Euler(-gunRecoilAngle, 0f, 0f);
             transform.localPosition = kickedPosition;
