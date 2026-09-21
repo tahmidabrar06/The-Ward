@@ -514,6 +514,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6971430405340547200, guid: 436d84b39ebbb99449cf0c0ed23b24a5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 381541080}
+    - targetCorrespondingSourceObject: {fileID: 6971430405340547200, guid: 436d84b39ebbb99449cf0c0ed23b24a5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 824599291}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7779035596426449466, guid: 436d84b39ebbb99449cf0c0ed23b24a5, type: 3}
       insertIndex: -1
@@ -1190,6 +1193,7 @@ MonoBehaviour:
   cooldown: 0.35
   range: 2
   impactForce: 4
+  muzzlePoint: {fileID: 0}
   spreadDegrees: 0.5
   magazineSize: 12
   startingReserveAmmo: 48
@@ -1392,6 +1396,37 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &824599290
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 824599291}
+  m_Layer: 0
+  m_Name: Muzzle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &824599291
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 824599290}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.025, z: 0.16}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1707156401}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &966794924 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 170235399627381868, guid: e2cdf96b699d513419c48b5c06bdf1d0, type: 3}
@@ -1427,6 +1462,7 @@ MonoBehaviour:
   cooldown: 0.5
   range: 3
   impactForce: 4
+  muzzlePoint: {fileID: 0}
   spreadDegrees: 0.5
   magazineSize: 12
   startingReserveAmmo: 48
@@ -1617,6 +1653,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 400000, guid: 6f966b9a7c817ed49973b4a8762cbbdf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1212981813}
+    - targetCorrespondingSourceObject: {fileID: 400000, guid: 6f966b9a7c817ed49973b4a8762cbbdf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1493210559}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 6f966b9a7c817ed49973b4a8762cbbdf, type: 3}
       insertIndex: -1
@@ -1848,6 +1887,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1493210558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1493210559}
+  m_Layer: 0
+  m_Name: Muzzle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1493210559
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1493210558}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.015, z: -0.45}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1327646755}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1576639932
 GameObject:
@@ -2166,6 +2236,7 @@ MonoBehaviour:
   cooldown: 0.25
   range: 60
   impactForce: 4
+  muzzlePoint: {fileID: 824599291}
   spreadDegrees: 0.5
   magazineSize: 12
   startingReserveAmmo: 48
@@ -2225,6 +2296,7 @@ MonoBehaviour:
   cooldown: 0.75
   range: 2
   impactForce: 4
+  muzzlePoint: {fileID: 0}
   spreadDegrees: 0.5
   magazineSize: 12
   startingReserveAmmo: 48
@@ -2279,6 +2351,7 @@ MonoBehaviour:
   cooldown: 0.1
   range: 75
   impactForce: 6
+  muzzlePoint: {fileID: 1493210559}
   spreadDegrees: 1.5
   magazineSize: 30
   startingReserveAmmo: 120

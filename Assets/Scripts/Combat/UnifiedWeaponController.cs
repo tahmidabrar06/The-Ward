@@ -53,6 +53,21 @@ namespace TheWard.Combat
             ReadWeaponSwitchInput();
         }
 
+        private void OnGUI()
+        {
+            UnifiedWeapon weapon = ActiveWeapon;
+            if (weapon == null || weapon.Mode != WeaponMode.Firearm || weapon.AimCamera == null) return;
+
+            Vector2 center = weapon.AimCamera.pixelRect.center;
+            center.y = Screen.height - center.y;
+            Color previousColor = GUI.color;
+            GUI.color = Color.black;
+            GUI.DrawTexture(new Rect(center.x - 3f, center.y - 3f, 6f, 6f), Texture2D.whiteTexture);
+            GUI.color = Color.white;
+            GUI.DrawTexture(new Rect(center.x - 1f, center.y - 1f, 2f, 2f), Texture2D.whiteTexture);
+            GUI.color = previousColor;
+        }
+
         private void ReadAttackInput()
         {
             UnifiedWeapon activeWeapon = GetActiveWeapon();

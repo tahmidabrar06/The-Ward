@@ -24,6 +24,7 @@ namespace TheWard.Combat
         [SerializeField] private float impactForce = 4f;
 
         [Header("Gun Settings")]
+        [SerializeField] private Transform muzzlePoint;
         [SerializeField] private float spreadDegrees = 0.5f;
         [SerializeField] private int magazineSize = 12;
         [SerializeField] private int startingReserveAmmo = 48;
@@ -55,6 +56,7 @@ namespace TheWard.Combat
         [SerializeField] private Vector3 grenadeChargeOffset = new Vector3(0f, -0.08f, -0.12f);
         [SerializeField] private Vector3 grenadeChargeEuler = new Vector3(18f, 0f, -12f);
 
+        private Camera aimCamera;
         private float nextAttackTime;
         private float chargeStartTime;
         private bool isCharging;
@@ -65,6 +67,7 @@ namespace TheWard.Combat
         private Coroutine recoilRoutine;
         private Material tracerMaterial;
 
+        public Camera AimCamera => aimCamera;
         public Transform RightHandGrip => rightHandGrip;
         public Transform LeftHandGrip => leftHandGrip;
         public string DisplayName => displayName;
@@ -74,6 +77,9 @@ namespace TheWard.Combat
 
         private void Awake()
         {
+            aimCamera = attackOrigin != null
+                ? attackOrigin.GetComponent<Camera>()
+                : GetComponentInParent<Camera>();
             ammo = magazineSize;
             reserveAmmo = startingReserveAmmo;
             startingPosition = transform.localPosition;
@@ -134,12 +140,23 @@ namespace TheWard.Combat
             }
         }
 
+        public Ray GetAimRay()
+        {
+            Transform origin = attackOrigin != null ? attackOrigin : transform;
+            Camera camera = aimCamera != null ? aimCamera : origin.GetComponent<Camera>();
+            return camera != null
+                ? camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f))
+                : new Ray(origin.position, origin.forward);
+        }
+
         private void Shoot()
         {
             Transform origin = attackOrigin != null ? attackOrigin : transform;
 
+            Ray aim = GetAimRay();
             Vector2 spread = Random.insideUnitCircle * spreadDegrees;
-            Vector3 direction = Quaternion.Euler(-spread.y, spread.x, 0f) * origin.forward;
+            Quaternion aimRotation = Quaternion.LookRotation(aim.direction, origin.up);
+            Vector3 direction = aimRotation * Quaternion.Euler(-spread.y, spread.x, 0f) * Vector3.forward;
 
             // Ignore the player's capsule and the gun itself. A held model can
             // sit in front of the camera and otherwise absorb every shot.
@@ -147,7 +164,7 @@ namespace TheWard.Combat
             bool hitSomething = false;
             float nearestDistance = range;
             RaycastHit[] candidates = Physics.RaycastAll(
-                origin.position, direction, range, hitMask,
+                aim.origin, direction, range, hitMask,
                 QueryTriggerInteraction.Ignore);
             foreach (RaycastHit candidate in candidates)
             {
@@ -172,8 +189,8 @@ namespace TheWard.Combat
 
             if (showShotTracer)
             {
-                Vector3 endPoint = hitSomething ? hit.point : origin.position + direction * range;
-                ShowShotTracer(origin, endPoint);
+                Vector3 endPoint = hitSomething ? hit.point : aim.origin + direction * range;
+                ShowShotTracer(endPoint);
             }
 
             if (!hitSomething)
@@ -348,7 +365,7 @@ namespace TheWard.Combat
             recoilRoutine = null;
         }
 
-        private void ShowShotTracer(Transform origin, Vector3 endPoint)
+        private void ShowShotTracer(Vector3 endPoint)
         {
             if (tracerMaterial == null)
             {
@@ -366,7 +383,7 @@ namespace TheWard.Combat
             line.endWidth = 0.003f;
             line.startColor = Color.yellow;
             line.endColor = Color.yellow;
-            line.SetPosition(0, origin.position + origin.right * 0.22f - origin.up * 0.14f + origin.forward * 0.35f);
+            line.SetPosition(0, muzzlePoint != null ? muzzlePoint.position : transform.position);
             line.SetPosition(1, endPoint);
             Destroy(tracer, 0.08f);
         }
@@ -429,7 +446,8 @@ namespace TheWard.Combat
             }
             else
             {
-                Gizmos.DrawRay(origin.position, origin.forward * range);
+                Ray aim = GetAimRay();
+                Gizmos.DrawRay(aim.origin, aim.direction * range);
             }
         }
     }
