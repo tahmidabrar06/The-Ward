@@ -3,7 +3,7 @@ using UnityEngine;
 namespace TheWard.Character
 {
     [RequireComponent(typeof(Animator))]
-    public sealed class FirstPersonLegs : MonoBehaviour
+    public sealed class PlayerBodyAnimator : MonoBehaviour
     {
         private static readonly int Speed = Animator.StringToHash("Speed");
         private Animator animator;
