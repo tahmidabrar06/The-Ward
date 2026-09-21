@@ -16,6 +16,8 @@ namespace TheWard.Combat
         [SerializeField] private UnifiedWeapon[] weapons;
         [SerializeField] private int startingWeaponIndex;
 
+        public UnifiedWeapon ActiveWeapon => GetActiveWeapon();
+
         private PlayerCharacterController player;
         private int activeWeaponIndex;
 

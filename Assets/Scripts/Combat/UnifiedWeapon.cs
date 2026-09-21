@@ -9,6 +9,10 @@ namespace TheWard.Combat
 
     public class UnifiedWeapon : MonoBehaviour
     {
+        [Header("First-Person Hands")]
+        [SerializeField] private Transform rightHandGrip;
+        [SerializeField] private Transform leftHandGrip;
+
         [Header("Basic Weapon Settings")]
         [SerializeField] private string displayName = "Weapon";
         [SerializeField] private WeaponMode mode = WeaponMode.Melee;
@@ -65,6 +69,8 @@ namespace TheWard.Combat
         private Coroutine recoilRoutine;
         private Material tracerMaterial;
 
+        public Transform RightHandGrip => rightHandGrip;
+        public Transform LeftHandGrip => leftHandGrip;
         public string DisplayName => displayName;
         public WeaponMode Mode => mode;
         public int Ammo => ammo;
