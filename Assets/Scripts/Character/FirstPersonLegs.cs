@@ -19,8 +19,7 @@ namespace TheWard.Character
         {
             Vector3 velocity = player.velocity;
             velocity.y = 0f;
-            float speed = player.isGrounded ? velocity.magnitude : 0f;
-            animator.SetFloat(Speed, speed, 0.12f, Time.deltaTime);
+            animator.SetFloat(Speed, velocity.magnitude, 0.12f, Time.deltaTime);
         }
     }
 }

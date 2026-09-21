@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace TheWard.Combat
 {
-    public class UnifiedWeaponController : MonoBehaviour
+    public class WeaponController : MonoBehaviour
     {
         [Header("Input Actions")]
         [SerializeField] private InputActionReference attackAction;
@@ -12,10 +12,10 @@ namespace TheWard.Combat
         [SerializeField] private InputActionReference nextWeaponAction;
 
         [Header("Player Weapons")]
-        [SerializeField] private UnifiedWeapon[] weapons;
+        [SerializeField] private Weapon[] weapons;
         [SerializeField] private int startingWeaponIndex;
 
-        public UnifiedWeapon ActiveWeapon => GetActiveWeapon();
+        public Weapon ActiveWeapon => GetActiveWeapon();
 
         private int activeWeaponIndex;
 
@@ -55,8 +55,8 @@ namespace TheWard.Combat
 
         private void OnGUI()
         {
-            UnifiedWeapon weapon = ActiveWeapon;
-            if (weapon == null || weapon.Mode != WeaponMode.Firearm || weapon.AimCamera == null) return;
+            Weapon weapon = ActiveWeapon;
+            if (weapon == null || !(weapon is GunWeapon) || weapon.AimCamera == null) return;
 
             Vector2 center = weapon.AimCamera.pixelRect.center;
             center.y = Screen.height - center.y;
@@ -70,7 +70,7 @@ namespace TheWard.Combat
 
         private void ReadAttackInput()
         {
-            UnifiedWeapon activeWeapon = GetActiveWeapon();
+            Weapon activeWeapon = GetActiveWeapon();
 
             if (activeWeapon == null || attackAction == null)
             {
@@ -88,7 +88,7 @@ namespace TheWard.Combat
         {
             if (reloadAction != null && reloadAction.action.WasPressedThisFrame())
             {
-                UnifiedWeapon activeWeapon = GetActiveWeapon();
+                Weapon activeWeapon = GetActiveWeapon();
 
                 if (activeWeapon != null)
                 {
@@ -164,7 +164,7 @@ namespace TheWard.Combat
             ShowSelectedWeapon();
         }
 
-        private UnifiedWeapon GetActiveWeapon()
+        private Weapon GetActiveWeapon()
         {
             if (weapons == null || weapons.Length == 0)
             {

@@ -1177,14 +1177,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 592817344}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0636b621787f942f8902a954ee33a89a, type: 3}
+  m_Script: {fileID: 11500000, guid: ea28c7eefd3942c28ec9c0c351763988, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.UnifiedWeapon
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.MeleeWeapon
   rightHandGrip: {fileID: 1364073760}
   leftHandGrip: {fileID: 1663679276}
   displayName: Sword
-  mode: 1
-  triggerMode: 0
   attackOrigin: {fileID: 73656928}
   hitMask:
     serializedVersion: 2
@@ -1192,35 +1190,9 @@ MonoBehaviour:
   damage: 30
   cooldown: 0.35
   range: 2
-  impactForce: 4
-  muzzlePoint: {fileID: 0}
-  spreadDegrees: 0.5
-  magazineSize: 12
-  startingReserveAmmo: 48
-  muzzleFlash: {fileID: 0}
-  bulletImpactPrefab: {fileID: 0}
-  gunRecoilDistance: 0.025
-  gunRecoilAngle: 3
-  showShotTracer: 1
-  aimHeldGunAtCrosshair: 0
-  muzzlePointsBackward: 0
-  reloadDuration: 1.2
-  reloadEuler: {x: -12, y: 0, z: -20}
-  reloadHandOffset: {x: 0, y: -0.12, z: 0}
   meleeRadius: 0.75
   meleeSwingEuler: {x: 55, y: -20, z: -25}
   meleeSwingDuration: 0.25
-  grenadePrefab: {fileID: 0}
-  minimumThrowForce: 6
-  maximumThrowForce: 18
-  maximumChargeTime: 1.5
-  explosionRadius: 5
-  explosionForce: 650
-  explosionDamage: 90
-  explosionEffectPrefab: {fileID: 0}
-  grenadeReleaseDelay: 0.9
-  grenadeChargeOffset: {x: 0, y: -0.03, z: -0.03}
-  grenadeChargeEuler: {x: 18, y: 0, z: -12}
 --- !u!43 &677239601
 Mesh:
   m_ObjectHideFlags: 0
@@ -1449,39 +1421,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 966794924}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0636b621787f942f8902a954ee33a89a, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f6be566065443bdacdf56d0a8d3e49e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.UnifiedWeapon
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.GrenadeWeapon
   rightHandGrip: {fileID: 1862565083}
   leftHandGrip: {fileID: 1238122163}
   displayName: Grenade
-  mode: 2
-  triggerMode: 0
   attackOrigin: {fileID: 73656928}
-  hitMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  damage: 50
   cooldown: 0.5
-  range: 3
-  impactForce: 4
-  muzzlePoint: {fileID: 0}
-  spreadDegrees: 0.5
-  magazineSize: 12
-  startingReserveAmmo: 48
-  muzzleFlash: {fileID: 0}
-  bulletImpactPrefab: {fileID: 0}
-  gunRecoilDistance: 0.025
-  gunRecoilAngle: 3
-  showShotTracer: 1
-  aimHeldGunAtCrosshair: 0
-  muzzlePointsBackward: 0
-  reloadDuration: 1.2
-  reloadEuler: {x: -12, y: 0, z: -20}
-  reloadHandOffset: {x: 0, y: -0.12, z: 0}
-  meleeRadius: 0.75
-  meleeSwingEuler: {x: 55, y: -20, z: -25}
-  meleeSwingDuration: 0.25
   grenadePrefab: {fileID: 170235399627381868, guid: e2cdf96b699d513419c48b5c06bdf1d0, type: 3}
   minimumThrowForce: 6
   maximumThrowForce: 18
@@ -1960,7 +1907,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fe80701bbf5840eb963739b76333d77, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.UnifiedWeaponController
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.WeaponController
   attackAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   reloadAction: {fileID: -7167710894897262173, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   previousWeaponAction: {fileID: 2411907206095950430, guid: 052faaac586de48259a63d0c4782560b, type: 3}
@@ -2004,13 +1951,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.PlayerCharacterController
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   walkSpeed: 4
   sprintSpeed: 7
-  jumpHeight: 1.2
-  extraAirJumps: 1
-  gravity: -20
 --- !u!143 &1576639936
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2229,11 +2172,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0636b621787f942f8902a954ee33a89a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.UnifiedWeapon
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.GunWeapon
   rightHandGrip: {fileID: 522251651}
   leftHandGrip: {fileID: 381541080}
   displayName: Pistol
-  mode: 0
   triggerMode: 0
   attackOrigin: {fileID: 73656928}
   hitMask:
@@ -2252,25 +2194,9 @@ MonoBehaviour:
   gunRecoilDistance: 0.025
   gunRecoilAngle: 3
   showShotTracer: 1
-  aimHeldGunAtCrosshair: 0
-  muzzlePointsBackward: 0
   reloadDuration: 1.1
   reloadEuler: {x: -12, y: 0, z: -20}
   reloadHandOffset: {x: 0, y: -0.12, z: 0}
-  meleeRadius: 0.75
-  meleeSwingEuler: {x: 55, y: -20, z: -25}
-  meleeSwingDuration: 0.25
-  grenadePrefab: {fileID: 0}
-  minimumThrowForce: 6
-  maximumThrowForce: 18
-  maximumChargeTime: 1.5
-  explosionRadius: 5
-  explosionForce: 650
-  explosionDamage: 90
-  explosionEffectPrefab: {fileID: 0}
-  grenadeReleaseDelay: 0.9
-  grenadeChargeOffset: {x: 0, y: -0.03, z: -0.03}
-  grenadeChargeEuler: {x: 18, y: 0, z: -12}
 --- !u!1 &1712486025 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6705367872142520749, guid: b2c2eaa77adbe704690e52a50768f2a8, type: 3}
@@ -2290,14 +2216,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1712486025}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0636b621787f942f8902a954ee33a89a, type: 3}
+  m_Script: {fileID: 11500000, guid: ea28c7eefd3942c28ec9c0c351763988, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.UnifiedWeapon
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.MeleeWeapon
   rightHandGrip: {fileID: 1625106740}
   leftHandGrip: {fileID: 1104831219}
   displayName: Baseball Bat
-  mode: 1
-  triggerMode: 0
   attackOrigin: {fileID: 73656928}
   hitMask:
     serializedVersion: 2
@@ -2305,35 +2229,9 @@ MonoBehaviour:
   damage: 15
   cooldown: 0.75
   range: 2
-  impactForce: 4
-  muzzlePoint: {fileID: 0}
-  spreadDegrees: 0.5
-  magazineSize: 12
-  startingReserveAmmo: 48
-  muzzleFlash: {fileID: 0}
-  bulletImpactPrefab: {fileID: 0}
-  gunRecoilDistance: 0.025
-  gunRecoilAngle: 3
-  showShotTracer: 1
-  aimHeldGunAtCrosshair: 0
-  muzzlePointsBackward: 0
-  reloadDuration: 1.2
-  reloadEuler: {x: -12, y: 0, z: -20}
-  reloadHandOffset: {x: 0, y: -0.12, z: 0}
   meleeRadius: 0.75
   meleeSwingEuler: {x: 55, y: -20, z: -25}
   meleeSwingDuration: 0.75
-  grenadePrefab: {fileID: 0}
-  minimumThrowForce: 6
-  maximumThrowForce: 18
-  maximumChargeTime: 1.5
-  explosionRadius: 5
-  explosionForce: 650
-  explosionDamage: 90
-  explosionEffectPrefab: {fileID: 0}
-  grenadeReleaseDelay: 0.9
-  grenadeChargeOffset: {x: 0, y: -0.03, z: -0.03}
-  grenadeChargeEuler: {x: 18, y: 0, z: -12}
 --- !u!1 &1801174388 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 6f966b9a7c817ed49973b4a8762cbbdf, type: 3}
@@ -2350,11 +2248,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0636b621787f942f8902a954ee33a89a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.UnifiedWeapon
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.GunWeapon
   rightHandGrip: {fileID: 81978700}
   leftHandGrip: {fileID: 1212981813}
   displayName: Machine Gun
-  mode: 0
   triggerMode: 1
   attackOrigin: {fileID: 73656928}
   hitMask:
@@ -2373,25 +2270,9 @@ MonoBehaviour:
   gunRecoilDistance: 0.025
   gunRecoilAngle: 3
   showShotTracer: 1
-  aimHeldGunAtCrosshair: 0
-  muzzlePointsBackward: 1
   reloadDuration: 1.5
   reloadEuler: {x: 8, y: 0, z: 16}
   reloadHandOffset: {x: 0, y: -0.12, z: 0.12}
-  meleeRadius: 0.75
-  meleeSwingEuler: {x: 55, y: -20, z: -25}
-  meleeSwingDuration: 0.25
-  grenadePrefab: {fileID: 0}
-  minimumThrowForce: 6
-  maximumThrowForce: 18
-  maximumChargeTime: 1.5
-  explosionRadius: 5
-  explosionForce: 650
-  explosionDamage: 90
-  explosionEffectPrefab: {fileID: 0}
-  grenadeReleaseDelay: 0.9
-  grenadeChargeOffset: {x: 0, y: -0.03, z: -0.03}
-  grenadeChargeEuler: {x: 18, y: 0, z: -12}
 --- !u!1 &1862565082
 GameObject:
   m_ObjectHideFlags: 0

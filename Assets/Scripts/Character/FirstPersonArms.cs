@@ -6,7 +6,7 @@ namespace TheWard.Character
     [RequireComponent(typeof(Animator))]
     public sealed class FirstPersonArms : MonoBehaviour
     {
-        [SerializeField] private UnifiedWeaponController weapons;
+        [SerializeField] private WeaponController weapons;
         [SerializeField] private Transform view;
 
         private Animator animator;
@@ -18,7 +18,7 @@ namespace TheWard.Character
 
         private void OnAnimatorIK(int layerIndex)
         {
-            UnifiedWeapon weapon = weapons != null ? weapons.ActiveWeapon : null;
+            Weapon weapon = weapons != null ? weapons.ActiveWeapon : null;
             if (view != null)
             {
                 UpdateElbow(AvatarIKHint.RightElbow, new Vector3(0.5f, -0.65f, 0.2f));

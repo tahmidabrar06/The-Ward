@@ -20487,7 +20487,6 @@ GameObject:
   - component: {fileID: 934739891}
   - component: {fileID: 934739890}
   - component: {fileID: 934739889}
-  - component: {fileID: 934739888}
   - component: {fileID: 934739887}
   - component: {fileID: 934739886}
   - component: {fileID: 934739885}
@@ -20554,36 +20553,9 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.PlayerCharacterController
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   walkSpeed: 6
   sprintSpeed: 7
-  jumpHeight: 1.2
-  extraAirJumps: 1
-  gravity: -9.8
---- !u!136 &934739888
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 934739884}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &934739889
 MeshRenderer:
   m_ObjectHideFlags: 0
