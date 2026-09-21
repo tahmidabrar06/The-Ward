@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 namespace TheWard.Combat
@@ -14,7 +13,6 @@ namespace TheWard.Combat
 
         [Header("Swing")]
         [SerializeField] private AnimationClip swingAnimation;
-        [SerializeField, Min(0f)] private float hitDelay = 0.15f;
         [SerializeField, Min(0.01f)] private float meleeSwingDuration = 0.25f;
 
         private float nextAttackTime;
@@ -22,21 +20,13 @@ namespace TheWard.Combat
         public override void HandleInput(bool pressed, bool held, bool released)
         {
             if (!pressed || isAnimating || Time.time < nextAttackTime) return;
-            nextAttackTime = Time.time + Mathf.Max(cooldown, meleeSwingDuration);
-            StartCoroutine(Swing());
+            if (PlayAnimation(swingAnimation, meleeSwingDuration))
+                nextAttackTime = Time.time + Mathf.Max(cooldown, meleeSwingDuration);
         }
 
-        private IEnumerator Swing()
+        public override void OnAnimationContact()
         {
-            PlayAnimation(swingAnimation, meleeSwingDuration);
-            yield return new WaitForSeconds(hitDelay);
-            Hit();
-            yield return new WaitForSeconds(Mathf.Max(0f, meleeSwingDuration - hitDelay));
-            FinishAnimation();
-        }
-
-        private void Hit()
-        {
+            if (!isAnimating) return;
             Ray aim = GetAimRay();
             // Cover the whole reach, including enemies close to the player.
             Collider[] candidates = Physics.OverlapCapsule(aim.origin, aim.GetPoint(range),

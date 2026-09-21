@@ -43,15 +43,24 @@ namespace TheWard.Combat
                 : new Ray(Origin.position, Origin.forward);
         }
 
-        protected void PlayAnimation(AnimationClip clip, float duration)
+        protected bool PlayAnimation(AnimationClip clip, float duration)
         {
+            if (arms == null || clip == null)
+            {
+                Debug.LogWarning($"Assign an animation and first-person arm rig for {displayName}.", this);
+                return false;
+            }
             isAnimating = true;
-            arms?.PlayAction(this, clip, duration);
+            arms.PlayAction(this, clip, duration);
+            return true;
         }
 
-        protected void FinishAnimation()
+        public virtual void OnAnimationContact() { }
+        public virtual void OnAnimationComplete() => FinishAnimation(false);
+
+        protected void FinishAnimation(bool cancelled = true)
         {
-            arms?.StopAction(this);
+            arms?.StopAction(this, cancelled);
             isAnimating = false;
             ResetWeaponTransform();
         }

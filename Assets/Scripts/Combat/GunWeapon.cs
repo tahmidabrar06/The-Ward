@@ -126,19 +126,18 @@ namespace TheWard.Combat
             if (recoilRoutine != null) StopCoroutine(recoilRoutine);
             recoilRoutine = null;
             ResetWeaponTransform();
-            StartCoroutine(ReloadWeapon());
+            PlayAnimation(reloadAnimation, reloadDuration);
         }
 
-        private IEnumerator ReloadWeapon()
+        public override void OnAnimationComplete()
         {
-            PlayAnimation(reloadAnimation, reloadDuration);
-            yield return new WaitForSeconds(reloadDuration);
+            if (!isAnimating) return;
             int bulletsNeeded = magazineSize - ammo;
             int bulletsToLoad = Mathf.Min(bulletsNeeded, reserveAmmo);
 
             ammo += bulletsToLoad;
             reserveAmmo -= bulletsToLoad;
-            FinishAnimation();
+            base.OnAnimationComplete();
         }
 
         private IEnumerator GunRecoil()

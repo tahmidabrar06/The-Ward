@@ -12,6 +12,8 @@ namespace TheWard.Character
         private void Awake()
         {
             animator = GetComponent<Animator>();
+            // The first-person arms deliver gameplay events; the shadow only follows the pose.
+            animator.fireEvents = false;
             player = GetComponentInParent<CharacterController>();
         }
 

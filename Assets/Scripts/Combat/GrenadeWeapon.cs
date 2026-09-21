@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 namespace TheWard.Combat
@@ -19,13 +18,13 @@ namespace TheWard.Combat
         [SerializeField] private GameObject explosionEffectPrefab;
 
         [Header("Throw Animation")]
-        [SerializeField, Min(0f)] private float grenadeReleaseDelay = 0.45f;
         [SerializeField] private AnimationClip throwAnimation;
         [SerializeField, Min(0.1f)] private float throwDuration = 0.8f;
 
         private float nextAttackTime;
         private float chargeStartTime;
         private bool isCharging;
+        private float throwForce;
         private Renderer[] grenadeRenderers;
 
         protected override void Awake()
@@ -61,16 +60,15 @@ namespace TheWard.Combat
 
             float chargeTime = Time.time - chargeStartTime;
             float chargeAmount = Mathf.Clamp01(chargeTime / maximumChargeTime);
-            float throwForce = Mathf.Lerp(minimumThrowForce, maximumThrowForce, chargeAmount);
+            throwForce = Mathf.Lerp(minimumThrowForce, maximumThrowForce, chargeAmount);
 
-            nextAttackTime = Time.time + Mathf.Max(cooldown, throwDuration);
-            StartCoroutine(SpawnGrenadeAfterWindup(throwForce));
+            if (PlayAnimation(throwAnimation, throwDuration))
+                nextAttackTime = Time.time + Mathf.Max(cooldown, throwDuration);
         }
 
-        private IEnumerator SpawnGrenadeAfterWindup(float throwForce)
+        public override void OnAnimationContact()
         {
-            PlayAnimation(throwAnimation, throwDuration);
-            yield return new WaitForSeconds(grenadeReleaseDelay);
+            if (!isAnimating) return;
             SetGrenadeVisible(false);
 
             Transform origin = attackOrigin != null ? attackOrigin : transform;
@@ -106,9 +104,13 @@ namespace TheWard.Combat
             grenadeBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             Vector3 throwDirection = (origin.forward + Vector3.up * 0.18f).normalized;
             grenadeBody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
-            yield return new WaitForSeconds(Mathf.Max(0f, throwDuration - grenadeReleaseDelay));
+        }
+
+        public override void OnAnimationComplete()
+        {
+            if (!isAnimating) return;
             SetGrenadeVisible(true);
-            FinishAnimation();
+            base.OnAnimationComplete();
         }
 
         private void SetGrenadeVisible(bool visible)

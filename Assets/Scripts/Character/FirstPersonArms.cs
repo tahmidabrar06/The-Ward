@@ -12,12 +12,16 @@ namespace TheWard.Character
         private Vector3 readyRigPosition;
 
         private static readonly int HoldingGun = Animator.StringToHash("HoldingGun");
+        private static readonly int CancelAction = Animator.StringToHash("CancelAction");
         private static readonly int ActionSpeed = Animator.StringToHash("ActionSpeed");
         private Animator animator;
         private Animator bodyAnimator;
         private Transform rightHand, leftHand;
         private Weapon actionWeapon;
-        private float actionStart, actionDuration, actionWeight;
+        private AnimationClip actionClip;
+        private int actionTrigger;
+        private bool contactSent;
+        private float actionDuration, actionWeight;
         private Vector3 readyRightPosition, readyLeftPosition;
         private Quaternion readyRightRotation, readyLeftRotation;
         private Quaternion wristToGripRotation, leftWristToGripRotation;
@@ -38,7 +42,9 @@ namespace TheWard.Character
         {
             if (clip == null) return;
             actionWeapon = weapon;
-            actionStart = Time.time;
+            actionClip = clip;
+            actionTrigger = Animator.StringToHash(clip.name);
+            contactSent = false;
             actionDuration = duration;
             wristToGripRotation = Quaternion.Inverse(rightHand.rotation) * weapon.RightHandGrip.rotation;
             leftWristToGripRotation = Quaternion.Inverse(leftHand.rotation) * weapon.LeftHandGrip.rotation;
@@ -48,18 +54,28 @@ namespace TheWard.Character
             readyLeftPosition = view.InverseTransformPoint(weapon.LeftHandGrip.position);
             readyLeftRotation = Quaternion.Inverse(view.rotation) * weapon.LeftHandGrip.rotation;
             animator.SetFloat(ActionSpeed, clip.length / duration);
-            animator.Play("Action." + clip.name, 1, 0f);
+            animator.ResetTrigger(CancelAction);
+            animator.SetTrigger(actionTrigger);
             if (bodyAnimator != null)
             {
                 bodyAnimator.SetFloat(ActionSpeed, clip.length / duration);
-                bodyAnimator.Play("Action." + clip.name, 1, 0f);
+                bodyAnimator.ResetTrigger(CancelAction);
+                bodyAnimator.SetTrigger(actionTrigger);
             }
         }
 
-        public void StopAction(Weapon weapon)
+        public void StopAction(Weapon weapon, bool cancelled)
         {
             if (actionWeapon != weapon) return;
             actionWeapon = null;
+            actionClip = null;
+            animator.ResetTrigger(actionTrigger);
+            if (cancelled) animator.SetTrigger(CancelAction);
+            if (bodyAnimator != null)
+            {
+                bodyAnimator.ResetTrigger(actionTrigger);
+                if (cancelled) bodyAnimator.SetTrigger(CancelAction);
+            }
             actionWeight = 0f;
             transform.localPosition = readyRigPosition;
             animator.SetLayerWeight(1, 0f);
@@ -67,14 +83,30 @@ namespace TheWard.Character
             if (bodyAnimator != null) bodyAnimator.SetLayerWeight(1, 0f);
         }
 
+        // These are called by events on the imported action clips.
+        public void ActionContact(AnimationEvent animationEvent)
+        {
+            if (actionWeapon == null || contactSent || animationEvent.animatorClipInfo.clip != actionClip) return;
+            contactSent = true;
+            actionWeapon.OnAnimationContact();
+        }
+
+        public void ActionComplete(AnimationEvent animationEvent)
+        {
+            if (actionWeapon == null || animationEvent.animatorClipInfo.clip != actionClip) return;
+            actionWeapon.OnAnimationComplete();
+        }
+
         private void Update()
         {
             animator.SetBool(HoldingGun, weapons != null && weapons.ActiveWeapon is GunWeapon);
-            float elapsed = Time.time - actionStart;
+            AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(1);
+            float elapsed = state.shortNameHash == actionTrigger ? state.normalizedTime * actionDuration : 0f;
             actionWeight = actionWeapon == null ? 0f : Mathf.SmoothStep(0f, 1f,
                 Mathf.Min(elapsed / 0.06f, (actionDuration - elapsed) / 0.12f));
             transform.localPosition = readyRigPosition + actionOffset * actionWeight;
-            animator.SetLayerWeight(1, actionWeight);
+            // A zero-weight layer stops delivering events. Keep it active until completion.
+            animator.SetLayerWeight(1, actionWeapon != null ? Mathf.Max(0.001f, actionWeight) : 0f);
             animator.SetLayerWeight(2, 1f - actionWeight);
             if (bodyAnimator != null) bodyAnimator.SetLayerWeight(1, actionWeight);
         }

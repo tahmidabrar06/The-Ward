@@ -1242,7 +1242,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   swingAnimation: {fileID: -203655887218126122, guid: 7531e54eba70a4583968a72b2e0752a5, type: 3}
-  hitDelay: 0.19
   meleeSwingDuration: 0.5
 --- !u!43 &677239601
 Mesh:
@@ -1488,7 +1487,6 @@ MonoBehaviour:
   explosionForce: 650
   explosionDamage: 90
   explosionEffectPrefab: {fileID: 1998830269065593993, guid: b70fbea4bc8994749ba52e4f560f9f28, type: 3}
-  grenadeReleaseDelay: 0.45
   throwAnimation: {fileID: -203655887218126122, guid: 550dfd97d0a6641c3a3643d5d88a3207, type: 3}
   throwDuration: 0.8
 --- !u!1 &1104831218
@@ -2281,7 +2279,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   swingAnimation: {fileID: -203655887218126122, guid: 4ee593ee845484ba7878f23f73e2b8d3, type: 3}
-  hitDelay: 0.18
   meleeSwingDuration: 0.55
 --- !u!1 &1801174388 stripped
 GameObject:
