@@ -9,11 +9,17 @@ namespace TheWard.Character
         [SerializeField] private WeaponController weapons;
         [SerializeField] private Transform view;
 
+        private static readonly int HoldingGun = Animator.StringToHash("HoldingGun");
         private Animator animator;
 
         private void Awake()
         {
             animator = GetComponent<Animator>();
+        }
+
+        private void Update()
+        {
+            animator.SetBool(HoldingGun, weapons != null && weapons.ActiveWeapon is GunWeapon);
         }
 
         private void OnAnimatorIK(int layerIndex)
@@ -24,6 +30,7 @@ namespace TheWard.Character
                 UpdateElbow(AvatarIKHint.RightElbow, new Vector3(0.5f, -0.65f, 0.2f));
                 UpdateElbow(AvatarIKHint.LeftElbow, new Vector3(-0.5f, -0.65f, 0.2f));
             }
+            // Targets stay outside the hand hierarchy to avoid IK feedback.
             UpdateHand(AvatarIKGoal.RightHand, weapon != null ? weapon.RightHandGrip : null);
             UpdateHand(AvatarIKGoal.LeftHand, weapon != null ? weapon.LeftHandGrip : null);
         }

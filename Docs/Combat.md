@@ -15,3 +15,5 @@ Melee checks the full reach from the camera, so close enemies can be hit. A wall
 `PlayerCharacterController.cs` handles horizontal walking and sprinting with a CharacterController. There is no jump action, gravity, or player Rigidbody. Place the player at the intended floor height; movement does not make the player fall onto a lower floor.
 
 The hand poses and animation assets are separate from this cleanup. `FirstPersonArms.cs` follows the grip transforms on the selected weapon. `FirstPersonLegs.cs` reads horizontal movement speed without requiring gravity or a grounded check.
+
+For hand placement, adjust `Right Hand Grip` and `Left Hand Grip` under each weapon. One-handed weapons use a left-hand rest target under the camera. Keep those targets outside the animated hand hierarchy to avoid an IK feedback loop. The Grip layer uses two static finger poses: a trigger-finger pose for guns and a closed grip for melee/grenades.
