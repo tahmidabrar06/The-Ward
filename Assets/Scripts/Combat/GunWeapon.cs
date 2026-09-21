@@ -11,11 +11,10 @@ namespace TheWard.Combat
         [SerializeField] private TriggerMode triggerMode = TriggerMode.PressOnce;
         [SerializeField] private float damage = 25f;
         [SerializeField] private float cooldown = 0.35f;
-        [SerializeField] private float range = 2f;
+        [SerializeField] private float range = 60f;
         [SerializeField] private LayerMask hitMask = ~0;
         [SerializeField] private float impactForce = 4f;
         [SerializeField] private Transform muzzlePoint;
-        [SerializeField] private float spreadDegrees = 0.5f;
         [SerializeField] private int magazineSize = 12;
         [SerializeField] private int startingReserveAmmo = 48;
         [SerializeField] private ParticleSystem muzzleFlash;
@@ -58,12 +57,8 @@ namespace TheWard.Combat
 
         private void Shoot()
         {
-            Transform origin = attackOrigin != null ? attackOrigin : transform;
-
             Ray aim = GetAimRay();
-            Vector2 spread = Random.insideUnitCircle * spreadDegrees;
-            Quaternion aimRotation = Quaternion.LookRotation(aim.direction, origin.up);
-            Vector3 direction = aimRotation * Quaternion.Euler(-spread.y, spread.x, 0f) * Vector3.forward;
+            Vector3 direction = aim.direction;
 
             // Ignore the player's capsule and the gun itself. A held model can
             // sit in front of the camera and otherwise absorb every shot.

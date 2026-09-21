@@ -29,9 +29,10 @@ namespace TheWard.Combat
         {
             isAnimating = true;
             Quaternion swingRotation = startingRotation * Quaternion.Euler(meleeSwingEuler);
-            yield return MoveWeapon(startingPosition, swingRotation, meleeSwingDuration / 2f);
+            // A quick strike followed by recovery keeps contact close to the click.
+            yield return MoveWeapon(startingPosition, swingRotation, meleeSwingDuration * 0.25f);
             Hit();
-            yield return MoveWeapon(startingPosition, startingRotation, meleeSwingDuration / 2f);
+            yield return MoveWeapon(startingPosition, startingRotation, meleeSwingDuration * 0.75f);
             isAnimating = false;
         }
 

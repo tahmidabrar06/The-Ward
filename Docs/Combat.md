@@ -4,8 +4,8 @@ Open `Assets/Scenes/TestCharWeapons.unity` to try the five weapons. Use 1–5 to
 
 Each weapon has its own component:
 
-- `GunWeapon.cs`: shooting, ammunition, recoil and reloads for the pistol and machine gun.
-- `MeleeWeapon.cs`: bat and sword swings. `Hit()` selects the nearest visible enemy within reach; `Swing()` calls it halfway through the animation. Change damage, range, hit radius and swing duration in the weapon's Inspector.
+- `GunWeapon.cs`: shooting, ammunition, recoil and reloads for the pistol and machine gun. Shots follow the center dot without random spread. Firing runs after the camera's head-follow update so aiming matches the rendered view.
+- `MeleeWeapon.cs`: bat and sword swings. `Hit()` selects the nearest visible enemy within reach; `Swing()` calls it a quarter of the way through the animation (about 0.1 seconds for the bat and 0.06 for the sword), then recovers. Change damage, range, hit radius and swing duration in the weapon's Inspector.
 - `GrenadeWeapon.cs`: charging and throwing. `UnifiedGrenadeProjectile.cs` still handles the existing impact/explosion behavior.
 - `WeaponController.cs`: input and weapon selection only.
 - `Weapon.cs`: shared hand/camera references and helpers for moving the held model. It contains no hit detection or damage rules.

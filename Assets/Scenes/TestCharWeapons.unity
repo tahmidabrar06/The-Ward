@@ -2236,7 +2236,6 @@ MonoBehaviour:
     m_Bits: 4294967295
   impactForce: 4
   muzzlePoint: {fileID: 824599291}
-  spreadDegrees: 0.5
   magazineSize: 12
   startingReserveAmmo: 48
   muzzleFlash: {fileID: 0}
@@ -2274,14 +2273,14 @@ MonoBehaviour:
   leftHandGrip: {fileID: 1104831219}
   attackOrigin: {fileID: 73656928}
   damage: 15
-  cooldown: 0.75
+  cooldown: 0.45
   range: 2
   meleeRadius: 0.75
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
   meleeSwingEuler: {x: 55, y: -20, z: -25}
-  meleeSwingDuration: 0.75
+  meleeSwingDuration: 0.4
 --- !u!1 &1801174388 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 6f966b9a7c817ed49973b4a8762cbbdf, type: 3}
@@ -2312,7 +2311,6 @@ MonoBehaviour:
     m_Bits: 4294967295
   impactForce: 6
   muzzlePoint: {fileID: 1493210559}
-  spreadDegrees: 1.5
   magazineSize: 30
   startingReserveAmmo: 120
   muzzleFlash: {fileID: 0}

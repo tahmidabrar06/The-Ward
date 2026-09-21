@@ -45,8 +45,10 @@ namespace TheWard.Combat
         {
             Vector3 fromPosition = transform.localPosition;
             Quaternion fromRotation = transform.localRotation;
-            for (float elapsed = 0f; elapsed < duration; elapsed += Time.deltaTime)
+            float elapsed = 0f;
+            while (elapsed < duration)
             {
+                elapsed += Time.deltaTime;
                 float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
                 transform.localPosition = Vector3.Lerp(fromPosition, position, t);
                 transform.localRotation = Quaternion.Slerp(fromRotation, rotation, t);

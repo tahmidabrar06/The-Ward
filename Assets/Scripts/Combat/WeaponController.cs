@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace TheWard.Combat
 {
+    [DefaultExecutionOrder(100)]
     public class WeaponController : MonoBehaviour
     {
         [Header("Input Actions")]
@@ -48,9 +49,15 @@ namespace TheWard.Combat
 
         private void Update()
         {
+            // Select the grips before the arm Animator evaluates IK.
+            ReadWeaponSwitchInput();
+        }
+
+        private void LateUpdate()
+        {
+            // Aim after mouse look and the head's eye anchor have moved the camera.
             ReadAttackInput();
             ReadReloadInput();
-            ReadWeaponSwitchInput();
         }
 
         private void OnGUI()
