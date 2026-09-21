@@ -1,64 +1,37 @@
-# Weapons and player movement
+# Combat setup
 
-Open `Assets/Scenes/TestCharWeapons.unity`. Use 1–5 to switch weapons, left click to attack, and R to reload. Hold and release left click to throw a grenade. Move with WASD and hold Shift to sprint.
+Open `Assets/Scenes/TestCharWeapons.unity`. Use WASD to move, Shift to sprint, 1–5 to switch weapons, left click to attack, and R to reload. Hold and release left click to throw a grenade.
 
-## Weapon animations
+## Animations
 
-The weapons play the imported humanoid clips, not scripted transform swings:
+Kept reloads, the two melee swings, grenade throw, and walking for the legs. `ReadyPose.anim` holds the hands still between actions, so there’s no idle movement.
 
-| Weapon | Clip | Duration | Contact/release |
+| Weapon | Clip | Duration | Hit/release |
 | --- | --- | --- | --- |
-| Pistol | Reload.fbx | 1.65 s | Ammo added at completion |
-| Machine gun | Reload.fbx | 1.9 s | Ammo added at completion |
-| Baseball bat | Baseball Strike.fbx | 0.55 s | Damage at 0.18 s |
-| Sword | Great Sword Slash.fbx | 0.5 s | Damage at 0.19 s |
-| Grenade | Grenade Throw.fbx | 0.8 s | Release at 0.45 s |
+| Pistol | Reload.fbx | 1.65 s | Ammo added near the end |
+| Machine gun | Reload.fbx | 1.9 s | Ammo added near the end |
+| Bat | Baseball Strike.fbx | 0.55 s | About 0.18 s |
+| Sword | Great Sword Slash.fbx | 0.5 s | About 0.19 s |
+| Grenade | Grenade Throw.fbx | 0.8 s | About 0.45 s |
 
-The FBX import settings trim the long setup and trailing motion. Set the playback duration on the weapon's component. Contact and release timing come from Animation Events in the FBX's Animation tab, so changing playback speed also changes when the hit happens. The times above are approximate at the configured durations.
+Change the duration on the weapon component. To adjust hit or release timing, move `ActionContact` in the FBX’s animation events. `ActionComplete` finishes the action and adds ammo for reloads. Switching weapons cancels the current action.
 
-The bat, sword and grenade clips call `ActionContact` at 32.7%, 38% and 56.25% respectively. All four clips call `ActionComplete` at 99%, just before the final frame. Reload adds ammunition at that event. There are no separate hit, release or reload timers.
+`FirstPersonArms.cs` handles hand placement and starts the Animator transitions. Adjust `Right Hand Grip` and `Left Hand Grip` to change how a weapon is held. Keep these targets outside the animated hand bones.
 
-`FirstPersonArms.cs` sets the clip's named Animator trigger, blends from the holding pose using animation progress, and attaches the weapon to the animated wrist. It keeps the wrist's IK rotation offset so the handle stays in the palm. The action framing keeps hands in front of the lens. The right-hand finger pose keeps the grip closed; the left fingers can follow the imported action.
+Only the arms Animator sends gameplay events, so the body’s matching animation won’t cause a second hit. If you rename a clip, update its state and trigger in both controllers too.
 
-Open the **Action** layer in either controller to see the four action transitions. Each trigger has the same name as its clip; `ActionSpeed` controls playback speed. Actions return to Ready at Exit Time 1. `CancelAction` returns immediately when switching weapons. If a clip is renamed, update its state and trigger in both controllers.
+## Scripts
 
-Only the arms Animator sends gameplay events. The body Animator has `fireEvents` disabled so its matching shadow animation cannot deal damage or spawn a second grenade. Events from a cancelled action are ignored; contact is accepted once per action. The arms action layer retains a small nonzero weight until completion, because Unity suppresses events on a layer with zero weight.
+- `GunWeapon.cs`: Shooting, ammo, recoil, and reloads.
+- `MeleeWeapon.cs`: Swings and hits the nearest enemy within reach. Walls block hits.
+- `GrenadeWeapon.cs`: Charging and throwing. `UnifiedGrenadeProjectile.cs` handles explosions.
+- `WeaponController.cs`: Input and weapon switching.
+- `Weapon.cs`: Shared camera, grip, and animation setup.
 
-The arms controller has a static ready pose, an Action layer, and separate left/right finger layers. There is no player idle motion or Rifle Idle asset. `ReadyPose.anim` is a frozen pose needed to hold the rig between actions. Walking remains for the visible legs.
+## Player setup
 
-## Combat scripts
+Movement uses one CharacterController for walking and sprinting. There’s no jump or gravity, so place the player at floor height.
 
-- `GunWeapon.cs`: center-crosshair shooting, ammunition, recoil and clip-based reloads. Firing runs after the camera updates. Reloading blocks firing; switching cancels the reload without adding ammo.
-- `MeleeWeapon.cs`: plays the assigned swing and damages the nearest visible enemy at the contact event. The full reach includes close enemies. Walls block hits and multiple colliders do not multiply damage.
-- `GrenadeWeapon.cs`: charge, clip playback and release at the contact event. Switching before release cancels the throw. `UnifiedGrenadeProjectile.cs` handles the existing explosion behavior.
-- `WeaponController.cs`: input and weapon selection.
-- `Weapon.cs`: shared grip/camera references, animation playback requests and cancellation.
+The full body and head still cast a shadow, and the torso and legs are visible when looking down. The camera follows the eye anchor. Keep the camera and arm rig beside `Player Body` in the hierarchy.
 
-For holding poses, adjust `Right Hand Grip` and `Left Hand Grip` under each weapon. One-handed weapons use a left-hand rest target under the camera. Keep these targets outside the animated hand hierarchy to avoid an IK feedback loop.
-
-## Body and movement
-
-`PlayerCharacterController.cs` uses one CharacterController for horizontal walking and sprinting. There is no jump, gravity, or player Rigidbody. Place the player at the intended floor height.
-
-`PlayerBodyAnimator.cs` reads horizontal movement speed. `Full Body Shadow` retains the complete body and head with Shadows Only rendering; `Visible Torso and Legs` shares its skeleton. The body's upper half plays the same action clip for the shadow while the legs keep their movement animation. First-person arms do not cast a second arm shadow.
-
-`PlayerLookController` follows the head's Eye Anchor in LateUpdate and keeps rotation under mouse control. Keep the camera/arm rig beside `Player Body`, rather than nesting one humanoid Animator under the other. There is still one camera.
-
-## Connection to the animation lecture
-
-These are the techniques from **8. Animation.pdf**, with slide numbers for review:
-
-| Slides | Technique | Where to find it |
-| --- | --- | --- |
-| 12, 18–24 | Humanoid rigs, Avatar retargeting and baked root motion | The four action FBX import settings. The CharacterController drives movement; player Animators do not apply root motion. |
-| 14–17 | State machines, transitions and script parameters | Both controllers' Action layers; `FirstPersonArms` sets triggers and `ActionSpeed`. |
-| 28–29 | A 1D blend tree driven by Speed | `PlayerBody.controller` blends the static ready pose into walking and faster walking. `PlayerBodyAnimator` supplies horizontal speed. |
-| 33–36 | Layers and Avatar Masks | The body uses `UpperBodyActions`; arms use `FirstPersonActions` and finger masks. Leg movement continues during actions. |
-| 38–40 | Animation Events calling script methods | Imported clips call `FirstPersonArms.ActionContact` / `ActionComplete`, which notify the active weapon. |
-| 41 | Inverse kinematics | `FirstPersonArms.OnAnimatorIK` aligns hands with grip targets and fits action poses in front of the camera. |
-
-To follow one action, select Baseball Strike in the FBX importer and inspect its two Events. Then open the arms controller's Action layer and follow the Baseball Strike trigger into the swing state and its exit back to Ready. `MeleeWeapon.OnAnimationContact` is where the swing applies damage.
-
-The lecture's idle, jump and larger directional blend-tree examples are examples of the techniques, rather than additional features required by this project's first-person controls. The player keeps the requested four action clips and walking legs.
-
-Unity's reference for editing imported clip events: [Add events to animation clips](https://docs.unity.com/en-us/engine/6000.3/manual/animation-section/animation-mecanim/animation-clips/animation-events-on-imported-clips).
+The setup follows the lecture’s Animator transitions, blend tree, avatar masks, animation events, and hand IK. Masks let the upper-body actions play while the legs keep walking.
