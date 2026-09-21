@@ -36,6 +36,11 @@ namespace TheWard.Combat
         [SerializeField] private bool aimHeldGunAtCrosshair = true;
         [SerializeField] private bool muzzlePointsBackward;
 
+        [Header("Reload")]
+        [SerializeField, Min(0.1f)] private float reloadDuration = 1.2f;
+        [SerializeField] private Vector3 reloadEuler = new Vector3(-12f, 0f, -20f);
+        [SerializeField] private Vector3 reloadHandOffset = new Vector3(0f, -0.12f, 0f);
+
         [Header("Melee Settings")]
         [SerializeField] private float meleeRadius = 0.75f;
         [SerializeField] private Vector3 meleeSwingEuler = new Vector3(55f, -20f, -25f);
@@ -60,6 +65,9 @@ namespace TheWard.Combat
         private float nextAttackTime;
         private float chargeStartTime;
         private bool isCharging;
+        private bool isAnimating;
+        private Vector3 startingLeftGrip;
+        private Renderer[] grenadeRenderers;
         private int ammo;
         private int reserveAmmo;
         private Vector3 startingPosition;
@@ -72,6 +80,7 @@ namespace TheWard.Combat
         public Transform LeftHandGrip => leftHandGrip;
         public string DisplayName => displayName;
         public WeaponMode Mode => mode;
+        public bool IsAnimating => isAnimating;
         public int Ammo => ammo;
         public int ReserveAmmo => reserveAmmo;
 
@@ -84,6 +93,8 @@ namespace TheWard.Combat
             reserveAmmo = startingReserveAmmo;
             startingPosition = transform.localPosition;
             startingRotation = transform.localRotation;
+            if (leftHandGrip != null) startingLeftGrip = leftHandGrip.localPosition;
+            if (mode == WeaponMode.Grenade) grenadeRenderers = GetComponentsInChildren<Renderer>();
         }
 
         private void LateUpdate()
@@ -91,7 +102,7 @@ namespace TheWard.Combat
             // The animated hand controls the gun's position, but the gun barrel
             // must still follow the camera aim. These two models face opposite
             // directions in their source files, hence muzzlePointsBackward.
-            if (mode != WeaponMode.Firearm || !aimHeldGunAtCrosshair || attackOrigin == null)
+            if (isAnimating || mode != WeaponMode.Firearm || !aimHeldGunAtCrosshair || attackOrigin == null)
                 return;
 
             Vector3 forward = muzzlePointsBackward ? -attackOrigin.forward : attackOrigin.forward;
@@ -100,6 +111,7 @@ namespace TheWard.Combat
 
         public void HandleInput(bool pressed, bool held, bool released)
         {
+            if (isAnimating) return;
             if (mode == WeaponMode.Grenade)
             {
                 HandleGrenadeInput(pressed, held, released);
@@ -273,14 +285,16 @@ namespace TheWard.Combat
             float chargeAmount = Mathf.Clamp01(chargeTime / maximumChargeTime);
             float throwForce = Mathf.Lerp(minimumThrowForce, maximumThrowForce, chargeAmount);
 
-            ResetWeaponTransform();
-            nextAttackTime = Time.time + Mathf.Max(cooldown, grenadeReleaseDelay + 0.8f);
+            nextAttackTime = Time.time + Mathf.Max(cooldown, grenadeReleaseDelay + 0.35f);
             StartCoroutine(SpawnGrenadeAfterWindup(throwForce));
         }
 
         private IEnumerator SpawnGrenadeAfterWindup(float throwForce)
         {
-            yield return new WaitForSeconds(grenadeReleaseDelay);
+            isAnimating = true;
+            Vector3 releasePosition = startingPosition + new Vector3(-0.04f, 0.10f, 0.12f);
+            yield return MoveWeapon(releasePosition, startingRotation * Quaternion.Euler(-25f, 0f, 0f), grenadeReleaseDelay);
+            SetGrenadeVisible(false);
 
             Transform origin = attackOrigin != null ? attackOrigin : transform;
             Vector3 spawnPosition = origin.position + origin.forward * 0.4f;
@@ -315,25 +329,53 @@ namespace TheWard.Combat
             grenadeBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             Vector3 throwDirection = (origin.forward + Vector3.up * 0.18f).normalized;
             grenadeBody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+            yield return MoveWeapon(startingPosition, startingRotation, 0.3f);
+            SetGrenadeVisible(true);
+            isAnimating = false;
 
         }
 
         public void Reload()
         {
-            if (mode != WeaponMode.Firearm || ammo >= magazineSize || reserveAmmo <= 0)
+            if (isAnimating || mode != WeaponMode.Firearm || ammo >= magazineSize || reserveAmmo <= 0)
             {
                 return;
             }
 
+            if (recoilRoutine != null) StopCoroutine(recoilRoutine);
+            recoilRoutine = null;
+            ResetWeaponTransform();
+            StartCoroutine(ReloadWeapon());
+        }
+
+        private IEnumerator ReloadWeapon()
+        {
+            isAnimating = true;
+            yield return MoveWeapon(startingPosition + Vector3.down * 0.025f,
+                startingRotation * Quaternion.Euler(reloadEuler), reloadDuration * 0.2f);
+            float elapsed = 0f;
+            float handDuration = reloadDuration * 0.6f;
+            while (elapsed < handDuration)
+            {
+                elapsed += Time.deltaTime;
+                float reach = Mathf.Sin(Mathf.Clamp01(elapsed / handDuration) * Mathf.PI);
+                if (leftHandGrip != null)
+                    leftHandGrip.localPosition = startingLeftGrip + reloadHandOffset * reach;
+                yield return null;
+            }
+            if (leftHandGrip != null) leftHandGrip.localPosition = startingLeftGrip;
+            yield return MoveWeapon(startingPosition, startingRotation, reloadDuration * 0.2f);
             int bulletsNeeded = magazineSize - ammo;
             int bulletsToLoad = Mathf.Min(bulletsNeeded, reserveAmmo);
 
             ammo += bulletsToLoad;
             reserveAmmo -= bulletsToLoad;
+            isAnimating = false;
         }
 
         private IEnumerator SwingMelee()
         {
+            isAnimating = true;
             Quaternion swingRotation = startingRotation * Quaternion.Euler(meleeSwingEuler);
             float halfTime = meleeSwingDuration / 2f;
 
@@ -341,6 +383,27 @@ namespace TheWard.Combat
             yield return RotateWeapon(swingRotation, startingRotation, halfTime);
 
             transform.localRotation = startingRotation;
+            isAnimating = false;
+        }
+
+        private IEnumerator MoveWeapon(Vector3 position, Quaternion rotation, float duration)
+        {
+            Vector3 fromPosition = transform.localPosition;
+            Quaternion fromRotation = transform.localRotation;
+            for (float elapsed = 0f; elapsed < duration; elapsed += Time.deltaTime)
+            {
+                float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
+                transform.localPosition = Vector3.Lerp(fromPosition, position, t);
+                transform.localRotation = Quaternion.Slerp(fromRotation, rotation, t);
+                yield return null;
+            }
+            transform.SetLocalPositionAndRotation(position, rotation);
+        }
+
+        private void SetGrenadeVisible(bool visible)
+        {
+            if (grenadeRenderers == null) return;
+            foreach (Renderer renderer in grenadeRenderers) renderer.enabled = visible;
         }
 
         private IEnumerator GunRecoil()
@@ -421,6 +484,9 @@ namespace TheWard.Combat
             StopAllCoroutines();
             recoilRoutine = null;
             isCharging = false;
+            isAnimating = false;
+            SetGrenadeVisible(true);
+            if (leftHandGrip != null) leftHandGrip.localPosition = startingLeftGrip;
             ResetWeaponTransform();
         }
 
