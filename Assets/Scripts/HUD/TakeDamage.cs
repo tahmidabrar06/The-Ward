@@ -1,6 +1,6 @@
 using UnityEngine;
-using UnityEngine.Rendering; // Changed: URP's core volume system
-using UnityEngine.Rendering.Universal; // Changed: URP's specific effects (like Vignette)
+using UnityEngine.Rendering; 
+using UnityEngine.Rendering.Universal;
 using System.Collections;
 using TheWard.Combat; 
 
@@ -54,7 +54,6 @@ public class TakeDamage : MonoBehaviour
         {
             StopCoroutine(_damageCoroutine);
         }
-        
         _damageCoroutine = StartCoroutine(TakeDamageEffect());
     }
 
@@ -75,7 +74,6 @@ public class TakeDamage : MonoBehaviour
 
             yield return new WaitForSeconds(0.05f);
         }
-        
         _vignette.intensity.Override(0f);
     }
 }
