@@ -8,7 +8,6 @@ namespace TheWard.Character
     public sealed class PlayerCharacterController : MonoBehaviour
     {
         [SerializeField] private InputActionReference moveAction;
-        [SerializeField] private InputActionReference jumpAction;
         [SerializeField] private InputActionReference sprintAction;
         [SerializeField] private InputActionReference sneakAction;
         
@@ -56,6 +55,8 @@ namespace TheWard.Character
 
         private void OnEnable()
         {
+            moveAction?.action.Enable();
+            sprintAction?.action.Enable();
             EnableAction(moveAction);
             EnableAction(jumpAction);
             EnableAction(sprintAction);
@@ -64,6 +65,8 @@ namespace TheWard.Character
 
         private void OnDisable()
         {
+            moveAction?.action.Disable();
+            sprintAction?.action.Disable();
             DisableAction(moveAction);
             DisableAction(jumpAction);
             DisableAction(sprintAction);
@@ -106,7 +109,6 @@ namespace TheWard.Character
 
             verticalVelocity += gravity * Time.deltaTime;
             Vector3 movement = horizontalMovement * speed;
-            movement.y = verticalVelocity;
             characterController.Move(movement * Time.deltaTime);
         }
         

@@ -4,12 +4,10 @@ using UnityEngine.Events;
 
 namespace TheWard.Combat
 {
-    // Put this component on anything that can lose health.
     public class Health : MonoBehaviour, IDamageable
     {
         [SerializeField] private float maxHealth = 100f;
 
-        // These events can be connected in the Unity Inspector.
         [SerializeField] private UnityEvent onDamage;
         [SerializeField] private UnityEvent onDeath;
 
@@ -18,7 +16,6 @@ namespace TheWard.Combat
         public float NormalizedHealth => CurrentHealth / maxHealth;
         public bool IsAlive => CurrentHealth > 0f;
 
-        // The health UI listens to this event.
         public event Action<float> Damaged;
         public event Action<float, float> HealthChanged;
 
@@ -27,7 +24,6 @@ namespace TheWard.Combat
             CurrentHealth = maxHealth;
         }
 
-        // Weapons call this method when they hit this object.
         public void TakeDamage(float damage)
         {
             if (!IsAlive || damage <= 0f)
