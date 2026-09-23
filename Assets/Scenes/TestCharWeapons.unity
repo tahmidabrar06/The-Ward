@@ -1937,7 +1937,6 @@ GameObject:
   - component: {fileID: 1576639934}
   - component: {fileID: 1576639933}
   - component: {fileID: 1576639941}
-  - component: {fileID: 1576639942}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2001,8 +2000,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.PlayerCharacterController
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  sneakAction: {fileID: 0}
   walkSpeed: 4
   sprintSpeed: 7
+  sneakSpeed: 2.5
+  staminaComponent: {fileID: 0}
+  standingHeight: 2
+  crouchHeight: 0.5
+  crouchTransitionSpeed: 10
+  cameraTransform: {fileID: 0}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!143 &1576639936
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2121,24 +2130,6 @@ MonoBehaviour:
   minimumPitch: -80
   maximumPitch: 80
   lockCursor: 1
---- !u!114 &1576639942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1576639932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8193ef509a284cd1bc86feee6585d587, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.PlayerHealthHUD
-  health: {fileID: 1576639934}
-  screenPosition: {x: 24, y: 24}
-  barSize: {x: 280, y: 28}
-  healthyColor: {r: 0.2, g: 0.78, b: 0.3, a: 1}
-  dangerColor: {r: 0.85, g: 0.12, b: 0.12, a: 1}
-  damageMessageDuration: 0.8
 --- !u!1 &1625106739
 GameObject:
   m_ObjectHideFlags: 0
@@ -3626,7 +3617,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f56cfaaa16e812e468930ea07a20bdd3, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Zombie
 --- !u!1 &2682909487068892329
 GameObject:
@@ -4419,7 +4410,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage:
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -5753,7 +5744,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 918b3969164a94c1dbb43529064068b0, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.PlayerBodyAnimator
 --- !u!1 &7726507193675549705
 GameObject:

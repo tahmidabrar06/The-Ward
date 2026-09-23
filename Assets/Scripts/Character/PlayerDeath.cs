@@ -11,7 +11,7 @@ namespace TheWard.Core
         [SerializeField] private Stamina playerStamina;
         [SerializeField] private PlayerCharacterController moveController;
         [SerializeField] private PlayerLookController lookController;
-        [SerializeField] private UnifiedWeaponController weaponController;
+        [SerializeField] private WeaponController weaponController;
         
         [Header("UI References")]
         [SerializeField] private GameObject deathUIPanel;

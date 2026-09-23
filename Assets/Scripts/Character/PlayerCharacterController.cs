@@ -16,10 +16,6 @@ namespace TheWard.Character
         [SerializeField, Min(0f)] private float sprintSpeed = 7f;
         [SerializeField, Min(0f)] private float sneakSpeed = 2.5f;
         [SerializeField] private Stamina staminaComponent;
-        
-        [Header("Jumping")]
-        [SerializeField, Min(0f)] private float jumpHeight = 1.2f;
-        [SerializeField] private float gravity = -20f;
 
         [Header("Sneaking Settings")]
         [SerializeField, Min(0.1f)] private float standingHeight = 2f;
@@ -58,7 +54,6 @@ namespace TheWard.Character
             moveAction?.action.Enable();
             sprintAction?.action.Enable();
             EnableAction(moveAction);
-            EnableAction(jumpAction);
             EnableAction(sprintAction);
             EnableAction(sneakAction);
         }
@@ -68,7 +63,6 @@ namespace TheWard.Character
             moveAction?.action.Disable();
             sprintAction?.action.Disable();
             DisableAction(moveAction);
-            DisableAction(jumpAction);
             DisableAction(sprintAction);
             DisableAction(sneakAction);
         }
@@ -96,18 +90,7 @@ namespace TheWard.Character
             }
 
             float speed = isCrouching ? sneakSpeed : (isSprinting ? sprintSpeed : walkSpeed);
-
-            if (characterController.isGrounded)
-            {
-                verticalVelocity = -2f;
-            }
-
-            if (jumpAction != null && jumpAction.action.WasPressedThisFrame() && characterController.isGrounded && !isCrouching)
-            {
-                verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            }
-
-            verticalVelocity += gravity * Time.deltaTime;
+            
             Vector3 movement = horizontalMovement * speed;
             characterController.Move(movement * Time.deltaTime);
         }
