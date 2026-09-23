@@ -34669,6 +34669,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21fc60e1083364fb5862ecbb6b782556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.Health
+--- !u!114 &1261258012 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2784080870819211898, guid: 037120bbfc9774050bfa61e805a89c24, type: 3}
+  m_PrefabInstance: {fileID: 1772235859}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd11e9dce53241fabc5f2e1af895e5ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Core.PlayerDeath
 --- !u!1001 &1295345580
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -65339,6 +65350,79 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1001 &2098050500
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 183981640819330638, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_Name
+      value: Zombie
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.6099
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.6099
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.6099
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -10.76
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030185570654752486, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
 --- !u!1 &2108992575
 GameObject:
   m_ObjectHideFlags: 0
@@ -67308,7 +67392,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1261258012}
         m_TargetAssemblyTypeName: TheWard.Core.PlayerDeath, Assembly-CSharp
         m_MethodName: Respawn
         m_Mode: 1
@@ -67486,7 +67570,6 @@ RectTransform:
   m_Children:
   - {fileID: 1411563045805538422}
   - {fileID: 4323975960994018810}
-  - {fileID: 3667901234757968064}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -67622,7 +67705,7 @@ RectTransform:
   m_Children:
   - {fileID: 310396843000800781}
   - {fileID: 2197643373197237064}
-  m_Father: {fileID: 1941584398752874320}
+  m_Father: {fileID: 4323975960994018810}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -67685,7 +67768,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3667901234757968064}
   m_Father: {fileID: 1941584398752874320}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -68155,7 +68239,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1261258012}
         m_TargetAssemblyTypeName: TheWard.Core.PlayerDeath, Assembly-CSharp
         m_MethodName: ReturnToMainMenu
         m_Mode: 1
@@ -68401,3 +68485,4 @@ SceneRoots:
   - {fileID: 1772235859}
   - {fileID: 1941584398752874320}
   - {fileID: 842557553}
+  - {fileID: 2098050500}

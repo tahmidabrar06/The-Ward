@@ -34,6 +34,8 @@ namespace TheWard.Core
             
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            
+            Respawn();
         }
         
         public void Respawn()
