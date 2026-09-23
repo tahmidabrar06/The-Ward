@@ -14744,12 +14744,12 @@ GameObject:
   - component: {fileID: 493863536}
   - component: {fileID: 493863535}
   - component: {fileID: 493863534}
-  - component: {fileID: 493863533}
   - component: {fileID: 493863532}
-  - component: {fileID: 493863531}
   - component: {fileID: 493863530}
   - component: {fileID: 493863529}
   - component: {fileID: 493863528}
+  - component: {fileID: 493863542}
+  - component: {fileID: 493863541}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -14771,7 +14771,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Core.PlayerDeath
   playerHealth: {fileID: 493863537}
   playerStamina: {fileID: 493863534}
-  moveController: {fileID: 493863531}
+  moveController: {fileID: 0}
   lookController: {fileID: 493863535}
   weaponController: {fileID: 493863536}
   deathUIPanel: {fileID: 755445101}
@@ -14806,39 +14806,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a241e1ac187074a61bef51bebeef4bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FeatureTesting
---- !u!114 &493863531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 493863527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b3106fe417f4fa7ad2cab8e57decc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.PlayerRigidbodyController
-  moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  sneakAction: {fileID: 7040659881675835329, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  walkSpeed: 4
-  sprintSpeed: 7
-  sneakSpeed: 2.5
-  jumpForce: 5
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  standingHeight: 2
-  crouchHeight: 1
-  standingRadius: 0.5
-  crouchRadius: 0.25
-  crouchTransitionSpeed: 10
-  cameraTransform: {fileID: 1118900435}
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  staminaComponent: {fileID: 493863534}
 --- !u!136 &493863532
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -14862,33 +14829,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &493863533
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 493863527}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &493863534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15050,6 +14990,60 @@ Transform:
   - {fileID: 1118900435}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &493863541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493863527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00f4b2a5e23334edcba4342572309239, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.PlayerCharacterController
+  moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  sneakAction: {fileID: 7040659881675835329, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  walkSpeed: 4
+  sprintSpeed: 7
+  sneakSpeed: 2.5
+  staminaComponent: {fileID: 0}
+  jumpHeight: 1.2
+  gravity: -20
+  standingHeight: 2
+  crouchHeight: 0.75
+  crouchTransitionSpeed: 10
+  cameraTransform: {fileID: 1118900435}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!143 &493863542
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493863527}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!43 &499601203
 Mesh:
   m_ObjectHideFlags: 0

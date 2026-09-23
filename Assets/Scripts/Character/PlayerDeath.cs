@@ -9,7 +9,7 @@ namespace TheWard.Core
         [Header("References")]
         [SerializeField] private Health playerHealth;
         [SerializeField] private Stamina playerStamina;
-        [SerializeField] private PlayerRigidbodyController moveController;
+        [SerializeField] private PlayerCharacterController moveController;
         [SerializeField] private PlayerLookController lookController;
         [SerializeField] private UnifiedWeaponController weaponController;
         

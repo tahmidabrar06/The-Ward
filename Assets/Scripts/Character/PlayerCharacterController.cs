@@ -24,7 +24,7 @@ namespace TheWard.Character
 
         [Header("Sneaking Settings")]
         [SerializeField, Min(0.1f)] private float standingHeight = 2f;
-        [SerializeField, Min(0.1f)] private float crouchHeight = 0.75f;
+        [SerializeField, Min(0.1f)] private float crouchHeight = 0.5f;
         [SerializeField, Min(1f)] private float crouchTransitionSpeed = 10f;
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private LayerMask obstacleMask = ~0;
@@ -114,36 +114,39 @@ namespace TheWard.Character
         {
             bool wantsToCrouch = sneakAction != null && sneakAction.action.IsPressed();
 
-            if (wantsToCrouch)
+            if (!wantsToCrouch && isCrouching)
             {
-                isCrouching = true;
-            }
-            else if (isCrouching)
-            {
-                float radius = characterController.radius;
-                Vector3 castOrigin = transform.position + characterController.center;
-                float castDistance = standingHeight - characterController.height;
-                
-                if (!Physics.SphereCast(castOrigin, radius, Vector3.up, out _, castDistance, obstacleMask, QueryTriggerInteraction.Ignore))
+                if (!CheckIfColliderAbove())
                 {
                     isCrouching = false;
                 }
             }
-            
+            else if (wantsToCrouch)
+            {
+                isCrouching = true;
+            }
+    
             float targetHeight = isCrouching ? crouchHeight : standingHeight;
-            
             characterController.height = Mathf.Lerp(characterController.height, targetHeight, Time.deltaTime * crouchTransitionSpeed);
-            
+    
             float heightDifference = standingHeight - characterController.height;
             characterController.center = new Vector3(characterController.center.x, standingCenterY - (heightDifference / 2f), characterController.center.z);
-            
+    
             if (cameraTransform != null)
             {
-                float heightRatio = characterController.height / standingHeight;
+                float targetHeightDifference = standingHeight - targetHeight;
+                float targetCamHeight = originalCameraLocalY - targetHeightDifference;
+        
                 Vector3 camPos = cameraTransform.localPosition;
-                camPos.y = Mathf.Lerp(cameraTransform.localPosition.y, originalCameraLocalY * heightRatio, Time.deltaTime * crouchTransitionSpeed);
+                camPos.y = Mathf.Lerp(cameraTransform.localPosition.y, targetCamHeight, Time.deltaTime * crouchTransitionSpeed);
                 cameraTransform.localPosition = camPos;
             }
+        }
+        
+        private bool CheckIfColliderAbove()
+        {
+            return
+                Physics.Raycast(transform.position, Vector3.up, 1);  //returns true if anything collides with a 1 unit long raycast drawn from player's current position (ultimately checks if something solid is above him)
         }
 
         private static void EnableAction(InputActionReference actionReference)
