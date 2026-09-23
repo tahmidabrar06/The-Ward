@@ -39,12 +39,6 @@ namespace TheWard.Character
             
             if (cameraTransform == null)
             {
-                Camera childCamera = GetComponentInChildren<Camera>();
-                if (childCamera != null) cameraTransform = childCamera.transform;
-            }
-
-            if (cameraTransform != null)
-            {
                 originalCameraLocalY = cameraTransform.localPosition.y;
             }
         }
