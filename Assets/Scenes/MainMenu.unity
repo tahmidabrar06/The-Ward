@@ -1071,8 +1071,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Quit
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8cc3f48620b85eb4ca29b575c2942c78, type: 2}
-  m_sharedMaterial: {fileID: 2204902682061759055, guid: 8cc3f48620b85eb4ca29b575c2942c78, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ce28f1db0c1f7d94ea540e449ef615b4, type: 2}
+  m_sharedMaterial: {fileID: -401930810025716979, guid: ce28f1db0c1f7d94ea540e449ef615b4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1809,8 +1809,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8cc3f48620b85eb4ca29b575c2942c78, type: 2}
-  m_sharedMaterial: {fileID: 2204902682061759055, guid: 8cc3f48620b85eb4ca29b575c2942c78, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ce28f1db0c1f7d94ea540e449ef615b4, type: 2}
+  m_sharedMaterial: {fileID: -401930810025716979, guid: ce28f1db0c1f7d94ea540e449ef615b4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -9545,6 +9545,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1362399028}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &760503655
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 760503657}
+  - component: {fileID: 760503656}
+  m_Layer: 0
+  m_Name: MainMenuManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &760503656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760503655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10720db65aaabd74f8e5aed1ff5da78f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainMenu
+--- !u!4 &760503657
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760503655}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.33464, y: 2.24146, z: -11.93324}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &789165511 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4182960130155038, guid: ad2e00a29b893684badcf4a95835b385, type: 3}
@@ -11832,8 +11876,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: The Ward
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8cc3f48620b85eb4ca29b575c2942c78, type: 2}
-  m_sharedMaterial: {fileID: 2204902682061759055, guid: 8cc3f48620b85eb4ca29b575c2942c78, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ce28f1db0c1f7d94ea540e449ef615b4, type: 2}
+  m_sharedMaterial: {fileID: -401930810025716979, guid: ce28f1db0c1f7d94ea540e449ef615b4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -12659,8 +12703,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8cc3f48620b85eb4ca29b575c2942c78, type: 2}
-  m_sharedMaterial: {fileID: 2204902682061759055, guid: 8cc3f48620b85eb4ca29b575c2942c78, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ce28f1db0c1f7d94ea540e449ef615b4, type: 2}
+  m_sharedMaterial: {fileID: -401930810025716979, guid: ce28f1db0c1f7d94ea540e449ef615b4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -12780,7 +12824,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1610761582}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 760503656}
+        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+        m_MethodName: PlayGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &1624460004
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13838,3 +13894,4 @@ SceneRoots:
   - {fileID: 1362399028}
   - {fileID: 174522932}
   - {fileID: 1562482492}
+  - {fileID: 760503657}
