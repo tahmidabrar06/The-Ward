@@ -16,6 +16,9 @@ namespace TheWard.Combat
         [SerializeField] private Weapon[] weapons;
         [SerializeField] private int startingWeaponIndex;
 
+		[Header("Crosshair reference")]
+		public GameObject crosshairUI;
+
         private int activeWeaponIndex;
 
         public Weapon ActiveWeapon => weapons != null && activeWeaponIndex >= 0 && activeWeaponIndex < weapons.Length
@@ -73,7 +76,7 @@ namespace TheWard.Combat
 
         private void OnGUI()
         {
-            Weapon weapon = ActiveWeapon;
+            /*Weapon weapon = ActiveWeapon;
             if (!(weapon is GunWeapon) || weapon.AimCamera == null) return;
 
             Vector2 center = weapon.AimCamera.pixelRect.center;
@@ -83,7 +86,7 @@ namespace TheWard.Combat
             GUI.DrawTexture(new Rect(center.x - 3f, center.y - 3f, 6f, 6f), Texture2D.whiteTexture);
             GUI.color = Color.white;
             GUI.DrawTexture(new Rect(center.x - 1f, center.y - 1f, 2f, 2f), Texture2D.whiteTexture);
-            GUI.color = previousColor;
+            GUI.color = previousColor;*/
         }
 
         private void ReadWeaponSwitchInput()
@@ -101,11 +104,11 @@ namespace TheWard.Combat
             Keyboard keyboard = Keyboard.current;
             if (keyboard == null) return;
 
-            if (keyboard.digit1Key.wasPressedThisFrame) SelectWeapon(0);
-            else if (keyboard.digit2Key.wasPressedThisFrame) SelectWeapon(1);
-            else if (keyboard.digit3Key.wasPressedThisFrame) SelectWeapon(2);
-            else if (keyboard.digit4Key.wasPressedThisFrame) SelectWeapon(3);
-            else if (keyboard.digit5Key.wasPressedThisFrame) SelectWeapon(4);
+            if (keyboard.digit1Key.wasPressedThisFrame) { SelectWeapon(0); crosshairUI.SetActive(true); } // hand gun
+            else if (keyboard.digit2Key.wasPressedThisFrame){ SelectWeapon(1); crosshairUI.SetActive(true); } // automatic
+            else if (keyboard.digit3Key.wasPressedThisFrame){ SelectWeapon(2); crosshairUI.SetActive(false); } // bat 
+            else if (keyboard.digit4Key.wasPressedThisFrame){ SelectWeapon(3); crosshairUI.SetActive(false); } // granade
+            else if (keyboard.digit5Key.wasPressedThisFrame){ SelectWeapon(4); crosshairUI.SetActive(false); } // sword
         }
 
         private void ChangeWeapon(int direction)
