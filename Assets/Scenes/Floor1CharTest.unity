@@ -67278,6 +67278,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6390002343372318616, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: playerController
+      value: 
+      objectReference: {fileID: 8343990890064578834}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -67429,6 +67433,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21fc60e1083364fb5862ecbb6b782556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.Health
+--- !u!114 &8343990890064578834 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 542371727033614167, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+  m_PrefabInstance: {fileID: 1791051344047719931}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00f4b2a5e23334edcba4342572309239, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.PlayerCharacterController
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

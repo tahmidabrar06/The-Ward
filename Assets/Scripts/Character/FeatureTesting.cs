@@ -27,7 +27,7 @@ public class FeatureTesting : MonoBehaviour
             {
                 Vector3 spawnPosition = spawnPoint != null ? spawnPoint.position : transform.position + (transform.forward * 2f);
                 Quaternion spawnRotation = spawnPoint != null ? spawnPoint.rotation : transform.rotation;
-
+                
                 Instantiate(zombiePrefab, spawnPosition, spawnRotation);
             }
             else
