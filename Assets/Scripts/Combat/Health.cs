@@ -17,6 +17,7 @@ namespace TheWard.Combat
         public bool IsAlive => CurrentHealth > 0f;
 
         public event Action<float> Damaged;
+        public event Action<float, float> HealthChanged;
 
         private void Awake()
         {
@@ -35,16 +36,20 @@ namespace TheWard.Combat
 
             onDamage?.Invoke();
             Damaged?.Invoke(damage);
+            HealthChanged?.Invoke(CurrentHealth, maxHealth); 
 
             if (CurrentHealth <= 0f)
             {
                 onDeath?.Invoke();
+				if (HitIndicator.Instance != null) HitIndicator.Instance.ShowHit(true);
             }
+			else {if (HitIndicator.Instance != null) HitIndicator.Instance.ShowHit(false);}
         }
 
         public void RestoreFullHealth()
         {
             CurrentHealth = maxHealth;
+            HealthChanged?.Invoke(CurrentHealth, maxHealth);
         }
     }
 }

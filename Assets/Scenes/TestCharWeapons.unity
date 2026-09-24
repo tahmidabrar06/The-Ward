@@ -499,7 +499,7 @@ PrefabInstance:
       value: Pistol_C
       objectReference: {fileID: 0}
     - target: {fileID: 8522767595139398882, guid: 436d84b39ebbb99449cf0c0ed23b24a5, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
+      propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 2a461ee17a7f0b8449bd2c6e34b0e286, type: 2}
     m_RemovedComponents: []
@@ -963,15 +963,15 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3692054107937592660, guid: c46c875fd7c2543a693806515f381748, type: 3}
-      propertyPath: 'm_Materials.Array.data[1]'
+      propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: 407d4c6408bc74d94b30399bd157942e, type: 2}
     - target: {fileID: 3692054107937592660, guid: c46c875fd7c2543a693806515f381748, type: 3}
-      propertyPath: 'm_Materials.Array.data[2]'
+      propertyPath: m_Materials.Array.data[2]
       value: 
       objectReference: {fileID: 2100000, guid: 5bfc261ff4e52460d928524d03ed2131, type: 2}
     - target: {fileID: 3692054107937592660, guid: c46c875fd7c2543a693806515f381748, type: 3}
-      propertyPath: 'm_Materials.Array.data[3]'
+      propertyPath: m_Materials.Array.data[3]
       value: 
       objectReference: {fileID: 2100000, guid: 632452a69c484430da82a26fb5e475f6, type: 2}
     - target: {fileID: 3971097722223640382, guid: c46c875fd7c2543a693806515f381748, type: 3}
@@ -1400,8 +1400,8 @@ Mesh:
   m_CookingOptions: 30
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
-  'm_MeshMetrics[0]': 1
-  'm_MeshMetrics[1]': 1
+  m_MeshMetrics[0]: 1
+  m_MeshMetrics[1]: 1
   m_MeshOptimizationFlags: 1
   m_StreamData:
     serializedVersion: 2
@@ -1937,7 +1937,6 @@ GameObject:
   - component: {fileID: 1576639934}
   - component: {fileID: 1576639933}
   - component: {fileID: 1576639941}
-  - component: {fileID: 1576639942}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1967,7 +1966,7 @@ MonoBehaviour:
   - {fileID: 1712486027}
   - {fileID: 966794926}
   - {fileID: 592817346}
-  startingWeaponIndex: 0
+  startingWeaponIndex: 1
 --- !u!114 &1576639934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2001,8 +2000,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.PlayerCharacterController
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  sneakAction: {fileID: 0}
   walkSpeed: 4
   sprintSpeed: 7
+  sneakSpeed: 2.5
+  staminaComponent: {fileID: 0}
+  standingHeight: 2
+  crouchHeight: 0.5
+  crouchTransitionSpeed: 10
+  cameraTransform: {fileID: 0}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!143 &1576639936
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2053,7 +2062,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 406571c3e89a245bfb39976edc5a3c20, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2121,24 +2130,6 @@ MonoBehaviour:
   minimumPitch: -80
   maximumPitch: 80
   lockCursor: 1
---- !u!114 &1576639942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1576639932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8193ef509a284cd1bc86feee6585d587, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.PlayerHealthHUD
-  health: {fileID: 1576639934}
-  screenPosition: {x: 24, y: 24}
-  barSize: {x: 280, y: 28}
-  healthyColor: {r: 0.2, g: 0.78, b: 0.3, a: 1}
-  dangerColor: {r: 0.85, g: 0.12, b: 0.12, a: 1}
-  damageMessageDuration: 0.8
 --- !u!1 &1625106739
 GameObject:
   m_ObjectHideFlags: 0
@@ -2226,14 +2217,14 @@ MonoBehaviour:
   displayName: Pistol
   rightHandGrip: {fileID: 522251651}
   leftHandGrip: {fileID: 381541080}
-  attackOrigin: {fileID: 73656928}
   triggerMode: 0
-  damage: 25
-  cooldown: 0.25
-  range: 60
+  attackOrigin: {fileID: 73656928}
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  damage: 25
+  cooldown: 0.25
+  range: 60
   impactForce: 4
   muzzlePoint: {fileID: 824599291}
   magazineSize: 12
@@ -2280,8 +2271,6 @@ MonoBehaviour:
     m_Bits: 4294967295
   swingAnimation: {fileID: -203655887218126122, guid: 4ee593ee845484ba7878f23f73e2b8d3, type: 3}
   meleeSwingDuration: 0.55
-  useForwardSwing: 1
-  swingContactFraction: 0.32727274
 --- !u!1 &1801174388 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 6f966b9a7c817ed49973b4a8762cbbdf, type: 3}
@@ -2302,14 +2291,14 @@ MonoBehaviour:
   displayName: Machine Gun
   rightHandGrip: {fileID: 81978700}
   leftHandGrip: {fileID: 1212981813}
-  attackOrigin: {fileID: 73656928}
   triggerMode: 1
-  damage: 12
-  cooldown: 0.1
-  range: 75
+  attackOrigin: {fileID: 73656928}
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  damage: 12
+  cooldown: 0.1
+  range: 75
   impactForce: 6
   muzzlePoint: {fileID: 1493210559}
   magazineSize: 30
@@ -3628,7 +3617,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f56cfaaa16e812e468930ea07a20bdd3, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Zombie
 --- !u!1 &2682909487068892329
 GameObject:
@@ -4421,7 +4410,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage:
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -5755,7 +5744,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 918b3969164a94c1dbb43529064068b0, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.PlayerBodyAnimator
 --- !u!1 &7726507193675549705
 GameObject:

@@ -9,6 +9,7 @@ namespace TheWard.Character
     /// </summary>
     public sealed class PlayerLookController : MonoBehaviour
     {
+		[SerializeField] public PlayerCharacterController playerController;
         [SerializeField] private InputActionReference lookAction;
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform eyeAnchor;
@@ -63,15 +64,21 @@ namespace TheWard.Character
 
         private void LateUpdate()
         {
-            // Head animation is evaluated after Update; keep mouse look in charge.
             if (cameraTransform == null) return;
-            if (eyeAnchor != null) cameraTransform.position = eyeAnchor.position;
+            if (eyeAnchor != null) 
+			{
+				float currentOffset = playerController != null ? playerController.CameraCrouchOffset : 0f; // Ugly fix to crouch problem
+
+				cameraTransform.position = eyeAnchor.position - new Vector3(0, currentOffset, 0);
+				
+			}
             ApplyLookRotation();
         }
 
         private void ApplyLookRotation()
         {
             cameraTransform.rotation = transform.rotation * Quaternion.Euler(pitch, 0f, 0f);
+           
         }
 
         private void OnApplicationFocus(bool hasFocus)
