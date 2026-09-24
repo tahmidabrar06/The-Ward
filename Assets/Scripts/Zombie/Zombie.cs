@@ -1,15 +1,9 @@
-using System;
-using NUnit.Framework.Constraints;
 using TheWard.Combat;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Zombie : MonoBehaviour
 {
-    //todo:
-    //Add sound
-    //Add attack event at the end of attack animation
-    
     public enum ZombieState
     {
         Unaware,
@@ -48,8 +42,6 @@ public class Zombie : MonoBehaviour
     private LayerMask obstructionMask;
 
     private Health health;
-    
-
 
     void Start()
     {
@@ -59,11 +51,10 @@ public class Zombie : MonoBehaviour
         currentState = ZombieState.Unaware;
     }
 
-
     void Update()
     {
-        
-        if(!isDead)
+
+        if (!isDead && player != null && agent.isOnNavMesh)
         {
             switch (currentState)
             {
@@ -84,10 +75,8 @@ public class Zombie : MonoBehaviour
                     break;
             }
         }
-    
-        //Debug.Log(currentState);
-    }
 
+    }
 
     void UnawareState()
     {
@@ -108,7 +97,6 @@ public class Zombie : MonoBehaviour
             currentState = ZombieState.Suspicious;
         }
     }
-
 
     void SuspiciousState()
     {
@@ -159,7 +147,6 @@ public class Zombie : MonoBehaviour
         }
     }
 
-
     void DetectedState()
     {
         attackTimer = 0;
@@ -177,7 +164,6 @@ public class Zombie : MonoBehaviour
             return;
         }
 
-
         if (stealthMechanics)
         {
             if (!PlayerInView() && !PlayerInDetectionRange())
@@ -186,7 +172,6 @@ public class Zombie : MonoBehaviour
             }
         }
     }
-
 
     void AttackingState()
     {
@@ -217,15 +202,12 @@ public class Zombie : MonoBehaviour
         }
     }
 
-
     void Attack()
     {
-        // Attack code
-        animator.SetTrigger("Attack"); //need to add attack event at the end of zombie attack animation
+        animator.SetTrigger("Attack");
         Health playerHealth = player.GetComponent<Health>();
-        playerHealth.TakeDamage(damage);
+        if (playerHealth != null) playerHealth.TakeDamage(damage);
     }
-
 
     void RotateToPlayer()
     {
@@ -239,7 +221,6 @@ public class Zombie : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(direction);
         }
     }
-
 
     bool PlayerInView()
     {
@@ -264,13 +245,11 @@ public class Zombie : MonoBehaviour
         return false;
     }
 
-
     bool PlayerInDetectionRange()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position );
         return distanceToPlayer <= detectionDist;
     }
-
 
     bool PlayerInAttackRange()
     {
@@ -278,7 +257,6 @@ public class Zombie : MonoBehaviour
         return distanceToPlayer <= attackRange;
     }
 
-    //to check if attacking is finished
     public void AttackAnimationFinished()
     {
         attackInProgress = false;

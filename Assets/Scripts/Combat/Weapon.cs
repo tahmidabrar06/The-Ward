@@ -1,64 +1,79 @@
+using TheWard.Character;
 using UnityEngine;
 
 namespace TheWard.Combat
 {
-    // A simple melee weapon used by the older WeaponController script.
-    public class Weapon : MonoBehaviour
+    public abstract class Weapon : MonoBehaviour
     {
-        [Header("Melee Attack")]
-        [SerializeField] private float damage = 25f;
-        [SerializeField] private float attackCooldown = 0.35f;
-        [SerializeField] private float attackRange = 2f;
-        [SerializeField] private float attackRadius = 0.6f;
-        [SerializeField] private LayerMask hitMask = ~0;
+        [SerializeField] private string displayName = "Weapon";
+        [SerializeField] protected Transform rightHandGrip;
+        [SerializeField] protected Transform leftHandGrip;
+        [SerializeField] protected Transform attackOrigin;
 
-        // The next time, in seconds, that another attack is allowed.
-        private float nextAllowedAttackTime;
+        protected Vector3 startingPosition;
+        protected Quaternion startingRotation;
+        protected bool isAnimating;
+        private FirstPersonArms arms;
 
-        // Returns true when an attack happens and false while cooling down.
-        public bool TryAttack(GameObject owner)
+        public string DisplayName => displayName;
+        public Transform RightHandGrip => rightHandGrip;
+        public Transform LeftHandGrip => leftHandGrip;
+        public Camera AimCamera { get; private set; }
+        public bool IsAnimating => isAnimating;
+        protected Transform Origin => attackOrigin != null ? attackOrigin : transform;
+
+        protected virtual void Awake()
         {
-            if (Time.time < nextAllowedAttackTime)
+            AimCamera = attackOrigin != null
+                ? attackOrigin.GetComponent<Camera>()
+                : GetComponentInParent<Camera>();
+            if (AimCamera != null) arms = AimCamera.GetComponentInChildren<FirstPersonArms>();
+            startingPosition = transform.localPosition;
+            startingRotation = transform.localRotation;
+        }
+
+        public abstract void HandleInput(bool pressed, bool held, bool released);
+        public virtual void Reload() { }
+
+        public Ray GetAimRay()
+        {
+            return AimCamera != null
+                ? AimCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f))
+                : new Ray(Origin.position, Origin.forward);
+        }
+
+        protected bool PlayAnimation(AnimationClip clip, float duration)
+        {
+            if (arms == null || clip == null)
             {
+                Debug.LogWarning($"Assign an animation and first-person arm rig for {displayName}.", this);
                 return false;
             }
-
-            // Start the cooldown before checking for a target.
-            nextAllowedAttackTime = Time.time + attackCooldown;
-
-            // Check a small sphere in front of the weapon.
-            Vector3 attackPosition = GetAttackPosition();
-            Collider[] objectsHit = Physics.OverlapSphere(
-                attackPosition,
-                attackRadius,
-                hitMask,
-                QueryTriggerInteraction.Ignore);
-
-            foreach (Collider objectHit in objectsHit)
-            {
-                Health targetHealth = objectHit.GetComponentInParent<Health>();
-
-                // Ignore objects without health and prevent the player hitting themself.
-                if (targetHealth != null && targetHealth.transform.root != owner.transform.root)
-                {
-                    targetHealth.TakeDamage(damage);
-                    break;
-                }
-            }
-
+            isAnimating = true;
+            arms.PlayAction(this, clip, duration);
             return true;
         }
 
-        private Vector3 GetAttackPosition()
+        public virtual void OnAnimationContact() { }
+        public virtual void OnAnimationComplete() => FinishAnimation(cancelled: false);
+
+        private void FinishAnimation(bool cancelled)
         {
-            return transform.position + transform.forward * attackRange;
+            arms?.StopAction(this, cancelled);
+            isAnimating = false;
+            ResetWeaponTransform();
         }
 
-        private void OnDrawGizmosSelected()
+        protected void ResetWeaponTransform()
         {
-            // Shows the melee hit area in the Scene view.
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(GetAttackPosition(), attackRadius);
+            transform.localPosition = startingPosition;
+            transform.localRotation = startingRotation;
+        }
+
+        protected virtual void OnDisable()
+        {
+            StopAllCoroutines();
+            FinishAnimation(cancelled: true);
         }
     }
 }
