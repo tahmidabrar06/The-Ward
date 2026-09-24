@@ -2790,6 +2790,9 @@ MonoBehaviour:
   weapons: {fileID: 5634817519465663803}
   view: {fileID: 9124333694323668972}
   actionOffset: {x: 0, y: 0.07, z: -0.45}
+  gripHoldFraction: 0.2
+  gripReturnFraction: 0.75
+  gripBlendFraction: 0.1
 --- !u!1 &2830301893196590448
 GameObject:
   m_ObjectHideFlags: 0
@@ -4310,7 +4313,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.6, y: 1.55, z: -8.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 271151581065798056}
@@ -4418,7 +4421,6 @@ MonoBehaviour:
   sprintSpeed: 7
   sneakSpeed: 2.5
   staminaComponent: {fileID: 6327677778665811326}
-  standingHeight: 2
   crouchHeight: 0.75
   crouchTransitionSpeed: 10
 --- !u!114 &4161757025570981915
@@ -6084,6 +6086,8 @@ MonoBehaviour:
     m_Bits: 4294967295
   swingAnimation: {fileID: -203655887218126122, guid: 7531e54eba70a4583968a72b2e0752a5, type: 3}
   meleeSwingDuration: 0.5
+  useForwardSwing: 0
+  swingContactFraction: 0.32727274
 --- !u!1 &6376370628094895658
 GameObject:
   m_ObjectHideFlags: 0
@@ -8671,6 +8675,8 @@ MonoBehaviour:
     m_Bits: 4294967295
   swingAnimation: {fileID: -203655887218126122, guid: 4ee593ee845484ba7878f23f73e2b8d3, type: 3}
   meleeSwingDuration: 0.55
+  useForwardSwing: 0
+  swingContactFraction: 0.32727274
 --- !u!1 &8002638264123263451
 GameObject:
   m_ObjectHideFlags: 0
