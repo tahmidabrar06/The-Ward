@@ -66014,6 +66014,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 648094942337609731, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: showShotTracer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 857568081484818163, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: cooldown
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 857568081484818163, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: showShotTracer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1290191485644675277, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: spawnPoint
       value: 
@@ -66021,7 +66033,7 @@ PrefabInstance:
     - target: {fileID: 4383025538454266020, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: deathUIPanel
       value: 
-      objectReference: {fileID: 1149237604863209255}
+      objectReference: {fileID: 0}
     - target: {fileID: 4383025538454266020, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: respawnPoint
       value: 
@@ -66069,6 +66081,14 @@ PrefabInstance:
     - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6370203747711728171, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: damage
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 6480104010165871473, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: damage
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -67218,11 +67238,6 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
---- !u!1 &1149237604863209255 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5080955484508113745, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
-  m_PrefabInstance: {fileID: 2582580285207281412}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2582580285207281412
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67332,7 +67347,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4870839645983699030, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
