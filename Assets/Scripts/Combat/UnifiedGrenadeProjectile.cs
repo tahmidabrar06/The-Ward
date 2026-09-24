@@ -66,6 +66,11 @@ namespace TheWard.Combat
                 if (health != null && health != ownerHealth)
                 {
                     health.TakeDamage(damage);
+                    if (HitIndicator.Instance != null)
+                    {
+                        if (!health.IsDead()) HitIndicator.Instance.ShowHit(false);
+                        else HitIndicator.Instance.ShowHit(true);
+                    }
                 }
             }
 

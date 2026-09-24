@@ -99,7 +99,15 @@ namespace TheWard.Combat
             }
 
             // Multiple colliders on the same zombie still receive one hit.
-            if (target != null) target.TakeDamage(damage);
+            if (target != null)
+            {
+                target.TakeDamage(damage);
+                if (HitIndicator.Instance != null)
+                {
+                    if (!target.IsDead()) HitIndicator.Instance.ShowHit(false);
+                    else HitIndicator.Instance.ShowHit(true);
+                }
+            }
         }
 
         private bool IsBlocked(Vector3 origin, Vector3 point, Health target)

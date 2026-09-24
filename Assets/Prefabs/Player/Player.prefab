@@ -4312,7 +4312,7 @@ Transform:
   m_GameObject: {fileID: 4582717099992144779}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.6, y: 1.55, z: -8.5}
+  m_LocalPosition: {x: -0.72, y: 1.81, z: -8.35}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4545,7 +4545,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a241e1ac187074a61bef51bebeef4bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FeatureTesting
-  zombiePrefab: {fileID: 183981640819330638, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+  zombiePrefab: {fileID: 7695817219333652487, guid: f775440835e2c42febb5b373281f86a9, type: 3}
   spawnPoint: {fileID: 0}
 --- !u!1 &4586864520016119658
 GameObject:
