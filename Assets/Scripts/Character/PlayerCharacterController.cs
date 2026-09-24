@@ -18,16 +18,13 @@ namespace TheWard.Character
         [SerializeField] private Stamina staminaComponent;
 
         [Header("Sneaking Settings")]
-        [SerializeField, Min(0.1f)] private float standingHeight = 2f;
+        //[SerializeField, Min(0.1f)] private float standingHeight = 2f;
+        private float standingHeight;
         [SerializeField, Min(0.1f)] private float crouchHeight = 0.5f;
         [SerializeField, Min(1f)] private float crouchTransitionSpeed = 10f;
-        [SerializeField] private Transform cameraTransform;
-        [SerializeField] private LayerMask obstacleMask = ~0;
         public float CameraCrouchOffset { get; private set; }
-        
         private CharacterController characterController;
         private float verticalVelocity;
-        
         private bool isCrouching;
         private float standingCenterY;
         private float originalCameraLocalY;
@@ -37,11 +34,7 @@ namespace TheWard.Character
             characterController = GetComponent<CharacterController>();
             
             standingCenterY = characterController.center.y;
-            
-            if (cameraTransform == null)
-            {
-                originalCameraLocalY = cameraTransform.localPosition.y;
-            }
+            standingHeight = characterController.height;
         }
 
         private void OnEnable()
@@ -83,6 +76,12 @@ namespace TheWard.Character
             float speed = isCrouching ? sneakSpeed : (isSprinting ? sprintSpeed : walkSpeed);
             
             Vector3 movement = horizontalMovement * speed;
+            
+            if (characterController.isGrounded) verticalVelocity = -2f;
+            
+            verticalVelocity += Physics.gravity.y * Time.deltaTime;
+            movement.y = verticalVelocity;
+            
             characterController.Move(movement * Time.deltaTime);
         }
         
@@ -108,7 +107,8 @@ namespace TheWard.Character
         
         private bool CheckIfColliderAbove()
         {
-            return Physics.Raycast(transform.position, Vector3.up, 1);  //returns true if anything collides with a 1 unit long raycast drawn from player's current position (ultimately checks if something solid is above him)
+            float distance = standingHeight - crouchHeight;
+            return Physics.Raycast(transform.position, Vector3.up, distance);  //returns true if anything collides with a 1 unit long raycast drawn from player's current position (ultimately checks if something solid is above him)
         }
 
         private static void EnableAction(InputActionReference actionReference)

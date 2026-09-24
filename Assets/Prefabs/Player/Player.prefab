@@ -4421,10 +4421,6 @@ MonoBehaviour:
   standingHeight: 2
   crouchHeight: 0.75
   crouchTransitionSpeed: 10
-  cameraTransform: {fileID: 9124333694323668972}
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &4161757025570981915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4492,6 +4488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdf188598c434d67899b7a28d2cf15bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.PlayerLookController
+  playerController: {fileID: 542371727033614167}
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   cameraTransform: {fileID: 9124333694323668972}
   eyeAnchor: {fileID: 8493367638032053242}
