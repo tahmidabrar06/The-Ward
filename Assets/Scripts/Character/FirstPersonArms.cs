@@ -8,12 +8,17 @@ namespace TheWard.Character
     {
         private const int ActionLayer = 1;
         private const int LeftFingerLayer = 2;
+        private const int RightFingerLayer = 3;
         private const float BlendInDuration = 0.06f;
         private const float BlendOutDuration = 0.12f;
 
         [SerializeField] private WeaponController weapons;
         [SerializeField] private Transform view;
         [SerializeField] private Vector3 actionOffset = new Vector3(0f, 0.07f, -0.45f);
+        [Header("Grip Timing")]
+        [SerializeField, Range(0f, 0.4f)] private float gripHoldFraction = 0.2f;
+        [SerializeField, Range(0.6f, 1f)] private float gripReturnFraction = 0.75f;
+        [SerializeField, Range(0.01f, 0.2f)] private float gripBlendFraction = 0.1f;
         private Vector3 readyRigPosition;
 
         private static readonly int HoldingGun = Animator.StringToHash("HoldingGun");
@@ -26,7 +31,7 @@ namespace TheWard.Character
         private AnimationClip actionClip;
         private int actionTrigger;
         private bool contactSent;
-        private float actionDuration, actionWeight;
+        private float actionDuration, actionWeight, actionProgress;
         private Vector3 readyRightPosition, readyLeftPosition;
         private Quaternion readyRightRotation, readyLeftRotation;
         private Quaternion wristToGripRotation, leftWristToGripRotation;
@@ -49,6 +54,7 @@ namespace TheWard.Character
             actionClip = clip;
             actionTrigger = Animator.StringToHash(clip.name);
             contactSent = false;
+            actionProgress = 0f;
             actionDuration = duration;
             wristToGripRotation = Quaternion.Inverse(rightHand.rotation) * weapon.RightHandGrip.rotation;
             leftWristToGripRotation = Quaternion.Inverse(leftHand.rotation) * weapon.LeftHandGrip.rotation;
@@ -102,6 +108,7 @@ namespace TheWard.Character
             animator.SetBool(HoldingGun, weapons != null && weapons.ActiveWeapon is GunWeapon);
             AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(ActionLayer);
             float elapsed = state.shortNameHash == actionTrigger ? state.normalizedTime * actionDuration : 0f;
+            actionProgress = actionDuration > 0f ? Mathf.Clamp01(elapsed / actionDuration) : 0f;
             float weight = actionWeapon == null ? 0f : Mathf.SmoothStep(0f, 1f,
                 Mathf.Min(elapsed / BlendInDuration, (actionDuration - elapsed) / BlendOutDuration));
             ApplyActionWeight(weight);
@@ -113,13 +120,34 @@ namespace TheWard.Character
             transform.localPosition = readyRigPosition + actionOffset * actionWeight;
             // A zero-weight layer stops delivering events. Keep it active until completion.
             animator.SetLayerWeight(ActionLayer, actionWeapon != null ? Mathf.Max(0.001f, actionWeight) : 0f);
-            animator.SetLayerWeight(LeftFingerLayer, 1f - actionWeight);
+            UpdateGripWeights();
             if (bodyAnimator != null) bodyAnimator.SetLayerWeight(ActionLayer, actionWeight);
+        }
+
+        private void UpdateGripWeights()
+        {
+            // Keep melee fingers wrapped throughout the swing. Reloads and throws
+            // release later and regain their grip before the action finishes.
+            float releaseWeight = 0f;
+            if (actionWeapon is GunWeapon || actionWeapon is GrenadeWeapon)
+            {
+                float blend = Mathf.Max(0.01f, gripBlendFraction);
+                float release = Mathf.SmoothStep(0f, 1f,
+                    (actionProgress - gripHoldFraction) / blend);
+                float returnToGrip = Mathf.SmoothStep(0f, 1f,
+                    (actionProgress - gripReturnFraction) / blend);
+                releaseWeight = release * (1f - returnToGrip);
+            }
+            animator.SetLayerWeight(LeftFingerLayer, 1f - releaseWeight);
+            // The throwing hand must hold the grenade until the release event.
+            animator.SetLayerWeight(RightFingerLayer,
+                actionWeapon is GrenadeWeapon && contactSent ? 1f - releaseWeight : 1f);
         }
 
         private void LateUpdate()
         {
             if (actionWeapon == null) return;
+            if (actionWeapon is MeleeWeapon melee && melee.UsesForwardSwing) return;
             // During actions the clip drives the wrist and the weapon follows it.
             // IK uses the saved ready pose, never this moving grip, to avoid feedback.
             Transform grip = actionWeapon.RightHandGrip;
@@ -135,6 +163,17 @@ namespace TheWard.Character
             UpdateElbow(AvatarIKHint.LeftElbow, new Vector3(-0.5f, -0.65f, 0.2f));
             if (actionWeapon != null)
             {
+                if (actionWeapon is MeleeWeapon melee && melee.UsesForwardSwing)
+                {
+                    // Sample after Animator evaluation so the visible contact matches
+                    // the clip event rather than the previous frame's Update time.
+                    AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(ActionLayer);
+                    float progress = state.shortNameHash == actionTrigger ? Mathf.Clamp01(state.normalizedTime) : 0f;
+                    melee.ApplyForwardSwing(view, progress);
+                    UpdateHand(AvatarIKGoal.RightHand, melee.RightHandGrip);
+                    UpdateHand(AvatarIKGoal.LeftHand, melee.LeftHandGrip);
+                    return;
+                }
                 FitAnimatedHand(AvatarIKGoal.RightHand, rightHand, wristToGripRotation,
                     readyRightPosition, readyRightRotation);
                 FitAnimatedHand(AvatarIKGoal.LeftHand, leftHand, leftWristToGripRotation,

@@ -14,6 +14,54 @@ namespace TheWard.Combat
         [Header("Swing")]
         [SerializeField] private AnimationClip swingAnimation;
         [SerializeField, Min(0.01f)] private float meleeSwingDuration = 0.25f;
+        [SerializeField] private bool useForwardSwing;
+        [SerializeField, Range(0.2f, 0.55f)] private float swingContactFraction = 0.32727274f;
+
+        public bool UsesForwardSwing => useForwardSwing;
+
+        public void ApplyForwardSwing(Transform view, float progress)
+        {
+            // The bat's length runs along local +Y. Rotate about the handle,
+            // aiming its barrel through the crosshair at the contact event.
+            Quaternion readyRotation = Quaternion.Inverse(view.rotation) *
+                transform.parent.rotation * startingRotation;
+            Vector3 gripOffset = Vector3.Scale(rightHandGrip.localPosition, transform.localScale);
+            Vector3 readyPosition = view.InverseTransformPoint(
+                transform.parent.TransformPoint(startingPosition)) + readyRotation * gripOffset;
+            Vector3 contactPosition = new Vector3(0.08f, -0.2f, 0.65f);
+            Vector3 contactDirection = (new Vector3(0f, 0f, range) - contactPosition).normalized;
+            Vector3 direction;
+            Vector3 position;
+            float windupEnd = swingContactFraction * 0.45f;
+            if (progress < windupEnd)
+            {
+                float t = Mathf.SmoothStep(0f, 1f, progress / windupEnd);
+                position = Vector3.Lerp(readyPosition, readyPosition + new Vector3(0.12f, 0.06f, -0.08f), t);
+                direction = Vector3.Slerp(readyRotation * Vector3.up, new Vector3(0.85f, 0.5f, -0.1f).normalized, t);
+            }
+            else if (progress < swingContactFraction)
+            {
+                float t = Mathf.SmoothStep(0f, 1f,
+                    (progress - windupEnd) / (swingContactFraction - windupEnd));
+                position = Vector3.Lerp(readyPosition + new Vector3(0.12f, 0.06f, -0.08f), contactPosition, t);
+                direction = Vector3.Slerp(new Vector3(0.85f, 0.5f, -0.1f).normalized, contactDirection, t);
+            }
+            else if (progress < 0.6f)
+            {
+                float t = Mathf.SmoothStep(0f, 1f, (progress - swingContactFraction) / (0.6f - swingContactFraction));
+                position = Vector3.Lerp(contactPosition, new Vector3(-0.22f, -0.32f, 0.55f), t);
+                direction = Vector3.Slerp(contactDirection, new Vector3(-0.8f, -0.2f, 0.55f).normalized, t);
+            }
+            else
+            {
+                float t = Mathf.SmoothStep(0f, 1f, (progress - 0.6f) / 0.35f);
+                position = Vector3.Lerp(new Vector3(-0.22f, -0.32f, 0.55f), readyPosition, t);
+                direction = Vector3.Slerp(new Vector3(-0.8f, -0.2f, 0.55f).normalized, readyRotation * Vector3.up, t);
+            }
+            Quaternion rotation = Quaternion.FromToRotation(readyRotation * Vector3.up, direction) * readyRotation;
+            transform.rotation = view.rotation * rotation;
+            transform.position = view.TransformPoint(position - rotation * gripOffset);
+        }
 
         private float nextAttackTime;
 

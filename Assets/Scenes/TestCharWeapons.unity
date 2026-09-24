@@ -499,7 +499,7 @@ PrefabInstance:
       value: Pistol_C
       objectReference: {fileID: 0}
     - target: {fileID: 8522767595139398882, guid: 436d84b39ebbb99449cf0c0ed23b24a5, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
+      propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 2a461ee17a7f0b8449bd2c6e34b0e286, type: 2}
     m_RemovedComponents: []
@@ -963,15 +963,15 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3692054107937592660, guid: c46c875fd7c2543a693806515f381748, type: 3}
-      propertyPath: 'm_Materials.Array.data[1]'
+      propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: 407d4c6408bc74d94b30399bd157942e, type: 2}
     - target: {fileID: 3692054107937592660, guid: c46c875fd7c2543a693806515f381748, type: 3}
-      propertyPath: 'm_Materials.Array.data[2]'
+      propertyPath: m_Materials.Array.data[2]
       value: 
       objectReference: {fileID: 2100000, guid: 5bfc261ff4e52460d928524d03ed2131, type: 2}
     - target: {fileID: 3692054107937592660, guid: c46c875fd7c2543a693806515f381748, type: 3}
-      propertyPath: 'm_Materials.Array.data[3]'
+      propertyPath: m_Materials.Array.data[3]
       value: 
       objectReference: {fileID: 2100000, guid: 632452a69c484430da82a26fb5e475f6, type: 2}
     - target: {fileID: 3971097722223640382, guid: c46c875fd7c2543a693806515f381748, type: 3}
@@ -1400,8 +1400,8 @@ Mesh:
   m_CookingOptions: 30
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
-  'm_MeshMetrics[0]': 1
-  'm_MeshMetrics[1]': 1
+  m_MeshMetrics[0]: 1
+  m_MeshMetrics[1]: 1
   m_MeshOptimizationFlags: 1
   m_StreamData:
     serializedVersion: 2
@@ -2217,14 +2217,14 @@ MonoBehaviour:
   displayName: Pistol
   rightHandGrip: {fileID: 522251651}
   leftHandGrip: {fileID: 381541080}
-  attackOrigin: {fileID: 73656928}
   triggerMode: 0
-  damage: 25
-  cooldown: 0.25
-  range: 60
+  attackOrigin: {fileID: 73656928}
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  damage: 25
+  cooldown: 0.25
+  range: 60
   impactForce: 4
   muzzlePoint: {fileID: 824599291}
   magazineSize: 12
@@ -2291,14 +2291,14 @@ MonoBehaviour:
   displayName: Machine Gun
   rightHandGrip: {fileID: 81978700}
   leftHandGrip: {fileID: 1212981813}
-  attackOrigin: {fileID: 73656928}
   triggerMode: 1
-  damage: 12
-  cooldown: 0.1
-  range: 75
+  attackOrigin: {fileID: 73656928}
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  damage: 12
+  cooldown: 0.1
+  range: 75
   impactForce: 6
   muzzlePoint: {fileID: 1493210559}
   magazineSize: 30

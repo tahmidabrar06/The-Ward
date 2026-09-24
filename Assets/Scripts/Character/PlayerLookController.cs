@@ -78,6 +78,20 @@ namespace TheWard.Character
         private void ApplyLookRotation()
         {
             cameraTransform.rotation = transform.rotation * Quaternion.Euler(pitch, 0f, 0f);
+            ApplyLookRotation();
+        }
+
+        private void LateUpdate()
+        {
+            // Head animation is evaluated after Update; keep mouse look in charge.
+            if (cameraTransform == null) return;
+            if (eyeAnchor != null) cameraTransform.position = eyeAnchor.position;
+            ApplyLookRotation();
+        }
+
+        private void ApplyLookRotation()
+        {
+            cameraTransform.rotation = transform.rotation * Quaternion.Euler(pitch, 0f, 0f);
         }
 
         private void OnApplicationFocus(bool hasFocus)

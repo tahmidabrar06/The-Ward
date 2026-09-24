@@ -104,11 +104,11 @@ namespace TheWard.Combat
             Keyboard keyboard = Keyboard.current;
             if (keyboard == null) return;
 
-            if (keyboard.digit1Key.wasPressedThisFrame) { SelectWeapon(0); crosshairUI.SetActive(true); } // hand gun
-            else if (keyboard.digit2Key.wasPressedThisFrame){ SelectWeapon(1); crosshairUI.SetActive(true); } // automatic
-            else if (keyboard.digit3Key.wasPressedThisFrame){ SelectWeapon(2); crosshairUI.SetActive(false); } // bat 
-            else if (keyboard.digit4Key.wasPressedThisFrame){ SelectWeapon(3); crosshairUI.SetActive(false); } // granade
-            else if (keyboard.digit5Key.wasPressedThisFrame){ SelectWeapon(4); crosshairUI.SetActive(false); } // sword
+            if (keyboard.digit1Key.wasPressedThisFrame) SelectWeapon(0);
+            else if (keyboard.digit2Key.wasPressedThisFrame) SelectWeapon(1);
+            else if (keyboard.digit3Key.wasPressedThisFrame) SelectWeapon(2);
+            else if (keyboard.digit4Key.wasPressedThisFrame) SelectWeapon(3);
+            else if (keyboard.digit5Key.wasPressedThisFrame) SelectWeapon(4);
         }
 
         private void ChangeWeapon(int direction)

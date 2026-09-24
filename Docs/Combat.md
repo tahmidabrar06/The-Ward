@@ -16,7 +16,11 @@ Kept reloads, the two melee swings, grenade throw, and walking for the legs. `Re
 
 Change the duration on the weapon component. To adjust hit or release timing, move `ActionContact` in the FBX’s animation events. `ActionComplete` finishes the action and adds ammo for reloads. Switching weapons cancels the current action.
 
+The bat in `TestCharWeapons` enables `Use Forward Swing`: its handle winds up on the right, drives the barrel toward the crosshair, follows through left, and returns to rest. The right hand follows the handle with IK; the left stays at its rest target. The imported clip still drives body motion and gameplay events. Keep `Swing Contact Fraction` aligned with the normalized `ActionContact` event time (currently 0.32727274). This option is off for the sword.
+
 `FirstPersonArms.cs` handles hand placement and starts the Animator transitions. Adjust `Right Hand Grip` and `Left Hand Grip` to change how a weapon is held. Keep these targets outside the animated hand bones.
+
+Grip poses loop while holding a weapon. Melee keeps the fingers closed for the whole swing. Reloads and throws hold the left-hand grip for the first 20% of the action, blend into the clip's finger pose over 10%, then start re-gripping at 75%. Tune `Grip Hold Fraction`, `Grip Return Fraction`, and `Grip Blend Fraction` on the FirstPersonArms component. The right hand keeps its grip until the grenade's release event. These settings change finger posing without changing attack, reload, or projectile timing.
 
 Only the arms Animator sends gameplay events, so the body’s matching animation won’t cause a second hit. If you rename a clip, update its state and trigger in both controllers too.
 
