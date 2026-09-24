@@ -41,11 +41,14 @@ namespace TheWard.Combat
             if (CurrentHealth <= 0f)
             {
                 onDeath?.Invoke();
-				if (HitIndicator.Instance != null) HitIndicator.Instance.ShowHit(true);
             }
-			else {if (HitIndicator.Instance != null) HitIndicator.Instance.ShowHit(false);}
         }
 
+        public bool IsDead()
+        {
+            return (CurrentHealth <= 0); 
+        }
+        
         public void RestoreFullHealth()
         {
             CurrentHealth = maxHealth;

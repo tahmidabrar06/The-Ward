@@ -101,6 +101,11 @@ namespace TheWard.Combat
             if (enemyHealth != null && enemyHealth.transform.root != transform.root)
             {
                 enemyHealth.TakeDamage(damage);
+                if (HitIndicator.Instance != null)
+                {
+                    if (!enemyHealth.IsDead()) HitIndicator.Instance.ShowHit(false);
+                    else HitIndicator.Instance.ShowHit(true);
+                }
             }
 
             if (hit.rigidbody != null)
