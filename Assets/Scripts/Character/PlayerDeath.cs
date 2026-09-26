@@ -1,6 +1,7 @@
 using UnityEngine;
 using TheWard.Character;
 using TheWard.Combat;
+using UnityEngine.SceneManagement;
 
 namespace TheWard.Core
 {
@@ -35,7 +36,8 @@ namespace TheWard.Core
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             
-            Respawn();
+            //Respawn();   //respawn is redundant. levels are small enough that we can reload scene instead.
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); //call this from the death menu button instead. this si temporiry for testing
         }
         
         public void Respawn()

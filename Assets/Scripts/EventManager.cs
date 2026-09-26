@@ -1,6 +1,5 @@
 using TheWard.Combat;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class EventManager : MonoBehaviour
 {
@@ -36,19 +35,17 @@ public class EventManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         zombieSpawn = GameObject.Find("ZombieSpawn");
         zombieContainer = GameObject.Find("ZombieContainer");
+        waveDefTrigger = GameObject.Find("WaveDefenseTrigger");
     }
 
     void Update()
     {
+        WaveDefConditionCheck(); //temporary, to be replaced with elvator door trigger
         if (waveDefenceStarted)
         {
             if (waveDefCountdown > 0)
             {
                 waveDefCountdown -= Time.deltaTime;
-            }
-            if(player.GetComponent<Health>().CurrentHealth <= 0)
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
             SpawnWaves();
         }
@@ -93,6 +90,16 @@ public class EventManager : MonoBehaviour
             {
                 zombie.SetZombieState(Zombie.ZombieState.Detected);
             }
+        }
+    }
+
+    //Temporary funtcion
+    void WaveDefConditionCheck()
+    {
+        if (Vector3.Distance(player.transform.position, waveDefTrigger.transform.position) 
+            <= waveDefTrigger.GetComponent<SphereCollider>().radius)
+        {
+            StartWaveDefence();
         }
     }
 }

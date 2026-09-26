@@ -13644,7 +13644,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360d12d1ee404264d9d5a7576aea28cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EventManager
-  durationOfWaveDefence: 60
+  durationOfWaveDef: 60
   numberOfWaves: 5
   difficultyMultiplier: 1
   waveScaleMultiplier: 1.2
@@ -13653,7 +13653,7 @@ MonoBehaviour:
   currentWave: 1
   waveSpawnInterval: 0
   waveSpawnTimer: 0
-  waveDefenceCountdown: 0
+  waveDefCountdown: 0
 --- !u!4 &323643031 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4158575754832734, guid: 5fd35642a8c9c7e49a95d59470b9c855, type: 3}
@@ -19719,6 +19719,10 @@ PrefabInstance:
     - target: {fileID: 4380863843944580603, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4383025538454266020, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4383025538454266020, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: deathUIPanel
