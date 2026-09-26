@@ -19,7 +19,7 @@ public class Zombie : MonoBehaviour
     [SerializeField]
     private float aggroRange;
     private bool attackInProgress;
-    private bool isDead;
+    public bool isDead;
     private bool hordeAggroed = false;
 
     private GameObject player;
@@ -51,7 +51,7 @@ public class Zombie : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
         health = GetComponent<Health>();
-        currentState = ZombieState.Unaware;
+        //currentState = ZombieState.Unaware;
     }
 
     void Update()
@@ -303,6 +303,11 @@ public class Zombie : MonoBehaviour
                 zombie.currentState = ZombieState.Detected;
             }
         }
+    }
+
+    public void SetZombieState(ZombieState state)
+    {
+        currentState = state;
     }
 
     void OnDrawGizmosSelected()
