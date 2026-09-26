@@ -20,6 +20,7 @@ public class Zombie : MonoBehaviour
     private float aggroRange;
     private bool attackInProgress;
     private bool isDead;
+    private bool hordeAggroed = false;
 
     private GameObject player;
     private NavMeshAgent agent;
@@ -151,8 +152,13 @@ public class Zombie : MonoBehaviour
 
     void DetectedState()
     {
+        //Debug.Log("Detected");
         attackTimer = 0;
-
+        if (!hordeAggroed)
+        {
+            AggroHorde();
+            hordeAggroed = true;
+        }
         agent.speed = chaseSpeed;
         agent.isStopped = false;
         agent.SetDestination(player.transform.position);
@@ -283,7 +289,6 @@ public class Zombie : MonoBehaviour
             health.RestoreFullHealth();
         }
         currentState = ZombieState.Detected;
-        AggroHorde();
     }
 
     void AggroHorde()
