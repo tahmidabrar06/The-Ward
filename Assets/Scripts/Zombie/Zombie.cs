@@ -16,6 +16,8 @@ public class Zombie : MonoBehaviour
     private ZombieState currentState;
 
     public bool stealthMechanics = false;
+    [SerializeField]
+    private float aggroRange;
     private bool attackInProgress;
     private bool isDead;
 
@@ -281,5 +283,25 @@ public class Zombie : MonoBehaviour
             health.RestoreFullHealth();
         }
         currentState = ZombieState.Detected;
+        AggroHorde();
+    }
+
+    void AggroHorde()
+    {
+        Collider[] zombies = Physics.OverlapSphere(transform.position, aggroRange);
+
+        foreach (Collider collider in zombies)
+        {
+            Zombie zombie = collider.GetComponentInParent<Zombie>();
+            if (zombie != null && zombie != this && !zombie.isDead)
+            {
+                zombie.currentState = ZombieState.Detected;
+            }
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(transform.position, aggroRange);
     }
 }
