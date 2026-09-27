@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace TheWard.Combat
 {
-    // Controls the grenade after the player throws it.
     public class UnifiedGrenadeProjectile : MonoBehaviour
     {
         [SerializeField] private float lifetime = 10f;
@@ -13,7 +12,6 @@ namespace TheWard.Combat
         private GameObject explosionEffect;
         private Health ownerHealth;
 
-        // Gets the explosion values from the equipped grenade weapon.
         public void Setup(
             float newDamage,
             float newRadius,
@@ -40,14 +38,12 @@ namespace TheWard.Combat
 
         private void Explode()
         {
-            // Create the visible explosion.
             if (explosionEffect != null)
             {
                 GameObject effect = Instantiate(explosionEffect, transform.position, Quaternion.identity);
                 Destroy(effect, 5f);
             }
 
-            // Find objects inside the explosion radius.
             Collider[] objectsHit = Physics.OverlapSphere(transform.position, explosionRadius);
 
             foreach (Collider objectHit in objectsHit)
@@ -70,6 +66,11 @@ namespace TheWard.Combat
                 if (health != null && health != ownerHealth)
                 {
                     health.TakeDamage(damage);
+                    if (HitIndicator.Instance != null)
+                    {
+                        if (!health.IsDead()) HitIndicator.Instance.ShowHit(false);
+                        else HitIndicator.Instance.ShowHit(true);
+                    }
                 }
             }
 
