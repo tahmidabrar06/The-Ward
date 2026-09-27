@@ -1685,8 +1685,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 760503656}
-        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+      - m_Target: {fileID: 787251497}
+        m_TargetAssemblyTypeName: SettingsPanelController, Assembly-CSharp
         m_MethodName: UpdateSettingsText
         m_Mode: 1
         m_Arguments:
@@ -10137,6 +10137,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &787251496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 787251498}
+  - component: {fileID: 787251497}
+  m_Layer: 0
+  m_Name: SettingsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &787251497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787251496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6176e60d2229034ba4902e7b54d3622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsPanelController
+  volumeSlider: {fileID: 1931795149}
+  sensitivitySlider: {fileID: 292660667}
+  volumeValueText: {fileID: 69361254}
+  sensitivityValueText: {fileID: 1082062615}
+  savedMessage: {fileID: 1771510865}
+--- !u!4 &787251498
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787251496}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.30312, y: 6.48, z: -3.79706}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &789165511 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4182960130155038, guid: ad2e00a29b893684badcf4a95835b385, type: 3}
@@ -10300,8 +10349,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 760503656}
-        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+      - m_Target: {fileID: 787251497}
+        m_TargetAssemblyTypeName: SettingsPanelController, Assembly-CSharp
         m_MethodName: SaveSettings
         m_Mode: 1
         m_Arguments:
@@ -12025,6 +12074,7 @@ GameObject:
   - component: {fileID: 1116561959}
   - component: {fileID: 1116561961}
   - component: {fileID: 1116561960}
+  - component: {fileID: 1116561962}
   m_Layer: 5
   m_Name: SettingsPanel
   m_TagString: Untagged
@@ -12095,6 +12145,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1116561958}
   m_CullTransparentMesh: 1
+--- !u!114 &1116561962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116561958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6176e60d2229034ba4902e7b54d3622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsPanelController
+  volumeSlider: {fileID: 1931795149}
+  sensitivitySlider: {fileID: 292660667}
+  volumeValueText: {fileID: 69361254}
+  sensitivityValueText: {fileID: 1082062615}
+  savedMessage: {fileID: 1771510865}
 --- !u!1 &1180857833
 GameObject:
   m_ObjectHideFlags: 0
@@ -15605,7 +15672,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 787251497}
+        m_TargetAssemblyTypeName: SettingsPanelController, Assembly-CSharp
+        m_MethodName: UpdateSettingsText
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1965689310
 GameObject:
   m_ObjectHideFlags: 0
@@ -16257,3 +16336,4 @@ SceneRoots:
   - {fileID: 174522932}
   - {fileID: 1562482492}
   - {fileID: 760503657}
+  - {fileID: 787251498}

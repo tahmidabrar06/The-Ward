@@ -5,7 +5,6 @@ public class UIManager : MonoBehaviour
 {
     [Header("Panels")]
     [SerializeField] private GameObject pausePanel;
-    [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject respawnPanel;
     [SerializeField] private GameObject victoryPanel;
 
@@ -15,14 +14,32 @@ public class UIManager : MonoBehaviour
 
     private bool isPaused = false;
 
+    private Transform playerTransform;
+    private Transform cameraTransform;
+
+    private Vector3 savedPlayerPosition;
+    private Quaternion savedPlayerRotation;
+    private Quaternion savedCameraRotation;
+
     private void Start()
     {
-        pausePanel.SetActive(false);
-        settingsPanel.SetActive(false);
-        respawnPanel.SetActive(false);
-        victoryPanel.SetActive(false);
+        if (playerMovement != null)
+            playerTransform = playerMovement.transform;
+
+        if (cameraMovement != null)
+            cameraTransform = cameraMovement.transform;
+
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        if (respawnPanel != null)
+            respawnPanel.SetActive(false);
+
+        if (victoryPanel != null)
+            victoryPanel.SetActive(false);
 
         Time.timeScale = 1f;
+        isPaused = false;
 
         EnableGameplay();
     }
@@ -31,20 +48,20 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (respawnPanel.activeSelf || victoryPanel.activeSelf)
+            if (respawnPanel != null && respawnPanel.activeSelf)
                 return;
 
-            if (settingsPanel.activeSelf)
-            {
-                CloseSettings();
+            if (victoryPanel != null && victoryPanel.activeSelf)
                 return;
-            }
 
             if (isPaused)
                 ResumeGame();
             else
                 PauseGame();
         }
+
+        if (isPaused)
+            FreezeTransforms();
     }
 
     // =========================
@@ -55,42 +72,35 @@ public class UIManager : MonoBehaviour
     {
         isPaused = true;
 
-        pausePanel.SetActive(true);
-        settingsPanel.SetActive(false);
+        if (playerTransform != null)
+        {
+            savedPlayerPosition = playerTransform.position;
+            savedPlayerRotation = playerTransform.rotation;
+        }
+
+        if (cameraTransform != null)
+        {
+            savedCameraRotation = cameraTransform.rotation;
+        }
+
+        if (pausePanel != null)
+            pausePanel.SetActive(true);
 
         FreezeGameplay();
     }
+
+    // =========================
+    // RESUME
+    // =========================
 
     public void ResumeGame()
     {
         isPaused = false;
 
-        pausePanel.SetActive(false);
-        settingsPanel.SetActive(false);
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
 
         EnableGameplay();
-    }
-
-    // =========================
-    // SETTINGS
-    // =========================
-
-    public void OpenSettings()
-    {
-        pausePanel.SetActive(false);
-        settingsPanel.SetActive(true);
-
-        FreezeGameplay();
-    }
-
-    public void CloseSettings()
-    {
-        settingsPanel.SetActive(false);
-
-        if (isPaused)
-            pausePanel.SetActive(true);
-        else
-            EnableGameplay();
     }
 
     // =========================
@@ -99,10 +109,16 @@ public class UIManager : MonoBehaviour
 
     public void ShowRespawnScreen()
     {
-        respawnPanel.SetActive(true);
-        pausePanel.SetActive(false);
-        settingsPanel.SetActive(false);
-        victoryPanel.SetActive(false);
+        isPaused = true;
+
+        if (respawnPanel != null)
+            respawnPanel.SetActive(true);
+
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        if (victoryPanel != null)
+            victoryPanel.SetActive(false);
 
         FreezeGameplay();
     }
@@ -110,7 +126,10 @@ public class UIManager : MonoBehaviour
     public void Replay()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        SceneManager.LoadScene(
+            SceneManager.GetActiveScene().name
+        );
     }
 
     // =========================
@@ -119,10 +138,16 @@ public class UIManager : MonoBehaviour
 
     public void ShowVictoryScreen()
     {
-        victoryPanel.SetActive(true);
-        pausePanel.SetActive(false);
-        settingsPanel.SetActive(false);
-        respawnPanel.SetActive(false);
+        isPaused = true;
+
+        if (victoryPanel != null)
+            victoryPanel.SetActive(true);
+
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        if (respawnPanel != null)
+            respawnPanel.SetActive(false);
 
         FreezeGameplay();
     }
@@ -134,6 +159,7 @@ public class UIManager : MonoBehaviour
     public void MainMenu()
     {
         Time.timeScale = 1f;
+
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -145,11 +171,11 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("Quitting game...");
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#else
         Application.Quit();
-        #endif
+#endif
     }
 
     // =========================
@@ -160,21 +186,43 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 0f;
 
-        if (playerMovement != null) playerMovement.enabled = false;
-        if (cameraMovement != null) cameraMovement.enabled = false;
+        if (playerMovement != null)
+            playerMovement.enabled = false;
+
+        if (cameraMovement != null)
+            cameraMovement.enabled = false;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        FreezeTransforms();
     }
 
     private void EnableGameplay()
     {
         Time.timeScale = 1f;
 
-        if (playerMovement != null) playerMovement.enabled = true;
-        if (cameraMovement != null) cameraMovement.enabled = true;
+        if (playerMovement != null)
+            playerMovement.enabled = true;
+
+        if (cameraMovement != null)
+            cameraMovement.enabled = true;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    private void FreezeTransforms()
+    {
+        if (playerTransform != null)
+        {
+            playerTransform.position = savedPlayerPosition;
+            playerTransform.rotation = savedPlayerRotation;
+        }
+
+        if (cameraTransform != null)
+        {
+            cameraTransform.rotation = savedCameraRotation;
+        }
     }
 }
