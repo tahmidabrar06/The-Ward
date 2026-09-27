@@ -1,21 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using TMPro;
 
 public class MainMenu : MonoBehaviour
 {
-    [Header("Settings")]
+    [Header("Panels")]
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject settingsPanel;
-
-    [SerializeField] private Slider volumeSlider;
-    [SerializeField] private Slider sensitivitySlider;
-
-    [SerializeField] private TMP_Text volumeValueText;
-    [SerializeField] private TMP_Text sensitivityValueText;
-
-    [SerializeField] private TMP_Text savedMessage;
 
     public void PlayGame()
     {
@@ -37,56 +27,11 @@ public class MainMenu : MonoBehaviour
     {
         mainMenuPanel.SetActive(false);
         settingsPanel.SetActive(true);
-
-        UpdateSettingsText();
     }
 
     public void BackToMainMenu()
     {
         settingsPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
-    }
-
-    public void SaveSettings()
-    {
-        PlayerPrefs.SetFloat("MasterVolume", volumeSlider.value);
-        PlayerPrefs.SetFloat("MouseSensitivity", sensitivitySlider.value);
-
-        PlayerPrefs.Save();
-
-        UpdateSettingsText();
-
-        if (savedMessage != null)
-        {
-            savedMessage.gameObject.SetActive(true);
-
-            CancelInvoke(nameof(HideSavedMessage));
-            Invoke(nameof(HideSavedMessage), 2f);
-        }
-
-        Debug.Log("Settings saved.");
-    }
-
-    private void HideSavedMessage()
-{
-    if (savedMessage != null)
-    {
-        savedMessage.gameObject.SetActive(false);
-    }
-}
-
-    public void UpdateSettingsText()
-    {
-        if (volumeValueText != null)
-        {
-            volumeValueText.text =
-                $"{Mathf.RoundToInt(volumeSlider.value * 100f)}%";
-        }
-
-        if (sensitivityValueText != null)
-        {
-            sensitivityValueText.text =
-                sensitivitySlider.value.ToString("0.0");
-        }
     }
 }
