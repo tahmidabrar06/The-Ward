@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private CameraMovement cameraMovement;
 
     private bool isPaused = false;
+    private bool isVictory = false;
 
     private Transform playerTransform;
     private Transform cameraTransform;
@@ -23,12 +24,15 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        // Get player transform
         if (playerMovement != null)
             playerTransform = playerMovement.transform;
 
+        // Get camera transform
         if (cameraMovement != null)
             cameraTransform = cameraMovement.transform;
 
+        // Hide panels at start
         if (pausePanel != null)
             pausePanel.SetActive(false);
 
@@ -38,20 +42,28 @@ public class UIManager : MonoBehaviour
         if (victoryPanel != null)
             victoryPanel.SetActive(false);
 
+        // Make sure the game starts normally
         Time.timeScale = 1f;
+
         isPaused = false;
+        isVictory = false;
 
         EnableGameplay();
     }
 
     private void Update()
     {
+        // Do nothing while victory screen is active
+        if (isVictory)
+        {
+            FreezeTransforms();
+            return;
+        }
+
+        // Pause / Resume with ESC
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (respawnPanel != null && respawnPanel.activeSelf)
-                return;
-
-            if (victoryPanel != null && victoryPanel.activeSelf)
                 return;
 
             if (isPaused)
@@ -60,8 +72,11 @@ public class UIManager : MonoBehaviour
                 PauseGame();
         }
 
+        // Keep player and camera frozen while paused
         if (isPaused)
+        {
             FreezeTransforms();
+        }
     }
 
     // =========================
@@ -70,21 +85,18 @@ public class UIManager : MonoBehaviour
 
     public void PauseGame()
     {
+        if (isVictory)
+            return;
+
         isPaused = true;
 
-        if (playerTransform != null)
-        {
-            savedPlayerPosition = playerTransform.position;
-            savedPlayerRotation = playerTransform.rotation;
-        }
-
-        if (cameraTransform != null)
-        {
-            savedCameraRotation = cameraTransform.rotation;
-        }
+        SaveCurrentTransforms();
 
         if (pausePanel != null)
             pausePanel.SetActive(true);
+
+        if (respawnPanel != null)
+            respawnPanel.SetActive(false);
 
         FreezeGameplay();
     }
@@ -95,6 +107,9 @@ public class UIManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        if (isVictory)
+            return;
+
         isPaused = false;
 
         if (pausePanel != null)
@@ -111,6 +126,8 @@ public class UIManager : MonoBehaviour
     {
         isPaused = true;
 
+        SaveCurrentTransforms();
+
         if (respawnPanel != null)
             respawnPanel.SetActive(true);
 
@@ -123,13 +140,14 @@ public class UIManager : MonoBehaviour
         FreezeGameplay();
     }
 
-    public void Replay()
+    public void Respawn()
     {
-        Time.timeScale = 1f;
+    // Restart the current floor
+    Time.timeScale = 1f;
 
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().name
-        );
+    SceneManager.LoadScene(
+        SceneManager.GetActiveScene().name
+    );
     }
 
     // =========================
@@ -138,18 +156,36 @@ public class UIManager : MonoBehaviour
 
     public void ShowVictoryScreen()
     {
-        isPaused = true;
+        // Mark the game as finished
+        isVictory = true;
+        isPaused = false;
 
+        // Save the exact position and rotation
+        SaveCurrentTransforms();
+
+        // Show victory screen
         if (victoryPanel != null)
             victoryPanel.SetActive(true);
 
+        // Hide other screens
         if (pausePanel != null)
             pausePanel.SetActive(false);
 
         if (respawnPanel != null)
             respawnPanel.SetActive(false);
 
+        // Completely freeze gameplay
         FreezeGameplay();
+
+        Debug.Log("Victory screen shown. Game frozen.");
+    }
+
+    public void PlayAgain()
+    {
+    // Restart the game from Floor 1
+    Time.timeScale = 1f;
+
+    SceneManager.LoadScene("Floor1");
     }
 
     // =========================
@@ -184,17 +220,26 @@ public class UIManager : MonoBehaviour
 
     private void FreezeGameplay()
     {
+        // Freeze Unity game time
         Time.timeScale = 0f;
 
+        // Disable player movement
         if (playerMovement != null)
+        {
             playerMovement.enabled = false;
+        }
 
+        // Disable camera movement
         if (cameraMovement != null)
+        {
             cameraMovement.enabled = false;
+        }
 
+        // Unlock cursor for UI
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
+        // Force player and camera to stay still
         FreezeTransforms();
     }
 
@@ -202,14 +247,39 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
+        // Enable player movement
         if (playerMovement != null)
+        {
             playerMovement.enabled = true;
+        }
 
+        // Enable camera movement
         if (cameraMovement != null)
+        {
             cameraMovement.enabled = true;
+        }
 
+        // Lock cursor for gameplay
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    // =========================
+    // TRANSFORM CONTROL
+    // =========================
+
+    private void SaveCurrentTransforms()
+    {
+        if (playerTransform != null)
+        {
+            savedPlayerPosition = playerTransform.position;
+            savedPlayerRotation = playerTransform.rotation;
+        }
+
+        if (cameraTransform != null)
+        {
+            savedCameraRotation = cameraTransform.rotation;
+        }
     }
 
     private void FreezeTransforms()
