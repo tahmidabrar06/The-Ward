@@ -1,4 +1,5 @@
 using UnityEngine;
+using TheWard.Audio;
 
 namespace TheWard.Combat
 {
@@ -18,6 +19,8 @@ namespace TheWard.Combat
         [SerializeField, Range(0.2f, 0.55f)] private float swingContactFraction = 0.32727274f;
 
         public bool UsesForwardSwing => useForwardSwing;
+        // Existing bat prefabs are identified by display name; other melee weapons use sword sounds.
+        private bool IsBluntWeapon => DisplayName.IndexOf("bat", System.StringComparison.OrdinalIgnoreCase) >= 0;
 
         public void ApplyForwardSwing(Transform view, float progress)
         {
@@ -69,7 +72,10 @@ namespace TheWard.Combat
         {
             if (!pressed || isAnimating || Time.time < nextAttackTime) return;
             if (PlayAnimation(swingAnimation, meleeSwingDuration))
+            {
                 nextAttackTime = Time.time + Mathf.Max(cooldown, meleeSwingDuration);
+                GameAudio.Play(IsBluntWeapon ? AudioCue.BatSwing : AudioCue.SwordSwing, transform.position);
+            }
         }
 
         public override void OnAnimationContact()
@@ -101,6 +107,8 @@ namespace TheWard.Combat
             // Multiple colliders on the same zombie still receive one hit.
             if (target != null)
             {
+                // Swing sounds can miss, but impact sounds require a confirmed target.
+                GameAudio.Play(IsBluntWeapon ? AudioCue.BatHit : AudioCue.SwordHit, target.transform.position, true);
                 target.TakeDamage(damage);
                 if (HitIndicator.Instance != null)
                 {

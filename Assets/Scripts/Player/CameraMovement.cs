@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -30,8 +28,12 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {
 
-         // change in pitch
-        verticalRot -= Input.GetAxis("Mouse Y") * sensitivityVert;
+        // A mouse may be disconnected; also leave the camera still while the game is paused.
+        Mouse mouse = Mouse.current;
+        if (mouse == null || Time.timeScale <= 0f) return;
+
+        // Match the old Mouse Y axis scale while reading pixel delta from Input System.
+        verticalRot -= mouse.delta.ReadValue().y * 0.1f * sensitivityVert;
         verticalRot = Mathf.Clamp(verticalRot, minimumVert, maximumVert);
 
         // get current yaw

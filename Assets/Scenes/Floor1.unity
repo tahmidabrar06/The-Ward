@@ -13843,8 +13843,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.PlayerHealthHUD
   health: {fileID: 390798352}
-  healthFill: {fileID: 1385277968}
-  healthText: {fileID: 172291018}
+  screenPosition: {x: 24, y: 24}
+  barSize: {x: 280, y: 28}
+  healthyColor: {r: 0.2, g: 0.78, b: 0.3, a: 1}
+  dangerColor: {r: 0.85, g: 0.12, b: 0.12, a: 1}
+  damageMessageDuration: 0.8
 --- !u!114 &390798352
 MonoBehaviour:
   m_ObjectHideFlags: 0
