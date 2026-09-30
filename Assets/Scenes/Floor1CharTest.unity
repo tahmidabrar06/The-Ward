@@ -19973,11 +19973,6 @@ Transform:
   - {fileID: 2108992581}
   m_Father: {fileID: 1577433532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1110521784 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7507022408726269980, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
-  m_PrefabInstance: {fileID: 2582580285207281412}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1127509852
 Mesh:
   m_ObjectHideFlags: 0
@@ -21436,6 +21431,28 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de73a68374813224d9a0717c5b75fc05, type: 3}
+--- !u!114 &1213679837 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6327677778665811326, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+  m_PrefabInstance: {fileID: 2112746969}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da0a450806b4458581a4fe6d53dd4e23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.Stamina
+--- !u!114 &1213679840 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4161757025570981915, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+  m_PrefabInstance: {fileID: 2112746969}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21fc60e1083364fb5862ecbb6b782556, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.Health
 --- !u!1 &1218147504
 GameObject:
   m_ObjectHideFlags: 0
@@ -65989,6 +66006,75 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1075059693}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2112746969
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1290191485644675277, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: spawnPoint
+      value: 
+      objectReference: {fileID: 30250676}
+    - target: {fileID: 4383025538454266020, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: deathUIPanel
+      value: 
+      objectReference: {fileID: 1149237604863209255}
+    - target: {fileID: 4383025538454266020, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: respawnPoint
+      value: 
+      objectReference: {fileID: 842557553}
+    - target: {fileID: 4582717099992144779, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.81
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
 --- !u!43 &2113914228
 Mesh:
   m_ObjectHideFlags: 0
@@ -67148,15 +67234,15 @@ PrefabInstance:
     - target: {fileID: 2639037591255937718, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2784080871479674409}
+      objectReference: {fileID: 0}
     - target: {fileID: 4189616536418061551, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
       propertyPath: health
       value: 
-      objectReference: {fileID: 8343990890064578830}
+      objectReference: {fileID: 1213679840}
     - target: {fileID: 4189616536418061551, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
       propertyPath: stamina
       value: 
-      objectReference: {fileID: 6410671248187471422}
+      objectReference: {fileID: 1213679837}
     - target: {fileID: 5410537817071247286, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
       propertyPath: m_Name
       value: Canvas
@@ -67244,136 +67330,18 @@ PrefabInstance:
     - target: {fileID: 8490517567996283671, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2784080871479674409}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
---- !u!114 &2784080871479674409 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4234496839626392669, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-  m_PrefabInstance: {fileID: 7548220909334954747}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd11e9dce53241fabc5f2e1af895e5ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Core.PlayerDeath
---- !u!114 &6410671248187471422 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5890773853666806151, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-  m_PrefabInstance: {fileID: 7548220909334954747}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da0a450806b4458581a4fe6d53dd4e23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.Stamina
---- !u!1001 &7548220909334954747
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1727122365234527284, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: spawnPoint
-      value: 
-      objectReference: {fileID: 30250676}
-    - target: {fileID: 1727122365234527284, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: zombiePrefab
-      value: 
-      objectReference: {fileID: 7695817219333652487, guid: f775440835e2c42febb5b373281f86a9, type: 3}
-    - target: {fileID: 4145917628291612530, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 4234496839626392669, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: deathUIPanel
-      value: 
-      objectReference: {fileID: 1149237604863209255}
-    - target: {fileID: 4234496839626392669, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: respawnPoint
-      value: 
-      objectReference: {fileID: 842557553}
-    - target: {fileID: 5197913028424378818, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: crosshairUI
-      value: 
-      objectReference: {fileID: 1110521784}
-    - target: {fileID: 6130901113596669722, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6130901113596669722, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.99
-      objectReference: {fileID: 0}
-    - target: {fileID: 6130901113596669722, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -8.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6130901113596669722, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6130901113596669722, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6130901113596669722, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6130901113596669722, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6130901113596669722, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6130901113596669722, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6130901113596669722, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6807143004596477650, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: damage
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 6916863489659062152, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-      propertyPath: damage
-      value: 75
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
---- !u!114 &8343990890064578830 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4598686522581920994, guid: 748a4b3eb16b64febbcb182aca79b5a2, type: 3}
-  m_PrefabInstance: {fileID: 7548220909334954747}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21fc60e1083364fb5862ecbb6b782556, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.Health
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1577433532}
-  - {fileID: 7548220909334954747}
   - {fileID: 2582580285207281412}
   - {fileID: 842557553}
   - {fileID: 30250676}
+  - {fileID: 2112746969}

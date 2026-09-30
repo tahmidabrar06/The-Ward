@@ -1,9 +1,12 @@
 using System.Collections;
+using TheWard.Audio;
 using UnityEngine;
 
 namespace TheWard.Combat
 {
     public enum TriggerMode { PressOnce, HoldAutomatic }
+
+    public enum GunSoundProfile { Automatic, Handgun, AssaultRifle, Shotgun }
 
     public sealed class GunWeapon : Weapon
     {
@@ -26,6 +29,35 @@ namespace TheWard.Combat
         [SerializeField] private float gunRecoilAngle = 6f;
         [SerializeField, Min(0.1f)] private float reloadDuration = 1.2f;
         [SerializeField] private AnimationClip reloadAnimation;
+
+        [Header("Audio")]
+        [SerializeField] private GunSoundProfile soundProfile;
+        // Automatic picks by firing mode; an Inspector profile can override it for a specific gun.
+        private AudioCue GetGunSound(AudioCue handgun, AudioCue rifle, AudioCue shotgun)
+        {
+            GunSoundProfile profile = soundProfile;
+            if (profile == GunSoundProfile.Automatic)
+            {
+                profile = GunSoundProfile.Handgun;
+                if (triggerMode == TriggerMode.HoldAutomatic) profile = GunSoundProfile.AssaultRifle;
+            }
+
+            switch (profile)
+            {
+                case GunSoundProfile.AssaultRifle:
+                    return rifle;
+                case GunSoundProfile.Shotgun:
+                    return shotgun;
+                default:
+                    return handgun;
+            }
+        }
+
+        public void PlayEquipSound()
+        {
+            AudioCue sound = GetGunSound(AudioCue.HandgunEquip, AudioCue.RifleEquip, AudioCue.ShotgunEquip);
+            GameAudio.Play(sound, transform.position);
+        }
 
         private int ammo;
         private int reserveAmmo;
@@ -54,6 +86,8 @@ namespace TheWard.Combat
 
         private void Shoot()
         {
+            AudioCue sound = GetGunSound(AudioCue.HandgunShot, AudioCue.RifleShot, AudioCue.ShotgunShot);
+            GameAudio.Play(sound, transform.position);
             Ray aim = GetAimRay();
             Vector3 direction = aim.direction;
 
@@ -101,6 +135,11 @@ namespace TheWard.Combat
             if (enemyHealth != null && enemyHealth.transform.root != transform.root)
             {
                 enemyHealth.TakeDamage(damage);
+                if (HitIndicator.Instance != null)
+                {
+                    if (!enemyHealth.IsDead()) HitIndicator.Instance.ShowHit(false);
+                    else HitIndicator.Instance.ShowHit(true);
+                }
             }
 
             if (hit.rigidbody != null)
@@ -126,7 +165,12 @@ namespace TheWard.Combat
             if (recoilRoutine != null) StopCoroutine(recoilRoutine);
             recoilRoutine = null;
             ResetWeaponTransform();
-            PlayAnimation(reloadAnimation, reloadDuration);
+            if (PlayAnimation(reloadAnimation, reloadDuration))
+            {
+                AudioCue sound = GetGunSound(AudioCue.HandgunReload, AudioCue.RifleReload, AudioCue.ShotgunReload);
+                // Tie reload audio to this weapon so switching away can stop it.
+                GameAudio.Play(sound, transform.position, owner: this);
+            }
         }
 
         public override void OnAnimationComplete()
@@ -191,6 +235,8 @@ namespace TheWard.Combat
 
         protected override void OnDisable()
         {
+            // Reloads are cancelled on a weapon switch; fired shots are allowed to finish.
+            GameAudio.StopOwned(this);
             base.OnDisable();
             recoilRoutine = null;
         }
