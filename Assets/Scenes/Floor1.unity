@@ -20598,6 +20598,8 @@ GameObject:
   - component: {fileID: 637580405}
   - component: {fileID: 637580404}
   - component: {fileID: 637580403}
+  - component: {fileID: 637580408}
+  - component: {fileID: 637580407}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -20692,6 +20694,37 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &637580407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637580402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9a084a7a72e94b5eb6027639bcef73c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitIndicator
+  hitImages: []
+  displayTime: 0.1
+  fadeTime: 0.2
+--- !u!114 &637580408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637580402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b742397994b74943ba144bc8cc20dda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.HUD
+  health: {fileID: 1591438690}
+  healthBarFill: {fileID: 1419579495}
+  stamina: {fileID: 1591438689}
+  staminaBarFill: {fileID: 147523108}
 --- !u!4 &648239120 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4390537981582356, guid: 58f390f526d63fa4d86583592629af90, type: 3}
@@ -21896,7 +21929,7 @@ Transform:
   m_GameObject: {fileID: 721127036}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -22.73, y: 0.56464, z: -6.18}
+  m_LocalPosition: {x: -22.73, y: 0.56464, z: -4.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -63317,9 +63350,13 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4383025538454266020, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: uiManager
+      value: 
+      objectReference: {fileID: 795342582}
+    - target: {fileID: 4383025538454266020, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: deathUIPanel
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1067108049}
     - target: {fileID: 4383025538454266020, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: respawnPoint
       value: 
@@ -63838,6 +63875,28 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+--- !u!114 &1591438689 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6327677778665811326, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+  m_PrefabInstance: {fileID: 1591438688}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da0a450806b4458581a4fe6d53dd4e23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.Stamina
+--- !u!114 &1591438690 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4161757025570981915, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+  m_PrefabInstance: {fileID: 1591438688}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21fc60e1083364fb5862ecbb6b782556, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.Health
 --- !u!1001 &1595075771
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -69751,73 +69810,6 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
---- !u!1 &1866736044
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1866736047}
-  - component: {fileID: 1866736046}
-  - component: {fileID: 1866736045}
-  m_Layer: 0
-  m_Name: DeathTriggerTest
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!65 &1866736045
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1866736044}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1866736046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1866736044}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68dec2bbb8d7ca647a2b4381c6a0c051, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  uiManager: {fileID: 795342582}
---- !u!4 &1866736047
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1866736044}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.73, y: 0.9, z: 2.99176}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1872729743 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4035588782422652, guid: f0bca500522992e4eb2bccd77624431c, type: 3}
@@ -83256,7 +83248,6 @@ SceneRoots:
   - {fileID: 573170148}
   - {fileID: 795342583}
   - {fileID: 637580406}
-  - {fileID: 1866736047}
   - {fileID: 1497989558}
   - {fileID: 2090379991}
   - {fileID: 1591438688}

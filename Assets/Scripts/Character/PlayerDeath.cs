@@ -15,20 +15,15 @@ namespace TheWard.Core
         [SerializeField] private WeaponController weaponController;
         
         [Header("UI References")]
-        [SerializeField] private GameObject deathUIPanel;
+        [SerializeField] private UIManager uiManager;
 
         [Header("Respawn Settings")]
         [SerializeField] private Transform respawnPoint;
 
-        private void Start()
-        {
-            if (deathUIPanel != null) deathUIPanel.SetActive(false);
-        }
         
         public void HandleDeath()
-        {
-            if (deathUIPanel != null) deathUIPanel.SetActive(true);
-            
+        {   
+            uiManager.ShowRespawnScreen();
             if (moveController != null) moveController.enabled = false;
             if (lookController != null) lookController.enabled = false;
             if (weaponController != null) weaponController.enabled = false;
@@ -37,34 +32,8 @@ namespace TheWard.Core
             Cursor.visible = true;
             
             //Respawn();   //respawn is redundant. levels are small enough that we can reload scene instead.
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); //call this from the death menu button instead. this si temporiry for testing
         }
-        
-        public void Respawn()
-        {
-            if (deathUIPanel != null) deathUIPanel.SetActive(false);
-            
-            CharacterController cc = moveController.GetComponent<CharacterController>();
-            if (cc != null) cc.enabled = false;
-            
-            if (respawnPoint != null)
-            {
-                moveController.transform.position = respawnPoint.position;
-                moveController.transform.rotation = respawnPoint.rotation;
-            }
-            
-            if (cc != null) cc.enabled = true;
-            
-            playerHealth.RestoreFullHealth();
-            playerStamina.RestoreFullStamina();
-            
-            if (moveController != null) moveController.enabled = true;
-            if (lookController != null) lookController.enabled = true;
-            if (weaponController != null) weaponController.enabled = true;
-            
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+        //removed respawn
         public void ReturnToMainMenu()
         {
             Debug.Log("TO DO");
