@@ -1,4 +1,5 @@
 using TheWard.Combat;
+using TheWard.Audio;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -41,19 +42,34 @@ public class Zombie : MonoBehaviour
     [SerializeField]
     private LayerMask obstructionMask;
 
+    [Header("Audio")]
+    [Tooltip("Automatic distributes zombies across the attack voice sets. Choose a set to give a prefab a specific voice.")]
+    [SerializeField] private ZombieAttackVoice attackVoice = ZombieAttackVoice.Automatic;
+    private int assignedAttackVoice = -1;
+    private int previousAttackClip = -1;
+
     private Health health;
+    private float nextVocalTime;
+    private float nextHurtTime;
+    private float footstepDistance;
+    private Vector3 previousPosition;
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
         health = GetComponent<Health>();
+        // Choose once per zombie so its attack voice remains consistent across encounters.
+        assignedAttackVoice = GameAudio.AssignZombieVoice(attackVoice);
         currentState = ZombieState.Unaware;
+        previousPosition = transform.position;
+        nextVocalTime = Time.time + Random.Range(2f, 6f);
     }
 
     void Update()
     {
 
+        UpdateAudio();
         if (!isDead && player != null && agent.isOnNavMesh)
         {
             switch (currentState)
@@ -76,6 +92,58 @@ public class Zombie : MonoBehaviour
             }
         }
 
+    }
+
+    private void UpdateAudio()
+    {
+        Vector3 displacement = transform.position - previousPosition;
+        displacement.y = 0f;
+        previousPosition = transform.position;
+        if (isDead || Time.timeScale <= 0f) return;
+        if (currentState != ZombieState.Unaware)
+            GameAudio.ReportThreat(transform.position,
+                currentState == ZombieState.Detected || currentState == ZombieState.Attacking);
+        // Stagger idle calls so groups do not all vocalize together or talk over their attacks.
+        if (Time.time >= nextVocalTime && currentState != ZombieState.Attacking)
+        {
+            GameAudio.Play(AudioCue.ZombieIdle, transform.position, true, owner: this);
+            nextVocalTime = Time.time + Random.Range(5f, 9f);
+        }
+        // Ignore large position jumps such as teleports when counting walking distance.
+        if (displacement.magnitude < 2f) footstepDistance += displacement.magnitude;
+        if (footstepDistance >= 1.4f)
+        {
+            GameAudio.Play(AudioCue.ZombieFootstep, transform.position, true, owner: this);
+            footstepDistance = 0f;
+        }
+    }
+
+    private void OnEnable()
+    {
+        health = GetComponent<Health>();
+        // Subscribe to actual damage, regardless of which weapon caused it.
+        if (health != null) health.Damaged += PlayHurtSound;
+        previousPosition = transform.position;
+        footstepDistance = 0f;
+    }
+
+    private void OnDisable()
+    {
+        // Unsubscribe on disable to avoid duplicate callbacks when the zombie is enabled again.
+        if (health != null) health.Damaged -= PlayHurtSound;
+        GameAudio.StopOwned(this);
+    }
+
+    private void PlayHurtSound(float damage)
+    {
+        // Skip fatal-hit vocals and limit rapid gunfire to one hurt sound per cooldown.
+        if (health != null && health.IsAlive && Time.time >= nextHurtTime)
+        {
+            GameAudio.StopOwned(this);
+            GameAudio.Play(AudioCue.ZombieHurt, transform.position, true, owner: this);
+            nextHurtTime = Time.time + 0.45f;
+            nextVocalTime = Time.time + 5f;
+        }
     }
 
     void UnawareState()
@@ -204,6 +272,9 @@ public class Zombie : MonoBehaviour
 
     void Attack()
     {
+        GameAudio.StopOwned(this);
+        GameAudio.PlayZombieAttack(assignedAttackVoice, ref previousAttackClip, transform.position, this);
+        nextVocalTime = Time.time + Random.Range(4f, 7f);
         animator.SetTrigger("Attack");
         Health playerHealth = player.GetComponent<Health>();
         if (playerHealth != null) playerHealth.TakeDamage(damage);
@@ -266,6 +337,9 @@ public class Zombie : MonoBehaviour
     {
         if(!isDead)
         {
+            GameAudio.StopOwned(this);
+            // No owner: let the body-fall sound finish even if this zombie is disabled.
+            GameAudio.Play(AudioCue.ZombieDeath, transform.position, true);
             agent.enabled = false;
             animator.SetTrigger("isDead");
             gameObject.GetComponent<CapsuleCollider>().enabled = false;
