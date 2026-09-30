@@ -1,3 +1,4 @@
+using TheWard.Character;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,8 +10,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject victoryPanel;
 
     [Header("Player Control")]
-    [SerializeField] private FirstPerson playerMovement;
-    [SerializeField] private CameraMovement cameraMovement;
+    [SerializeField] private PlayerCharacterController playerMovement;
+    [SerializeField] private PlayerLookController cameraMovement;
 
     private bool isPaused = false;
     private bool isVictory = false;

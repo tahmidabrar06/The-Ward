@@ -17,8 +17,11 @@ public class Zombie : MonoBehaviour
     private ZombieState currentState;
 
     public bool stealthMechanics = false;
+    [SerializeField]
+    private float aggroRange;
     private bool attackInProgress;
-    private bool isDead;
+    public bool isDead;
+    private bool hordeAggroed = false;
 
     private GameObject player;
     private NavMeshAgent agent;
@@ -61,7 +64,7 @@ public class Zombie : MonoBehaviour
         health = GetComponent<Health>();
         // Choose once per zombie so its attack voice remains consistent across encounters.
         assignedAttackVoice = GameAudio.AssignZombieVoice(attackVoice);
-        currentState = ZombieState.Unaware;
+        //currentState = ZombieState.Unaware;
         previousPosition = transform.position;
         nextVocalTime = Time.time + Random.Range(2f, 6f);
     }
@@ -217,8 +220,13 @@ public class Zombie : MonoBehaviour
 
     void DetectedState()
     {
+        //Debug.Log("Detected");
         attackTimer = 0;
-
+        if (!hordeAggroed)
+        {
+            AggroHorde();
+            hordeAggroed = true;
+        }
         agent.speed = chaseSpeed;
         agent.isStopped = false;
         agent.SetDestination(player.transform.position);
@@ -355,5 +363,29 @@ public class Zombie : MonoBehaviour
             health.RestoreFullHealth();
         }
         currentState = ZombieState.Detected;
+    }
+
+    void AggroHorde()
+    {
+        Collider[] zombies = Physics.OverlapSphere(transform.position, aggroRange);
+
+        foreach (Collider collider in zombies)
+        {
+            Zombie zombie = collider.GetComponentInParent<Zombie>();
+            if (zombie != null && zombie != this && !zombie.isDead)
+            {
+                zombie.currentState = ZombieState.Detected;
+            }
+        }
+    }
+
+    public void SetZombieState(ZombieState state)
+    {
+        currentState = state;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(transform.position, aggroRange);
     }
 }
