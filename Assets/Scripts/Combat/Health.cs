@@ -1,4 +1,5 @@
 using System;
+using TheWard.Audio;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -34,6 +35,8 @@ namespace TheWard.Combat
             CurrentHealth -= damage;
             CurrentHealth = Mathf.Max(CurrentHealth, 0f);
 
+            // Player damage uses the eating/impact cue. Zombies play their own hurt vocals via Damaged.
+            if (CompareTag("Player")) GameAudio.Play(AudioCue.PlayerHurt, transform.position);
             onDamage?.Invoke();
             Damaged?.Invoke(damage);
             HealthChanged?.Invoke(CurrentHealth, maxHealth); 

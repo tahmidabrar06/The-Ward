@@ -1,4 +1,5 @@
 using UnityEngine;
+using TheWard.Audio;
 
 namespace TheWard.Combat
 {
@@ -6,6 +7,7 @@ namespace TheWard.Combat
     {
         [SerializeField] private float lifetime = 10f;
 
+        private bool hasExploded;
         private float damage;
         private float explosionRadius;
         private float explosionForce;
@@ -38,6 +40,11 @@ namespace TheWard.Combat
 
         private void Explode()
         {
+            // Multiple collision callbacks can arrive before Destroy runs; detonate only once.
+            if (hasExploded) return;
+            hasExploded = true;
+            // The shared audio source survives the projectile long enough to play the full explosion.
+            GameAudio.Play(AudioCue.Explosion, transform.position, true);
             if (explosionEffect != null)
             {
                 GameObject effect = Instantiate(explosionEffect, transform.position, Quaternion.identity);

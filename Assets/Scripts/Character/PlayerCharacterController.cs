@@ -1,4 +1,5 @@
 using TheWard.Combat;
+using TheWard.Audio;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -29,6 +30,14 @@ namespace TheWard.Character
         private float standingCenterY;
         private float originalCameraLocalY;
 
+        private float stepDistance;
+
+        private void Start()
+        {
+            // Start this floor's music and provide the player position for nearby threat checks.
+            GameAudio.RegisterPlayer(transform, GetComponent<Health>());
+        }
+
         private void Awake()
         {
             characterController = GetComponent<CharacterController>();
@@ -48,6 +57,7 @@ namespace TheWard.Character
 
         private void OnDisable()
         {
+            stepDistance = 0f;
             moveAction?.action.Disable();
             sprintAction?.action.Disable();
             DisableAction(moveAction);
@@ -82,9 +92,33 @@ namespace TheWard.Character
             verticalVelocity += Physics.gravity.y * Time.deltaTime;
             movement.y = verticalVelocity;
             
+            // Measure actual movement so holding a movement key against a wall stays silent.
+            Vector3 beforeMove = transform.position;
             characterController.Move(movement * Time.deltaTime);
+            UpdateFootsteps(beforeMove, isSprinting);
+
         }
         
+        private void UpdateFootsteps(Vector3 beforeMove, bool sprinting)
+        {
+            Vector3 displacement = transform.position - beforeMove;
+            // Only grounded horizontal travel contributes to footsteps.
+            displacement.y = 0f;
+            if (!characterController.isGrounded || displacement.sqrMagnitude <= 0.00001f)
+            {
+                stepDistance = 0f;
+                return;
+            }
+
+            stepDistance += displacement.magnitude;
+            // Distance per step controls cadence; crouching also uses a quieter volume below.
+            float stride = isCrouching ? 1.7f : sprinting ? 2.1f : 1.8f;
+            if (stepDistance < stride) return;
+            GameAudio.Step(sprinting ? FootstepAction.Run : FootstepAction.Walk, transform.position,
+                isCrouching ? 0.13f : sprinting ? 0.45f : 0.3f);
+            stepDistance = 0f;
+        }
+
         private void HandleCrouch()
         {
             bool wantsToCrouch = sneakAction != null && sneakAction.action.IsPressed();

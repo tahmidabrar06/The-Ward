@@ -129,8 +129,11 @@ namespace TheWard.Combat
                 return;
             }
 
+            // Selecting the equipped slot again should not replay its equip sound.
+            if (activeWeaponIndex == index) return;
             activeWeaponIndex = index;
             ShowSelectedWeapon();
+            if (ActiveWeapon is GunWeapon gun) gun.PlayEquipSound();
         }
 
         private void ShowSelectedWeapon()
