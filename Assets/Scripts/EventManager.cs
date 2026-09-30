@@ -18,6 +18,7 @@ public class EventManager : MonoBehaviour
     private GameObject waveDefTrigger;
     public GameObject zombiePrefab;
     private GameObject player;
+    private UIManager uiManager;
 
     [Header("Live Values For Testing")]
     [SerializeField]
@@ -36,6 +37,7 @@ public class EventManager : MonoBehaviour
         zombieSpawn = GameObject.Find("ZombieSpawn");
         zombieContainer = GameObject.Find("ZombieContainer");
         waveDefTrigger = GameObject.Find("WaveDefenseTrigger");
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
     }
 
     void Update()
@@ -65,6 +67,10 @@ public class EventManager : MonoBehaviour
             waveSpawnTimer -= waveSpawnInterval;
             currentWave += 1;
         }
+        if (waveDefCountdown <= 0 && GetAliveZombieCount() == 0)
+        {
+            Victory();
+        }
     }
 
     public void SpawnZombie(int amount)
@@ -93,7 +99,6 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    //Temporary funtcion
     void WaveDefConditionCheck()
     {
         if (Vector3.Distance(player.transform.position, waveDefTrigger.transform.position) 
@@ -101,5 +106,36 @@ public class EventManager : MonoBehaviour
         {
             StartWaveDefence();
         }
+    }
+
+    public int GetAliveZombieCount()
+    {
+        int aliveCount = 0;
+
+        Zombie[] zombies = zombieContainer.GetComponentsInChildren<Zombie>();
+
+        foreach (Zombie zombie in zombies)
+        {
+            if (!zombie.isDead)
+            {
+                aliveCount++;
+            }
+        }
+        return aliveCount;
+    }
+
+    public float GetCountDown()
+    {
+        return waveDefCountdown;
+    }
+    public string GetWave()
+    {
+        return currentWave.ToString()+"/"+ numberOfWaves;
+    }
+
+    public void Victory()
+    {
+        //uiManager.ShowVictoryScreen(); //Victory screen not implemented yet, substituting with respawnScreen()
+        uiManager.ShowRespawnScreen();
     }
 }
