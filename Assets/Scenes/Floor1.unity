@@ -17462,12 +17462,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 454885129}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.37898, y: 0.5, z: 2.99176}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 5.94762, y: -2.56597, z: -11.9155}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 795342583}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &461757817 stripped
 Transform:
@@ -20939,12 +20939,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 670019060}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.30312, y: 6.48, z: -3.79706}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 16.62972, y: 3.41403, z: -18.704319}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 795342583}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &671542298
 PrefabInstance:
@@ -22730,7 +22730,10 @@ Transform:
   m_LocalPosition: {x: -13.3266, y: 3.06597, z: 14.90726}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1501965659}
+  - {fileID: 670019062}
+  - {fileID: 454885131}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &803581724
@@ -61238,12 +61241,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1501965657}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.27879, y: 0.5, z: 0.0268}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 13.605391, y: -2.56597, z: -14.88046}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 795342583}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1518373121
 PrefabInstance:
@@ -83251,11 +83254,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 1577433532}
   - {fileID: 573170148}
-  - {fileID: 637580406}
   - {fileID: 795342583}
-  - {fileID: 1501965659}
-  - {fileID: 670019062}
-  - {fileID: 454885131}
+  - {fileID: 637580406}
   - {fileID: 1866736047}
   - {fileID: 1497989558}
   - {fileID: 2090379991}
