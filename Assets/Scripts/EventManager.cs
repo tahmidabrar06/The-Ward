@@ -19,6 +19,7 @@ public class EventManager : MonoBehaviour
     public GameObject zombiePrefab;
     private GameObject player;
     private UIManager uiManager;
+    private TriggerElevator elevatorTrig;
 
     [Header("Live Values For Testing")]
     [SerializeField]
@@ -38,6 +39,7 @@ public class EventManager : MonoBehaviour
         zombieContainer = GameObject.Find("ZombieContainer");
         waveDefTrigger = GameObject.Find("WaveDefenseTrigger");
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        elevatorTrig = GameObject.Find("ElevatorOpenTrigger").GetComponent<TriggerElevator>();
     }
 
     void Update()
@@ -136,6 +138,7 @@ public class EventManager : MonoBehaviour
     public void Victory()
     {
         //uiManager.ShowVictoryScreen(); //Victory screen not implemented yet, substituting with respawnScreen()
-        uiManager.ShowRespawnScreen();
+        //uiManager.ShowRespawnScreen();
+        elevatorTrig.victory = true; //needs to show victory screen instead of insta loading floor2
     }
 }
