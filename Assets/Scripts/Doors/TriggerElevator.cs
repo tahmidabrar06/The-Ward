@@ -3,7 +3,7 @@ using UnityEngine;
 public class TriggerElevator : MonoBehaviour
 {
     [SerializeField] private OpenElevator[] doors;
-
+    public bool victory = false;
     // OPEN only,
     void OnTriggerEnter(Collider other)
     {
@@ -12,10 +12,13 @@ public class TriggerElevator : MonoBehaviour
             return;
         }
 
-        foreach (OpenElevator door in doors)
+        if(victory)
         {
-            Debug.Log("Elevator doors opening");
-            door.Open();
+            foreach (OpenElevator door in doors)
+            {
+                Debug.Log("Elevator doors opening");
+                door.Open();
+            }
         }
     }
 

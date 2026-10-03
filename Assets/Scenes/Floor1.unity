@@ -63848,7 +63848,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -22.91
+      value: -1.48
       objectReference: {fileID: 0}
     - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -63856,7 +63856,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.66
+      value: -10.23
       objectReference: {fileID: 0}
     - target: {fileID: 5982188665886198755, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -83396,6 +83396,7 @@ GameObject:
   - component: {fileID: 33363239922007820}
   - component: {fileID: 23332643585795648}
   - component: {fileID: 64619258019686996}
+  - component: {fileID: 64619258019686997}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -83608,6 +83609,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300002, guid: 30a37ce794ca1c94192e4d8721b12940, type: 3}
+--- !u!208 &64619258019686997
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1744751507865216}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.528, y: 1.049, z: 0.079}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.527, y: -0.90900004, z: 0.028}
+  m_TimeToStationary: 0.5
 --- !u!1001 &6372778648081487955
 PrefabInstance:
   m_ObjectHideFlags: 0
