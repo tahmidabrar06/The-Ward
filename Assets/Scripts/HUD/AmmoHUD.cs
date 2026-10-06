@@ -12,7 +12,7 @@ namespace TheWard.Combat
         [Header("Settings")]
         [SerializeField] private int lowAmmoThreshold = 3; 
 
-        private void Start()
+        private void Awake()
         {
             if (warningText != null)
             {
@@ -50,6 +50,15 @@ namespace TheWard.Combat
             {
                 warningText.gameObject.SetActive(false);
             }
+        }
+        public void EnableAmmoText()
+        {
+            ammoCountText.gameObject.SetActive(true);
+        }
+
+        public void DisableAmmoText()
+        {
+            ammoCountText.gameObject.SetActive(false);
         }
     }
 }

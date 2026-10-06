@@ -138,13 +138,21 @@ namespace TheWard.Combat
 
         private void ShowSelectedWeapon()
         {
-            for (int index = 0; index < weapons.Length; index++)
+            /*for (int index = 0; index < weapons.Length; index++)
             {
                 if (weapons[index] != null)
                 {
                     weapons[index].gameObject.SetActive(index == activeWeaponIndex);
                 }
+            }*/
+            for (int index = 0; index < weapons.Length; index++)
+            {
+                if (weapons[index] != null)
+                {
+                    weapons[index].gameObject.SetActive(false);
+                }
             }
+                weapons[activeWeaponIndex].gameObject.SetActive(true);
         }
     }
 }

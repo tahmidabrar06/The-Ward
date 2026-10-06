@@ -80,7 +80,11 @@ namespace TheWard.Combat
         
         private void OnEnable()
         {
-            if (ammoUI != null) ammoUI.UpdateAmmoState(ammo, reserveAmmo, magazineSize);
+            if (ammoUI != null)
+            {
+                ammoUI.EnableAmmoText();
+                ammoUI.UpdateAmmoState(ammo, reserveAmmo, magazineSize);
+            }
         }
         
         public override void HandleInput(bool pressed, bool held, bool released)
@@ -252,6 +256,10 @@ namespace TheWard.Combat
             GameAudio.StopOwned(this);
             base.OnDisable();
             recoilRoutine = null;
+            if (ammoUI != null)
+            {
+                ammoUI.DisableAmmoText();
+            }
         }
     }
 }
