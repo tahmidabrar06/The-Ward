@@ -1,4 +1,5 @@
 using UnityEngine;
+using TheWard.Audio;
 
 namespace TheWard.Combat
 {
@@ -70,6 +71,8 @@ namespace TheWard.Combat
         {
             if (!isAnimating) return;
             SetGrenadeVisible(false);
+            // Play at the animation's release event, when the projectile actually leaves the hand.
+            GameAudio.Play(AudioCue.GrenadeThrow, transform.position);
 
             Transform origin = attackOrigin != null ? attackOrigin : transform;
             Vector3 spawnPosition = origin.position + origin.forward * 0.4f;

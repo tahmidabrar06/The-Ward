@@ -7,6 +7,7 @@ public class ElevatorManager : MonoBehaviour
 
     private bool hasEntered = false;
 
+    //temporary, this needs to be called from victory screen, on button press - tahmid
     private void OnTriggerEnter(Collider other)
     {
         if (hasEntered)
