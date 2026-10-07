@@ -57,6 +57,7 @@ public class EventManager : MonoBehaviour
 
     public void StartWaveDefence()
     {
+        TutorialManager.Instance.ShowPrompt("Defend against zombie waves");
         waveDefenceStarted = true;
         ClearZombieContainer();
     }
@@ -69,7 +70,7 @@ public class EventManager : MonoBehaviour
             waveSpawnTimer -= waveSpawnInterval;
             currentWave += 1;
         }
-        if (waveDefCountdown <= 0 && GetAliveZombieCount() == 0)
+        if (waveDefCountdown <= 0 && GetAliveZombieCount() == 0) // Consider changing to ((waveDefCountdown <= 0 || (currentWave >= numberOfWaves)) && GetAliveZombieCount() == 0)
         {
             Victory();
         }
@@ -139,6 +140,7 @@ public class EventManager : MonoBehaviour
     {
         //uiManager.ShowVictoryScreen(); //Victory screen not implemented yet, substituting with respawnScreen()
         //uiManager.ShowRespawnScreen();
+        TutorialManager.Instance.ShowPrompt("Enter the elevator");
         elevatorTrig.victory = true; //needs to show victory screen instead of insta loading floor2
     }
 }
