@@ -7,10 +7,6 @@ public class TriggerDoorArea : MonoBehaviour
     [SerializeField] private RotateDoor door;
     [SerializeField] private InputActionReference pressKey;
     [SerializeField] private float closeDelay = 1.5f;
-    
-    [Header("Tutorial UI")]
-    [SerializeField] private UIManager uiManager;
-    [SerializeField] private string promptMessage = "Press [F] to Open Door";
 
     // check if the player ahs triggered the cube
     private bool playerTriggered;
@@ -48,7 +44,9 @@ public class TriggerDoorArea : MonoBehaviour
         {
             // Debug.Log("Pressed F - Opened door");
             door.Open();
-            if (uiManager != null) uiManager.HideTutorialPrompt();
+            
+            // Close tutorial prompt
+            TutorialManager.Instance.HidePrompt();
         }
     }
 
@@ -61,7 +59,8 @@ public class TriggerDoorArea : MonoBehaviour
         }
         playerTriggered = true; // triggered the cube
         
-        if (!door.IsOpen && uiManager != null) uiManager.ShowTutorialPrompt(promptMessage);
+        // Show tutorial prompt
+        TutorialManager.Instance.ShowPrompt("Press [F] to Open Door");
         
         if (closeRoutine != null)
         {
@@ -78,7 +77,8 @@ public class TriggerDoorArea : MonoBehaviour
         }
         playerTriggered = false;
         
-        if (uiManager != null) uiManager.HideTutorialPrompt();
+        // Close tutorial prompt
+        TutorialManager.Instance.HidePrompt();
         
         // close door when opened later (delay a bit)
         if (door.IsOpen)

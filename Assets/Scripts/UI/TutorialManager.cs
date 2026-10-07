@@ -6,6 +6,7 @@ public class TutorialManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private UIManager uiManager;
+    [SerializeField] private TutorialSequence tutorialSequence;
 
     private void Awake()
     {
@@ -34,4 +35,13 @@ public class TutorialManager : MonoBehaviour
             uiManager.HideTutorialPrompt();
         }
     }
+    
+    public void BeginTutorialSequence()
+    {
+        if (tutorialSequence != null)
+        {
+            tutorialSequence.BeginSequence();
+        }
+    }
+    
 }

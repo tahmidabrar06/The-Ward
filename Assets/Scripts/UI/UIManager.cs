@@ -230,7 +230,7 @@ public class UIManager : MonoBehaviour
 
         EnableGameplay();
         
-        if (tutorialSequence != null) tutorialSequence.BeginSequence();
+        TutorialManager.Instance.BeginTutorialSequence();
     }
 
     // =========================
