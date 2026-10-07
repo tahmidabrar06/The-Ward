@@ -64377,6 +64377,10 @@ PrefabInstance:
       propertyPath: ammoUI
       value: 
       objectReference: {fileID: 637580409}
+    - target: {fileID: 648094942337609731, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: damage
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 857568081484818163, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: ammoUI
       value: 
@@ -78038,7 +78042,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1962603031
 RectTransform:
   m_ObjectHideFlags: 0
