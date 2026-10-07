@@ -5,10 +5,15 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     [Header("Panels")]
-    [SerializeField] private GameObject tutorialPanel;
+    [SerializeField] private GameObject introPanel;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject respawnPanel;
     [SerializeField] private GameObject victoryPanel;
+    
+    [Header("Tutorial System")]
+    [SerializeField] private GameObject tutorialPanel; 
+    [SerializeField] private TMPro.TMP_Text tutorialText;
+    [SerializeField] private TutorialSequence tutorialSequence;
 
     [Header("Player Control")]
     [SerializeField] private PlayerCharacterController playerMovement;
@@ -17,7 +22,7 @@ public class UIManager : MonoBehaviour
     private bool isPaused = false;
     private bool isVictory = false;
 
-    private static bool hasSeenTutorial = false;
+    private static bool hasSeenIntro = false;
     
     private Transform playerTransform;
     private Transform cameraTransform;
@@ -52,9 +57,9 @@ public class UIManager : MonoBehaviour
         isPaused = false;
         isVictory = false;
 
-        if (tutorialPanel != null && !hasSeenTutorial)
+        if (introPanel != null && !hasSeenIntro)
         {
-            tutorialPanel.SetActive(true);
+            introPanel.SetActive(true);
             SaveCurrentTransforms();
             FreezeGameplay();
         }
@@ -208,22 +213,24 @@ public class UIManager : MonoBehaviour
     public void MainMenu()
     {
         Time.timeScale = 1f;
-        hasSeenTutorial = false;
+        hasSeenIntro = false;
         SceneManager.LoadScene("MainMenu");
     }
     
     // =========================
-    // Turorial SCREEN
+    // Intro SCREEN
     // =========================
 
-    public void StartGameAfterTutorial()
+    public void StartGameAfterIntro()
     {
-        hasSeenTutorial = true;
+        hasSeenIntro = true;
 
-        if (tutorialPanel != null)
-            tutorialPanel.SetActive(false);
+        if (introPanel != null)
+            introPanel.SetActive(false);
 
         EnableGameplay();
+        
+        if (tutorialSequence != null) tutorialSequence.BeginSequence();
     }
 
     // =========================
@@ -321,5 +328,16 @@ public class UIManager : MonoBehaviour
         {
             cameraTransform.rotation = savedCameraRotation;
         }
+    }
+    
+    public void ShowTutorialPrompt(string message)
+    {
+        if (tutorialPanel != null) tutorialPanel.SetActive(true);
+        if (tutorialText != null) tutorialText.text = message;
+    }
+
+    public void HideTutorialPrompt()
+    {
+        if (tutorialPanel != null) tutorialPanel.SetActive(false);
     }
 }
