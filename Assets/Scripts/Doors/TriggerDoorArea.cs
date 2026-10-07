@@ -38,6 +38,7 @@ public class TriggerDoorArea : MonoBehaviour
             // Debug.Log("F not pressed");
             return;
         }
+        if(TutorialManager.Instance.IsSequenceActive) return;
 
         // press F,  open door
         if (pressKey.action.WasPressedThisFrame() && !door.IsOpen)
@@ -59,8 +60,10 @@ public class TriggerDoorArea : MonoBehaviour
         }
         playerTriggered = true; // triggered the cube
         
+        if(TutorialManager.Instance.IsSequenceActive) return;
+        
         // Show tutorial prompt
-        TutorialManager.Instance.ShowPrompt("Press [F] to Open Door");
+        if (!door.IsOpen) TutorialManager.Instance.ShowPrompt("Press [F] to Open Door");
         
         if (closeRoutine != null)
         {
@@ -76,6 +79,8 @@ public class TriggerDoorArea : MonoBehaviour
             return;
         }
         playerTriggered = false;
+        
+        if(TutorialManager.Instance.IsSequenceActive) return;
         
         // Close tutorial prompt
         TutorialManager.Instance.HidePrompt();

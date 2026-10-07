@@ -15547,8 +15547,6 @@ MonoBehaviour:
   door: {fileID: 1874460562}
   pressKey: {fileID: -7897576653505415979, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   closeDelay: 1.5
-  uiManager: {fileID: 795342582}
-  promptMessage: Press [F] to Open Door
 --- !u!65 &346939850
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23540,7 +23538,6 @@ GameObject:
   m_Component:
   - component: {fileID: 795342583}
   - component: {fileID: 795342582}
-  - component: {fileID: 795342584}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -23566,7 +23563,7 @@ MonoBehaviour:
   victoryPanel: {fileID: 4607925905564632964, guid: 4f3cef260171f1a44a3bc49e53464661, type: 3}
   tutorialPanel: {fileID: 882386722}
   tutorialText: {fileID: 999548650}
-  tutorialSequence: {fileID: 795342584}
+  tutorialSequence: {fileID: 0}
   playerMovement: {fileID: 2075618049}
   cameraMovement: {fileID: 2075618046}
 --- !u!4 &795342583
@@ -23585,27 +23582,9 @@ Transform:
   - {fileID: 1501965659}
   - {fileID: 670019062}
   - {fileID: 454885131}
+  - {fileID: 1201007765}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &795342584
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 795342581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fd196265f6a54fc69eb115cf75096b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialSequence
-  uiManager: {fileID: 795342582}
-  movePrompt: Use [W A S D] to Move
-  moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  shootPrompt: Press [Left Click] to Shoot
-  shootAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  sprintPromt: Press [Left Shift] to Sprint
-  sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1001 &803581724
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32689,6 +32668,69 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 898390fc365fbcd48ab182c92e88a052, type: 3}
+--- !u!1 &1201007764
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1201007765}
+  - component: {fileID: 1201007766}
+  - component: {fileID: 1201007767}
+  m_Layer: 0
+  m_Name: TutorialManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1201007765
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201007764}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 795342583}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1201007766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201007764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 296f9f8da07b94d6bae17196c6de71b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialManager
+  uiManager: {fileID: 795342582}
+  tutorialSequence: {fileID: 1201007767}
+--- !u!114 &1201007767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201007764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fd196265f6a54fc69eb115cf75096b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialSequence
+  moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  shootAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  torchAction: {fileID: 1224580743721113614, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1001 &1213414047
 PrefabInstance:
   m_ObjectHideFlags: 0

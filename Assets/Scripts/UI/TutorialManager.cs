@@ -7,6 +7,8 @@ public class TutorialManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private UIManager uiManager;
     [SerializeField] private TutorialSequence tutorialSequence;
+    
+    public bool IsSequenceActive { get; private set; } = false;
 
     private void Awake()
     {
@@ -40,8 +42,13 @@ public class TutorialManager : MonoBehaviour
     {
         if (tutorialSequence != null)
         {
+            IsSequenceActive = true;
             tutorialSequence.BeginSequence();
         }
     }
     
+    public void EndTutorialSequence()
+    {
+        IsSequenceActive = false; // Turn the lock OFF
+    }
 }

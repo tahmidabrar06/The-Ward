@@ -73,6 +73,7 @@ public class TutorialSequence : MonoBehaviour
                 currentStep = 0;   
                 TutorialManager.Instance.HidePrompt();
                 
+                TutorialManager.Instance.EndTutorialSequence();
                 Destroy(this); 
             }
         }
