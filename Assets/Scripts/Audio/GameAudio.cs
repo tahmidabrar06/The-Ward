@@ -1,3 +1,4 @@
+using System.Collections;
 using TheWard.Combat;
 using UnityEngine;
 
@@ -10,12 +11,14 @@ namespace TheWard.Audio
         private const int SoundSourceCount = 32;
         private static GameAudio instance;
         [SerializeField] private GameAudioBank bank;
-        private readonly AudioSource[] soundSources = new AudioSource[SoundSourceCount];
-        private readonly Object[] sourceOwners = new Object[SoundSourceCount];
-        private MusicController musicController;
-        private Transform player;
-        private bool paused;
-        private int nextZombieVoice;
+        [SerializeField] private AudioSource[] soundSources = new AudioSource[SoundSourceCount];
+        [SerializeField] private Object[] sourceOwners = new Object[SoundSourceCount];
+        [SerializeField] private float[] sourceLevels = new float[SoundSourceCount];
+        [SerializeField] private bool[] cinematicSources = new bool[SoundSourceCount];
+        [SerializeField] private MusicController musicController;
+        [SerializeField] private Transform player;
+        [SerializeField] private bool paused;
+        [SerializeField] private int nextZombieVoice;
 
         // Clear the cached instance when entering Play mode, even with domain reload disabled.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -29,24 +32,45 @@ namespace TheWard.Audio
         {
             if (instance != null) return instance;
 
-            GameAudioBank audioBank = Resources.Load<GameAudioBank>("GameAudioBank");
-            if (audioBank == null) return null;
-
+            // Static fields reset on script reload, while scene objects remain alive.
+            GameAudio existing = FindFirstObjectByType<GameAudio>();
+            if (existing != null)
+            {
+                instance = existing;
+                existing.SetupAudio();
+                return instance;
+            }
+            if (Resources.Load<GameAudioBank>("GameAudioBank") == null) return null;
             GameObject audioObject = new GameObject("Game Audio");
-            instance = audioObject.AddComponent<GameAudio>();
-            instance.bank = audioBank;
-            instance.SetupAudio();
-            return instance;
+            return audioObject.AddComponent<GameAudio>();
+        }
+
+        private void OnEnable()
+        {
+            if (instance != null && instance != this)
+            {
+                enabled = false;
+                Destroy(gameObject);
+                return;
+            }
+            instance = this;
+            SetupAudio();
         }
 
         private void SetupAudio()
         {
+            if (bank == null) bank = Resources.Load<GameAudioBank>("GameAudioBank");
+            if (bank == null) { enabled = false; return; }
             for (int i = 0; i < soundSources.Length; i++)
             {
-                GameObject soundObject = new GameObject("Sound Effect " + (i + 1));
-                soundObject.transform.SetParent(transform);
-
-                AudioSource source = soundObject.AddComponent<AudioSource>();
+                Transform child = transform.Find("Sound Effect " + (i + 1));
+                if (child == null)
+                {
+                    child = new GameObject("Sound Effect " + (i + 1)).transform;
+                    child.SetParent(transform);
+                }
+                AudioSource source = child.GetComponent<AudioSource>();
+                if (source == null) source = child.gameObject.AddComponent<AudioSource>();
                 source.playOnAwake = false;
                 source.rolloffMode = AudioRolloffMode.Linear;
                 source.minDistance = 2f;
@@ -56,9 +80,14 @@ namespace TheWard.Audio
                 soundSources[i] = source;
             }
 
-            GameObject musicObject = new GameObject("Music");
-            musicObject.transform.SetParent(transform);
-            musicController = musicObject.AddComponent<MusicController>();
+            Transform musicTransform = transform.Find("Music");
+            if (musicTransform == null)
+            {
+                musicTransform = new GameObject("Music").transform;
+                musicTransform.SetParent(transform);
+            }
+            musicController = musicTransform.GetComponent<MusicController>();
+            if (musicController == null) musicController = musicTransform.gameObject.AddComponent<MusicController>();
             musicController.Setup(bank);
         }
 
@@ -69,6 +98,12 @@ namespace TheWard.Audio
             if (audio == null) return;
             audio.player = transform;
             audio.musicController.SetPlayer(transform, health);
+        }
+
+        public static void SetWaveDefense(bool active)
+        {
+            GameAudio audio = active ? GetInstance() : instance;
+            if (audio != null) audio.musicController.SetWaveDefense(active);
         }
 
         // Only nearby zombies influence the music; distant encounters stay out of the mix.
@@ -90,6 +125,30 @@ namespace TheWard.Audio
             if (sound == null) return;
             AudioClip clip = sound.Next();
             audio.PlayClip(clip, position, spatial, volume * sound.volume, owner);
+        }
+
+        // Run on the weapon so disabling it cancels pending reload stages too.
+        public static IEnumerator PlayReload(AudioCue cue, Transform weapon, float duration, Object owner)
+        {
+            GameAudio audio = GetInstance();
+            if (audio == null) yield break;
+            GameAudioBank.Sound sound = audio.bank.Find(cue);
+            if (sound == null) yield break;
+            if (!sound.sequential)
+            {
+                Play(cue, weapon.position, owner: owner);
+                yield break;
+            }
+            if (sound.clips == null || sound.clips.Length == 0) yield break;
+
+            // Leave the final part of the animation for the charging sound's tail.
+            float interval = Mathf.Max(0.1f, duration) / sound.clips.Length;
+            for (int i = 0; i < sound.clips.Length; i++)
+            {
+                if (i > 0) yield return new WaitForSeconds(interval);
+                if (audio == null || weapon == null) yield break;
+                audio.PlayClip(sound.clips[i], weapon.position, false, sound.volume, owner);
+            }
         }
 
         public static int AssignZombieVoice(ZombieAttackVoice preference)
@@ -161,7 +220,16 @@ namespace TheWard.Audio
             audio.PlayClip(clip, position, false, volume, null);
         }
 
-        private void PlayClip(AudioClip clip, Vector3 position, bool spatial, float volume, Object owner)
+        // Story sequences can use this path to respect the independent cinematic level.
+        public static void PlayCinematic(AudioClip clip, Vector3 position, Object owner = null)
+        {
+            if (Time.timeScale <= 0f) return;
+            GameAudio audio = GetInstance();
+            if (audio != null) audio.PlayClip(clip, position, false, 1f, owner, cinematic: true);
+        }
+
+        private void PlayClip(AudioClip clip, Vector3 position, bool spatial, float volume, Object owner,
+            bool cinematic = false)
         {
             if (clip == null || paused) return;
             // Sounds stay on these sources so an explosion can finish after its grenade is destroyed.
@@ -174,7 +242,9 @@ namespace TheWard.Audio
                 sourceOwners[i] = owner;
                 source.transform.position = position;
                 source.spatialBlend = spatial ? 1f : 0f;
-                source.volume = Mathf.Clamp01(volume * bank.effectsVolume);
+                sourceLevels[i] = Mathf.Clamp01(volume * (cinematic ? 1f : bank.effectsVolume));
+                cinematicSources[i] = cinematic;
+                source.volume = sourceLevels[i] * (cinematic ? AudioSettings.Cinematics : AudioSettings.Sfx);
                 source.PlayOneShot(clip);
                 return;
             }
@@ -182,6 +252,11 @@ namespace TheWard.Audio
 
         private void Update()
         {
+            // Update active sounds too, including while the settings menu pauses gameplay.
+            for (int i = 0; i < soundSources.Length; i++)
+                soundSources[i].volume = sourceLevels[i] *
+                    (cinematicSources[i] ? AudioSettings.Cinematics : AudioSettings.Sfx);
+
             // Audio does not follow timeScale automatically; pause and resume sources explicitly.
             bool gamePaused = Time.timeScale <= 0f;
             if (gamePaused == paused) return;

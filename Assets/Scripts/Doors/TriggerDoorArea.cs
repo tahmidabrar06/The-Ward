@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +10,7 @@ public class TriggerDoorArea : MonoBehaviour
     [SerializeField] private float closeDelay = 1.5f;
 
     // check if the player ahs triggered the cube
-    private bool playerTriggered;
+    private readonly HashSet<Collider> playerColliders = new HashSet<Collider>();
     private Coroutine closeRoutine;
 
     // for the trigger: F is pressed
@@ -24,16 +25,19 @@ public class TriggerDoorArea : MonoBehaviour
     // for the trigger: F is no longer pressed
     void OnDisable()
     {
-        if (pressKey != null)
-        {
-            pressKey.action.Disable();
-        }
+        // The action asset is shared; another trigger may still be using this action.
+        playerColliders.Clear();
+        StopAllCoroutines();
+        closeRoutine = null;
     }
 
     void Update()
     {
         // no F pressed, but the player is in the triggered area
-        if (!playerTriggered || pressKey == null)
+        playerColliders.RemoveWhere(collider => collider == null || !collider.enabled ||
+            !collider.gameObject.activeInHierarchy);
+        if (Time.timeScale <= 0f || playerColliders.Count == 0 || pressKey == null ||
+            pressKey.action == null || door == null)
         {
             // Debug.Log("F not pressed");
             return;
@@ -47,14 +51,21 @@ public class TriggerDoorArea : MonoBehaviour
         }
     }
 
-    // 
-    void OnTriggerEnter(Collider other)
+    private static bool IsPlayer(Collider other)
     {
-        if (!other.CompareTag("Player"))
+        Transform current = other.transform;
+        while (current != null)
         {
-            return;
+            if (current.CompareTag("Player")) return true;
+            current = current.parent;
         }
-        playerTriggered = true; // triggered the cube
+        return false;
+    }
+
+    private void RegisterPlayer(Collider other)
+    {
+        if (!IsPlayer(other)) return;
+        playerColliders.Add(other);
         if (closeRoutine != null)
         {
             StopCoroutine(closeRoutine);
@@ -62,25 +73,24 @@ public class TriggerDoorArea : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other) => RegisterPlayer(other);
+
+    // Recover occupancy after script reload or enabling while already inside the trigger.
+    void OnTriggerStay(Collider other) => RegisterPlayer(other);
+
     void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("Player"))
-        {
-            return;
-        }
-        playerTriggered = false;
-        // close door when opened later (delay a bit)
-        if (door.IsOpen)
-        {
+        if (!IsPlayer(other)) return;
+        playerColliders.Remove(other);
+        if (playerColliders.Count == 0 && door != null && door.IsOpen && closeRoutine == null)
             closeRoutine = StartCoroutine(CloseAfterDelay());
-        }
     }
 
     // close door
     IEnumerator CloseAfterDelay()
     {
         yield return new WaitForSeconds(closeDelay);
-        door.Close();
+        if (door != null && playerColliders.Count == 0) door.Close();
         closeRoutine = null;
     }
 }

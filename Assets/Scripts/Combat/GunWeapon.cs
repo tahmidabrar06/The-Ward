@@ -169,7 +169,7 @@ namespace TheWard.Combat
             {
                 AudioCue sound = GetGunSound(AudioCue.HandgunReload, AudioCue.RifleReload, AudioCue.ShotgunReload);
                 // Tie reload audio to this weapon so switching away can stop it.
-                GameAudio.Play(sound, transform.position, owner: this);
+                StartCoroutine(GameAudio.PlayReload(sound, transform, reloadDuration, this));
             }
         }
 
