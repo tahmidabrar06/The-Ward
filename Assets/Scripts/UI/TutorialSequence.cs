@@ -18,7 +18,7 @@ public class TutorialSequence : MonoBehaviour
     public void BeginSequence()
     {
         currentStep = 1;
-        if (uiManager != null) uiManager.ShowTutorialPrompt(movePrompt);
+        TutorialManager.Instance.ShowPrompt(movePrompt);
     }
 
     private void OnEnable()
@@ -35,7 +35,7 @@ public class TutorialSequence : MonoBehaviour
             if (moveInput.magnitude > 0.1f)
             {
                 currentStep = 2;
-                if (uiManager != null) uiManager.ShowTutorialPrompt(shootPrompt);
+                TutorialManager.Instance.ShowPrompt(shootPrompt);
             }
         }
         else if (currentStep == 2)
@@ -43,7 +43,7 @@ public class TutorialSequence : MonoBehaviour
             if (shootAction.action.WasPressedThisFrame())
             {
                 currentStep = 3;
-                if (uiManager != null) uiManager.ShowTutorialPrompt(sprintPromt);
+                TutorialManager.Instance.ShowPrompt(sprintPromt);
             }
         }
         else if (currentStep == 3)
@@ -51,7 +51,7 @@ public class TutorialSequence : MonoBehaviour
             if (sprintAction.action.WasPressedThisFrame())
             {
                 currentStep = 0;   
-                if (uiManager != null) uiManager.HideTutorialPrompt();
+                TutorialManager.Instance.HidePrompt();
                 Destroy(this); 
             }
         }
