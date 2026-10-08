@@ -9,7 +9,9 @@ Audio is wired into the existing player, weapon, grenade, and zombie scripts. No
 | Player walking and crouching | `Footsteps - Essentials/Footsteps_Tile/Footsteps_Tile_Walk` |
 | Player running | `Footsteps - Essentials/Footsteps_Tile/Footsteps_Tile_Run` |
 | Pistol shot | `FreeWeaponSFX_v1.1/AssaultRifle/Gunshots/sfx_wpn_ar_gunshot_01.wav` |
-| Gun reload (all profiles) | `FreeWeaponSFX_v1.1/AssaultRifle/Reload/sfx_wpn_ar_reload_03_magIn.wav` |
+| Handgun reload | `FreeWeaponSFX_v1.1/Handgun/Reload`: slide lock, magazine out, magazine draw, magazine in, charge |
+| Rifle reload | `FreeWeaponSFX_v1.1/AssaultRifle/Reload`: magazine out, magazine draw, magazine in, charge |
+| Shotgun reload | `FreeWeaponSFX_v1.1/AssaultRifle/Reload/sfx_wpn_ar_reload_03_magIn.wav` |
 | Grenade launch | `FreeWeaponSFX_v1.1/GrenadeLauncher/sfx_wpn_gl_fire.wav` |
 | Grenade explosion | `FreeWeaponSFX_v1.1/GrenadeLauncher/sfx_wpn_gl_explosion.wav` |
 | Machine gun | AssaultRifle gunshot variants |
@@ -17,7 +19,7 @@ Audio is wired into the existing player, weapon, grenade, and zombie scripts. No
 | Sword / bat | Zombie Massacre swing and flesh / blunt impact variants |
 | Zombies | ZombieHorror idle, footsteps, body fall; Zombie Massacre 16-bit Impact Pain Hurt clips; Zombie Massacre attack voices: Short, Medium, Intimidating |
 | Player damage / zombie eating attack | `TerrorByte Games/Zombie Massacre SFX Pack/16bit/Flesh Blood and Gore/zombie_massacre_sfx_flesh_blood_gore_stereo_01.wav` |
-| Music | `HS_MP` Exploration, MidTension, and Tension loops |
+| Music | `HS_MP` Exploration and MidTension for ordinary encounters; Tension reserved for wave defense |
 
 No jumping behavior or jump audio was added.
 
@@ -29,9 +31,9 @@ Footsteps follow actual grounded movement, with a faster cadence when sprinting 
 
 ## Audio scripts
 
-- `GameAudioBank` holds the clips and volumes shown in the Inspector.
+- `GameAudioBank` holds the clips and volumes shown in the Inspector. Sequential reload cues play their clips in listed order; other cues select variations.
 - `GameAudio` handles sound effects through cached `AudioSource` components and `PlayOneShot`. It also stops a weapon or zombie's sounds when needed.
-- `MusicController` plays the three music loops and fades between them. Its sources are separate from the effects, so combat sounds do not interrupt the music.
+- `MusicController` plays the exploration, encounter, and wave-defense loops and fades between them. Its sources are separate from the effects, so combat sounds do not interrupt the music.
 
 The player starts the audio setup automatically in Floor1, Floor2, and Floor3. Both player controllers (`PlayerCharacterController` and the older `FirstPerson`) register with the audio system, including when a floor is opened directly or loaded through an elevator. During Play mode, expand **Game Audio → Music** in the Hierarchy to inspect the music sources. Existing scenes and prefabs need no new assignments.
 
@@ -43,7 +45,7 @@ Open `Floor1CharTest` and wait for Unity to finish importing and compiling:
 
 1. Walk, sprint, crouch, stop, and push against a wall. Only grounded movement should produce Tile footsteps, with quieter crouching and faster running.
 2. Fire the pistol and machine gun. Confirm the pistol uses the selected clip and shots require ammunition.
-3. Reload a partly empty gun: hear the selected magazine-in clip once. A full magazine or no reserve ammunition should stay silent. Switching weapons cancels reload audio.
+3. Reload a partly empty handgun and rifle: hear each weapon’s ordered reload stages spread across its reload duration. A full magazine or no reserve ammunition should stay silent. Switching weapons cancels reload audio.
 4. Throw a grenade: hear the launch clip on release and one spatial explosion at impact. The explosion tail should continue after the grenade disappears.
 5. Swing the sword and bat, with and without a target. Impacts should sound only on a successful hit.
 6. Approach zombies: check spatial idle, movement, attack, hurt, and death sounds. Music should rise around threats and settle after leaving them.
@@ -52,3 +54,13 @@ Open `Floor1CharTest` and wait for Unity to finish importing and compiling:
 Compilation and asset-link checks can run outside Unity; audible balance and scene playback require this play-mode pass.
 
 To check floor music, open Floor2 alone and press Play, then repeat with Floor3. Each should fade into Exploration automatically. Also check an elevator transition between floors; the previous scene’s audio should stop and the destination floor’s music should begin.
+
+## Sound settings
+
+Settings panels retain their existing fonts, colours, sliders, and Save/Back buttons. Master defaults to 100%, SFX to 100%, music to 20%, and cinematics to 60%; each slider supports 0–100%. Adjust listening level with the PC or headset volume control. Existing saved master preferences are preserved.
+
+Sliders preview levels immediately, including paused audio. Save persists levels across restarts; unsaved preview levels remain for the current session. Master scales all audio, while SFX and music independently scale the audio bank’s mix. `GameAudio.PlayCinematic(clip, position, owner)` routes future story audio through the cinematic level; no existing cutscene playback was found.
+
+Verify in MainMenu and the Floor1/Floor2 pause settings: change every slider, check percentage labels, save, reopen, and restart. Test music/SFX at zero, restore recommended values, and confirm mouse sensitivity and Back/Save still work. Check the panel at the target game resolution for clipping.
+
+Wave defense starts its dedicated `HS_Tension_Loop` at the opening when `EventManager.StartWaveDefence` first succeeds. It takes precedence over nearby threat cues until victory, then crossfades back to exploration. Repeated trigger checks cannot restart the music or restart a completed defense. The loop follows Music/Master settings and pause/resume. Verify by entering the defense trigger, remaining inside it, pausing/resuming, then finishing the timer and clearing the remaining zombies.
