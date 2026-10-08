@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace TheWard.Audio
 {
-    // Exploration and encounter music crossfade to a dedicated wave-defense loop.
     public class MusicController : MonoBehaviour
     {
         [SerializeField] private AudioSource explorationSource;
@@ -21,7 +20,6 @@ namespace TheWard.Audio
         [SerializeField] private float combatUntil;
         [SerializeField] private bool paused;
 
-        // GameAudio calls Setup before registering the player or starting playback.
         public void Setup(GameAudioBank audioBank)
         {
             bank = audioBank;
@@ -51,7 +49,6 @@ namespace TheWard.Audio
             source = child.gameObject.AddComponent<AudioSource>();
             source.playOnAwake = false;
             source.loop = true;
-            // Music is 2D: its volume should not depend on where the player stands.
             source.spatialBlend = 0f;
             source.volume = 0f;
             source.clip = clip;
@@ -145,16 +142,6 @@ namespace TheWard.Audio
                 if (paused) PauseMusic();
                 else ResumeMusic();
             }
-            if (paused)
-            {
-                ApplyUserVolume(explorationSource);
-                ApplyUserVolume(suspicionSource);
-                ApplyUserVolume(combatSource);
-                ApplyUserVolume(waveDefenseSource);
-                return;
-            }
-
-            // Combat takes priority over suspicion; exploration returns when both timers expire.
             AudioSource activeTrack = explorationSource;
             if (waveDefenseActive && waveDefenseSource.clip != null)
             {
@@ -173,36 +160,21 @@ namespace TheWard.Audio
             bool playerAlive = player != null && (playerHealth == null || playerHealth.IsAlive);
             if (!playerAlive) activeTrack = null;
 
-            FadeSource(explorationSource, activeTrack);
-            FadeSource(suspicionSource, activeTrack);
-            FadeSource(combatSource, activeTrack);
-            FadeSource(waveDefenseSource, activeTrack);
+            UpdateTrack(explorationSource, activeTrack, ref explorationLevel);
+            UpdateTrack(suspicionSource, activeTrack, ref suspicionLevel);
+            UpdateTrack(combatSource, activeTrack, ref combatLevel);
+            UpdateTrack(waveDefenseSource, activeTrack, ref waveDefenseLevel);
         }
 
-        private void ApplyUserVolume(AudioSource source)
+        private void UpdateTrack(AudioSource source, AudioSource activeTrack, ref float level)
         {
             if (source == null) return;
-            float mixLevel = source == explorationSource ? explorationLevel :
-                source == suspicionSource ? suspicionLevel :
-                source == combatSource ? combatLevel : waveDefenseLevel;
-            source.volume = mixLevel * AudioSettings.Music;
-        }
-
-        // Fade the selected track up and the others down over several frames.
-        private void FadeSource(AudioSource source, AudioSource activeTrack)
-        {
-            if (source == null) return;
-            float targetVolume = 0f;
-            if (source == activeTrack) targetVolume = bank.musicVolume;
-            float mixLevel = source == explorationSource ? explorationLevel :
-                source == suspicionSource ? suspicionLevel :
-                source == combatSource ? combatLevel : waveDefenseLevel;
-            mixLevel = Mathf.MoveTowards(mixLevel, targetVolume, fadeSpeed * Time.deltaTime);
-            if (source == explorationSource) explorationLevel = mixLevel;
-            else if (source == suspicionSource) suspicionLevel = mixLevel;
-            else if (source == combatSource) combatLevel = mixLevel;
-            else waveDefenseLevel = mixLevel;
-            source.volume = mixLevel * AudioSettings.Music;
+            if (!paused)
+            {
+                float target = source == activeTrack ? bank.musicVolume : 0f;
+                level = Mathf.MoveTowards(level, target, fadeSpeed * Time.deltaTime);
+            }
+            source.volume = level * AudioSettings.Music;
         }
     }
 }
