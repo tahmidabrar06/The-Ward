@@ -1,9 +1,11 @@
 using TheWard.Combat;
+using TheWard.Audio;
 using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
     private bool waveDefenceStarted = false;
+    private bool waveDefenceCompleted;
 
     [SerializeField]
     private float durationOfWaveDef;
@@ -44,6 +46,7 @@ public class EventManager : MonoBehaviour
 
     void Update()
     {
+        WaveDefConditionCheck(); //temporary, to be replaced with elvator door trigger
         if (waveDefenceStarted)
         {
             if (waveDefCountdown > 0)
@@ -52,13 +55,13 @@ public class EventManager : MonoBehaviour
             }
             SpawnWaves();
         }
-		else WaveDefConditionCheck(); //temporary, to be replaced with elvator door trigger
     }
 
     public void StartWaveDefence()
     {
-        TutorialManager.Instance.ShowBigPrompt("Defend against zombie waves");
+        if (waveDefenceStarted || waveDefenceCompleted) return;
         waveDefenceStarted = true;
+        GameAudio.SetWaveDefense(true);
         ClearZombieContainer();
     }
 
@@ -70,7 +73,7 @@ public class EventManager : MonoBehaviour
             waveSpawnTimer -= waveSpawnInterval;
             currentWave += 1;
         }
-        if (waveDefCountdown <= 0 && GetAliveZombieCount() == 0) // Consider changing to ((waveDefCountdown <= 0 || (currentWave >= numberOfWaves)) && GetAliveZombieCount() == 0)
+        if (waveDefCountdown <= 0 && GetAliveZombieCount() == 0)
         {
             Victory();
         }
@@ -138,10 +141,21 @@ public class EventManager : MonoBehaviour
 
     public void Victory()
     {
+        if (waveDefenceCompleted) return;
+        waveDefenceCompleted = true;
+        waveDefenceStarted = false;
+        GameAudio.SetWaveDefense(false);
         //uiManager.ShowVictoryScreen(); //Victory screen not implemented yet, substituting with respawnScreen()
         //uiManager.ShowRespawnScreen();
-		TutorialManager.Instance.HideBigPrompt();
-        TutorialManager.Instance.ShowPrompt("Enter the elevator");
         elevatorTrig.victory = true; //needs to show victory screen instead of insta loading floor2
+    }
+    private void OnDisable()
+    {
+        if (waveDefenceStarted) GameAudio.SetWaveDefense(false);
+    }
+
+    private void OnEnable()
+    {
+        if (waveDefenceStarted) GameAudio.SetWaveDefense(true);
     }
 }

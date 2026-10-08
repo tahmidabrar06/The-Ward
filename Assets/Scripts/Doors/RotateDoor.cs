@@ -6,9 +6,9 @@ public class RotateDoor : MonoBehaviour
     public Vector3 closeRotAngle;   // rotation angle when closed
     public float speed = 1.0f;      // door rotation speed
 
-    bool isRotating = false;        // is the door currently rotating
-    int direction = -1;             // rotation direction
-    float interpolate = 0.0f;       // interpolation amount
+    [SerializeField] private bool isRotating = false;        // is the door currently rotating
+    [SerializeField] private int direction = -1;             // rotation direction
+    [SerializeField] private float interpolate = 0.0f;       // interpolation amount
 
     // check if door is opened
     public bool IsOpen

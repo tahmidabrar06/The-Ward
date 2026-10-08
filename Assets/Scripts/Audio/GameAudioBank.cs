@@ -3,6 +3,40 @@ using UnityEngine;
 
 namespace TheWard.Audio
 {
+    // User levels are separate from the bank's per-clip mix and survive scene changes.
+    public static class AudioSettings
+    {
+        public static float Master { get; private set; } = 1f;
+        public static float Sfx { get; private set; } = 1f;
+        public static float Music { get; private set; } = 0.2f;
+        public static float Cinematics { get; private set; } = 0.6f;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Load()
+        {
+            SetVolumes(PlayerPrefs.GetFloat("MasterVolume", 1f),
+                PlayerPrefs.GetFloat("SfxVolume", 1f), PlayerPrefs.GetFloat("MusicVolume", 0.2f),
+                PlayerPrefs.GetFloat("CinematicVolume", 0.6f));
+        }
+
+        public static void SetVolumes(float master, float sfx, float music, float cinematics)
+        {
+            Master = Mathf.Clamp01(master);
+            Sfx = Mathf.Clamp01(sfx);
+            Music = Mathf.Clamp01(music);
+            Cinematics = Mathf.Clamp01(cinematics);
+            AudioListener.volume = Master;
+        }
+
+        public static void Save()
+        {
+            PlayerPrefs.SetFloat("MasterVolume", Master);
+            PlayerPrefs.SetFloat("SfxVolume", Sfx);
+            PlayerPrefs.SetFloat("MusicVolume", Music);
+            PlayerPrefs.SetFloat("CinematicVolume", Cinematics);
+        }
+    }
+
     // Unity saves these enum values as numbers. Append new cues instead of reordering them.
     public enum AudioCue
     {
@@ -28,6 +62,8 @@ namespace TheWard.Audio
             public AudioCue cue;
             [Range(0f, 1f)] public float volume = 0.7f;
             public AudioClip[] clips;
+            // Reload foley is ordered, rather than picked as random variations.
+            public bool sequential;
             // Playback history is runtime state, not a setting saved into the asset.
             [NonSerialized] private int lastIndex = -1;
 
@@ -66,6 +102,7 @@ namespace TheWard.Audio
         public AudioClip exploration;
         public AudioClip suspicion;
         public AudioClip combat;
+        public AudioClip waveDefense;
         [Range(0f, 1f)] public float musicVolume = 0.18f;
         [Range(0f, 1f)] public float effectsVolume = 0.8f;
 

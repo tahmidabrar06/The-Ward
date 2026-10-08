@@ -58,8 +58,13 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 1adebd98321258449a4307c51780352e, type: 3}
   - cue: 2
     volume: 0.45
+    sequential: 1
     clips:
-    - {fileID: 8300000, guid: 84b8dc5699eea984d91a0a8e96178771, type: 3}
+    - {fileID: 8300000, guid: 3de7713f7dd4a144fb85bdf1efdc1ead, type: 3}
+    - {fileID: 8300000, guid: 6e95c1f9872c66348afdabf419de6f7a, type: 3}
+    - {fileID: 8300000, guid: d715b7c425963954b8732277063971ee, type: 3}
+    - {fileID: 8300000, guid: 8a6916b0948e95a458df68134a4ec9ae, type: 3}
+    - {fileID: 8300000, guid: 0691163014aba1549afecc26fec14ab4, type: 3}
   - cue: 3
     volume: 0.75
     clips:
@@ -73,8 +78,12 @@ MonoBehaviour:
     - {fileID: 8300000, guid: d0b14abf562284a408a90d207c988ce6, type: 3}
   - cue: 5
     volume: 0.45
+    sequential: 1
     clips:
+    - {fileID: 8300000, guid: 08edb2bef8ffb1f4a8de1858af2f36fb, type: 3}
+    - {fileID: 8300000, guid: ab3d477e689b7c640a37efec61f5a150, type: 3}
     - {fileID: 8300000, guid: 84b8dc5699eea984d91a0a8e96178771, type: 3}
+    - {fileID: 8300000, guid: d80439cbec359c2429722491566cc218, type: 3}
   - cue: 6
     volume: 0.75
     clips:
@@ -237,6 +246,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: f8e559768bed7ed4680ab0449da7ec3a, type: 3}
   exploration: {fileID: 8300000, guid: 7c83656836f934188ae4262b9f51b6ab, type: 3}
   suspicion: {fileID: 8300000, guid: 0beb7c76abf7a48e1b7dc86620700c6e, type: 3}
-  combat: {fileID: 8300000, guid: 65828c3bbe94140b1be14a0715084f6a, type: 3}
+  combat: {fileID: 8300000, guid: 0beb7c76abf7a48e1b7dc86620700c6e, type: 3}
+  waveDefense: {fileID: 8300000, guid: 65828c3bbe94140b1be14a0715084f6a, type: 3}
   musicVolume: 0.18
   effectsVolume: 0.8
