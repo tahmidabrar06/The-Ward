@@ -23533,6 +23533,7 @@ MonoBehaviour:
   tutorialPanel: {fileID: 882386722}
   tutorialText: {fileID: 999548650}
   tutorialSequence: {fileID: 0}
+  floorVictoryPanel: {fileID: 1733635198}
   playerMovement: {fileID: 2075618049}
   cameraMovement: {fileID: 2075618046}
 --- !u!4 &795342583
