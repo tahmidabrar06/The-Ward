@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     [Header("Panels")]
+    [SerializeField] private GameObject introPanel;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject respawnPanel;
     [SerializeField] private GameObject victoryPanel;
@@ -16,6 +17,8 @@ public class UIManager : MonoBehaviour
     private bool isPaused = false;
     private bool isVictory = false;
 
+    private static bool hasSeenIntro = false;
+    
     private Transform playerTransform;
     private Transform cameraTransform;
 
@@ -49,7 +52,16 @@ public class UIManager : MonoBehaviour
         isPaused = false;
         isVictory = false;
 
-        EnableGameplay();
+        if (introPanel != null && !hasSeenIntro)
+        {
+            introPanel.SetActive(true);
+            SaveCurrentTransforms();
+            FreezeGameplay();
+        }
+        else
+        {
+            EnableGameplay();
+        }    
     }
 
     private void Update()
@@ -196,8 +208,24 @@ public class UIManager : MonoBehaviour
     public void MainMenu()
     {
         Time.timeScale = 1f;
-
+        hasSeenIntro = false;
         SceneManager.LoadScene("MainMenu");
+    }
+    
+    // =========================
+    // Intro SCREEN
+    // =========================
+
+    public void StartGameAfterIntro()
+    {
+        hasSeenIntro = true;
+
+        if (introPanel != null)
+            introPanel.SetActive(false);
+
+        EnableGameplay();
+        
+        TutorialManager.Instance.BeginTutorialSequence();
     }
 
     // =========================

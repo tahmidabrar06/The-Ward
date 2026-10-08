@@ -22,13 +22,12 @@ public class TakeDamage : MonoBehaviour
         
         if (_volume == null || _volume.profile == null)
         {
-            Debug.LogError("Error: Volume or Profile not found on this object.");
             return;
         }
         
         if (!_volume.profile.TryGet(out _vignette))
         {
-            Debug.LogError("Error: Vignette not found in URP Volume Profile.");
+            Debug.LogError("Error: Vignette not found");
         }
         else
         {

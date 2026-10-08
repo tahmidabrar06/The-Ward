@@ -46,7 +46,6 @@ public class EventManager : MonoBehaviour
 
     void Update()
     {
-        WaveDefConditionCheck(); //temporary, to be replaced with elvator door trigger
         if (waveDefenceStarted)
         {
             if (waveDefCountdown > 0)
@@ -55,6 +54,7 @@ public class EventManager : MonoBehaviour
             }
             SpawnWaves();
         }
+		else WaveDefConditionCheck();
     }
 
     public void StartWaveDefence()
@@ -63,6 +63,7 @@ public class EventManager : MonoBehaviour
         waveDefenceStarted = true;
         GameAudio.SetWaveDefense(true);
         ClearZombieContainer();
+		TutorialManager.Instance.ShowBigPrompt("Defend against zombie waves");
     }
 
     public void SpawnWaves()
@@ -141,6 +142,9 @@ public class EventManager : MonoBehaviour
 
     public void Victory()
     {
+		TutorialManager.Instance.HideBigPrompt();
+		TutorialManager.Instance.ShowPrompt("Get in the elevator");
+
         if (waveDefenceCompleted) return;
         waveDefenceCompleted = true;
         waveDefenceStarted = false;

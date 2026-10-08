@@ -21,7 +21,7 @@ public class TriggerDoorArea : MonoBehaviour
             pressKey.action.Enable();
         }
     }
-
+    
     // for the trigger: F is no longer pressed
     void OnDisable()
     {
@@ -46,8 +46,10 @@ public class TriggerDoorArea : MonoBehaviour
         // press F,  open door
         if (pressKey.action.WasPressedThisFrame() && !door.IsOpen)
         {
+            
             // Debug.Log("Pressed F - Opened door");
             door.Open();
+            TutorialManager.Instance.HidePrompt();
         }
     }
 
@@ -71,6 +73,11 @@ public class TriggerDoorArea : MonoBehaviour
             StopCoroutine(closeRoutine);
             closeRoutine = null;
         }
+        
+        if (!door.IsOpen && !TutorialManager.Instance.IsSequenceActive)
+        {
+            TutorialManager.Instance.ShowPrompt("Press [F] to Open Door");
+        }
     }
 
     void OnTriggerEnter(Collider other) => RegisterPlayer(other);
@@ -84,6 +91,8 @@ public class TriggerDoorArea : MonoBehaviour
         playerColliders.Remove(other);
         if (playerColliders.Count == 0 && door != null && door.IsOpen && closeRoutine == null)
             closeRoutine = StartCoroutine(CloseAfterDelay());
+        
+        if (!TutorialManager.Instance.IsSequenceActive) TutorialManager.Instance.HidePrompt();
     }
 
     // close door

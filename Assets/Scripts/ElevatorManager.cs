@@ -17,6 +17,7 @@ public class ElevatorManager : MonoBehaviour
         {
             hasEntered = true;
             GoToNextFloor();
+            TutorialManager.Instance.HidePrompt();
         }
     }
 

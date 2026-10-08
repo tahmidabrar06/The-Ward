@@ -10,6 +10,9 @@ namespace TheWard.Combat
 
     public sealed class GunWeapon : Weapon
     {
+        [Header("UI")]
+        [SerializeField] private AmmoHUD ammoUI;
+        
         [Header("Shooting")]
         [SerializeField] private TriggerMode triggerMode = TriggerMode.PressOnce;
         [SerializeField] private float damage = 25f;
@@ -74,7 +77,16 @@ namespace TheWard.Combat
             ammo = magazineSize;
             reserveAmmo = startingReserveAmmo;
         }
-
+        
+        private void OnEnable()
+        {
+            if (ammoUI != null)
+            {
+                ammoUI.EnableAmmoText();
+                ammoUI.UpdateAmmoState(ammo, reserveAmmo, magazineSize);
+            }
+        }
+        
         public override void HandleInput(bool pressed, bool held, bool released)
         {
             bool firing = triggerMode == TriggerMode.HoldAutomatic ? held : pressed;
@@ -82,6 +94,8 @@ namespace TheWard.Combat
             nextAttackTime = Time.time + cooldown;
             ammo--;
             Shoot();
+            
+            if (ammoUI != null) ammoUI.UpdateAmmoState(ammo, reserveAmmo, magazineSize);
         }
 
         private void Shoot()
@@ -181,6 +195,9 @@ namespace TheWard.Combat
 
             ammo += bulletsToLoad;
             reserveAmmo -= bulletsToLoad;
+            
+            if (ammoUI != null) ammoUI.UpdateAmmoState(ammo, reserveAmmo, magazineSize);
+            
             base.OnAnimationComplete();
         }
 
@@ -239,6 +256,10 @@ namespace TheWard.Combat
             GameAudio.StopOwned(this);
             base.OnDisable();
             recoilRoutine = null;
+            if (ammoUI != null)
+            {
+                ammoUI.DisableAmmoText();
+            }
         }
     }
 }
