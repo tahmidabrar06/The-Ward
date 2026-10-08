@@ -64446,6 +64446,18 @@ PrefabInstance:
       propertyPath: damage
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 7064552132945535739, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282728147791247426, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: timer
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282728147791247426, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+      propertyPath: GoalIntesity
+      value: 0.4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
