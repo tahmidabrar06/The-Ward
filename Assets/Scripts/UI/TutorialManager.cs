@@ -26,8 +26,8 @@ public class TutorialManager : MonoBehaviour
     {
         if (tutorialText != null) 
         {
+			tutorialText.text = message;	
             tutorialText.gameObject.SetActive(true); 
-            tutorialText.text = message;
         }
     }
 
@@ -40,8 +40,8 @@ public class TutorialManager : MonoBehaviour
     {
         if (BigtutorialText != null) 
         {
+			BigtutorialText.text = message;
             BigtutorialText.gameObject.SetActive(true); 
-            BigtutorialText.text = message;
         }
     }
 

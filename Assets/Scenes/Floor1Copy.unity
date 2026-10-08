@@ -13967,7 +13967,7 @@ GameObject:
   - component: {fileID: 246994463}
   - component: {fileID: 246994466}
   - component: {fileID: 246994465}
-  - component: {fileID: 246994464}
+  - component: {fileID: 246994467}
   m_Layer: 5
   m_Name: BigTutorialPrompt
   m_TagString: Untagged
@@ -13994,21 +13994,6 @@ RectTransform:
   m_AnchoredPosition: {x: -51, y: 492}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &246994464
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 246994462}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d163c71773724376b3f707a52d4d645, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TypewriterEffect
-  textComponent: {fileID: 0}
-  continueButton: {fileID: 0}
-  typingSpeed: 0.05
 --- !u!114 &246994465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14109,6 +14094,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 246994462}
   m_CullTransparentMesh: 1
+--- !u!114 &246994467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246994462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d163c71773724376b3f707a52d4d645, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TypewriterEffect
+  textComponent: {fileID: 246994465}
+  continueButton: {fileID: 0}
+  typingSpeed: 0.05
 --- !u!1 &260894023
 GameObject:
   m_ObjectHideFlags: 0
@@ -23558,9 +23558,6 @@ MonoBehaviour:
   pausePanel: {fileID: 2012671112}
   respawnPanel: {fileID: 1067108049}
   victoryPanel: {fileID: 4607925905564632964, guid: 4f3cef260171f1a44a3bc49e53464661, type: 3}
-  tutorialPanel: {fileID: 882386722}
-  tutorialText: {fileID: 999548650}
-  tutorialSequence: {fileID: 1201007767}
   playerMovement: {fileID: 2075618049}
   cameraMovement: {fileID: 2075618046}
 --- !u!4 &795342583
@@ -27437,8 +27434,8 @@ RectTransform:
   m_GameObject: {fileID: 999548649}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 882386723}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -32711,7 +32708,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 296f9f8da07b94d6bae17196c6de71b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialManager
-  uiManager: {fileID: 795342582}
+  tutorialPanel: {fileID: 882386722}
+  tutorialText: {fileID: 999548650}
+  BigtutorialText: {fileID: 246994465}
   tutorialSequence: {fileID: 1201007767}
 --- !u!114 &1201007767
 MonoBehaviour:

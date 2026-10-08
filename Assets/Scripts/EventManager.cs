@@ -44,7 +44,6 @@ public class EventManager : MonoBehaviour
 
     void Update()
     {
-        WaveDefConditionCheck(); //temporary, to be replaced with elvator door trigger
         if (waveDefenceStarted)
         {
             if (waveDefCountdown > 0)
@@ -53,6 +52,7 @@ public class EventManager : MonoBehaviour
             }
             SpawnWaves();
         }
+		else WaveDefConditionCheck(); //temporary, to be replaced with elvator door trigger
     }
 
     public void StartWaveDefence()

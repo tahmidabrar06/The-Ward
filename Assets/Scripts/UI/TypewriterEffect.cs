@@ -27,9 +27,11 @@ public class TypewriterEffect : MonoBehaviour
 
     private void OnEnable()
     {
-        if (textComponent == null || continueButton == null) return;
+		Debug.Log(fullText);
+        if (textComponent == null) return;
+        fullText = textComponent.text;
         
-        continueButton.gameObject.SetActive(false);
+        if (continueButton != null) continueButton.gameObject.SetActive(false);
         textComponent.text = "";
         
         typingCoroutine = StartCoroutine(TypeText());
@@ -44,6 +46,6 @@ public class TypewriterEffect : MonoBehaviour
             yield return new WaitForSecondsRealtime(typingSpeed);
         }
 
-        continueButton.gameObject.SetActive(true);
+        if (continueButton != null) continueButton.gameObject.SetActive(true);
     }
 }
