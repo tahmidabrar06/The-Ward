@@ -76,7 +76,7 @@ public class TriggerDoorArea : MonoBehaviour
         
         if (!door.IsOpen && !TutorialManager.Instance.IsSequenceActive)
         {
-            if (TutorialManager.Instance != null) TutorialManager.Instance.ShowPrompt("Press [F] to Open Door");
+            TutorialManager.Instance.ShowPrompt("Press [F] to Open Door");
         }
     }
 
