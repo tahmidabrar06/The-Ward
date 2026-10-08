@@ -1,54 +1,66 @@
 using UnityEngine;
+using TMPro;
 
 public class TutorialManager : MonoBehaviour
 {
     public static TutorialManager Instance { get; private set; }
 
     [Header("References")]
-    [SerializeField] private UIManager uiManager;
+    [SerializeField] private GameObject tutorialPanel; 
+    [SerializeField] private TMP_Text tutorialText;
+	[SerializeField] private TMP_Text BigtutorialText;
     [SerializeField] private TutorialSequence tutorialSequence;
     
     public bool IsSequenceActive { get; private set; } = false;
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-        }
+        if (Instance != null && Instance != this) Destroy(gameObject);
+        else Instance = this;
+		if (tutorialPanel != null) tutorialPanel.SetActive(true);
+		HideBigPrompt();
+		HidePrompt();
     }
     
     public void ShowPrompt(string message)
     {
-        if (uiManager != null)
+        if (tutorialText != null) 
         {
-            uiManager.ShowTutorialPrompt(message);
+            tutorialText.gameObject.SetActive(true); 
+            tutorialText.text = message;
         }
     }
 
     public void HidePrompt()
     {
-        if (uiManager != null)
+        if (tutorialText != null) tutorialText.gameObject.SetActive(false); 
+    }
+
+    public void ShowBigPrompt(string message)
+    {
+        if (BigtutorialText != null) 
         {
-            uiManager.HideTutorialPrompt();
+            BigtutorialText.gameObject.SetActive(true); 
+            BigtutorialText.text = message;
         }
     }
-    
+
+    public void HideBigPrompt()
+    {
+        if (BigtutorialText != null) BigtutorialText.gameObject.SetActive(false); 
+    }
+
     public void BeginTutorialSequence()
     {
         if (tutorialSequence != null)
         {
-            IsSequenceActive = true;
+            IsSequenceActive = true; 
             tutorialSequence.BeginSequence();
         }
     }
-    
+
     public void EndTutorialSequence()
     {
-        IsSequenceActive = false; // Turn the lock OFF
+        IsSequenceActive = false; 
     }
 }

@@ -16,9 +16,6 @@ namespace TheWard.Combat
         [SerializeField] private Weapon[] weapons;
         [SerializeField] private int startingWeaponIndex;
 
-		[Header("Crosshair reference")]
-		public GameObject crosshairUI;
-
         private int activeWeaponIndex;
 
         public Weapon ActiveWeapon => weapons != null && activeWeaponIndex >= 0 && activeWeaponIndex < weapons.Length
@@ -72,21 +69,6 @@ namespace TheWard.Combat
 
             if (reloadAction != null && reloadAction.action.WasPressedThisFrame())
                 weapon.Reload();
-        }
-
-        private void OnGUI()
-        {
-            /*Weapon weapon = ActiveWeapon;
-            if (!(weapon is GunWeapon) || weapon.AimCamera == null) return;
-
-            Vector2 center = weapon.AimCamera.pixelRect.center;
-            center.y = Screen.height - center.y;
-            Color previousColor = GUI.color;
-            GUI.color = Color.black;
-            GUI.DrawTexture(new Rect(center.x - 3f, center.y - 3f, 6f, 6f), Texture2D.whiteTexture);
-            GUI.color = Color.white;
-            GUI.DrawTexture(new Rect(center.x - 1f, center.y - 1f, 2f, 2f), Texture2D.whiteTexture);
-            GUI.color = previousColor;*/
         }
 
         private void ReadWeaponSwitchInput()

@@ -11,6 +11,7 @@ namespace TheWard.Combat
         
         [Header("Settings")]
         [SerializeField] private int lowAmmoThreshold = 3; 
+        [SerializeField] private bool showAmmoCount = false;
 
         private void Awake()
         {
@@ -53,7 +54,7 @@ namespace TheWard.Combat
         }
         public void EnableAmmoText()
         {
-            ammoCountText.gameObject.SetActive(true);
+            if(showAmmoCount) ammoCountText.gameObject.SetActive(true);
         }
 
         public void DisableAmmoText()

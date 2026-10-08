@@ -57,7 +57,7 @@ public class EventManager : MonoBehaviour
 
     public void StartWaveDefence()
     {
-        TutorialManager.Instance.ShowPrompt("Defend against zombie waves");
+        TutorialManager.Instance.ShowBigPrompt("Defend against zombie waves");
         waveDefenceStarted = true;
         ClearZombieContainer();
     }
@@ -140,6 +140,7 @@ public class EventManager : MonoBehaviour
     {
         //uiManager.ShowVictoryScreen(); //Victory screen not implemented yet, substituting with respawnScreen()
         //uiManager.ShowRespawnScreen();
+		TutorialManager.Instance.HideBigPrompt();
         TutorialManager.Instance.ShowPrompt("Enter the elevator");
         elevatorTrig.victory = true; //needs to show victory screen instead of insta loading floor2
     }

@@ -9,11 +9,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject respawnPanel;
     [SerializeField] private GameObject victoryPanel;
-    
-    [Header("Tutorial System")]
-    [SerializeField] private GameObject tutorialPanel; 
-    [SerializeField] private TMPro.TMP_Text tutorialText;
-    [SerializeField] private TutorialSequence tutorialSequence;
 
     [Header("Player Control")]
     [SerializeField] private PlayerCharacterController playerMovement;
@@ -328,16 +323,5 @@ public class UIManager : MonoBehaviour
         {
             cameraTransform.rotation = savedCameraRotation;
         }
-    }
-    
-    public void ShowTutorialPrompt(string message)
-    {
-        if (tutorialPanel != null) tutorialPanel.SetActive(true);
-        if (tutorialText != null) tutorialText.text = message;
-    }
-
-    public void HideTutorialPrompt()
-    {
-        if (tutorialPanel != null) tutorialPanel.SetActive(false);
     }
 }
