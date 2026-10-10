@@ -51,7 +51,6 @@ public class EventManager : MonoBehaviour
         {
             if (waveDefCountdown > 0)
             {
-				if(currentWave == 2) TutorialManager.Instance.RemoveBigPrompt();
                 waveDefCountdown -= Time.deltaTime;
 				uiUpdateTimer -= Time.deltaTime;
                 if (uiUpdateTimer <= 0f)
@@ -87,6 +86,7 @@ public class EventManager : MonoBehaviour
             SpawnZombie(baseZombieAmount);
 			TallyMarker.Instance.AddTally();
             waveSpawnTimer -= waveSpawnInterval;
+			if(currentWave == 2) TutorialManager.Instance.RemoveBigPrompt();
         }
         if (currentWave == numberOfWaves && GetAliveZombieCount() == 0)
         {
