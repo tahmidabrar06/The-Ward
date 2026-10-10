@@ -44,7 +44,7 @@ public class TriggerDoorArea : MonoBehaviour
         }
 
         // press F,  open door
-        if (pressKey.action.WasPressedThisFrame() && !door.IsOpen)
+        if (pressKey.action.WasPressedThisFrame() && !door.IsOpen && !TutorialManager.Instance.IsSequenceActive )
         {
             
             // Debug.Log("Pressed F - Opened door");

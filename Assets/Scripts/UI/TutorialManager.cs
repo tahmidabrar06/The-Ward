@@ -45,10 +45,19 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    public void HideBigPrompt()
+    public void HideBigPrompt() // instantly remover text
     {
         if (BigtutorialText != null) BigtutorialText.gameObject.SetActive(false); 
     }
+
+	public void RemoveBigPrompt() // Smoothly remove text
+	{
+		if (BigtutorialText != null) 
+        {
+            TypewriterEffect typewriter = BigtutorialText.GetComponent<TypewriterEffect>();
+            typewriter.StartRemovingText(); 
+        }
+	}
 
     public void BeginTutorialSequence()
     {
