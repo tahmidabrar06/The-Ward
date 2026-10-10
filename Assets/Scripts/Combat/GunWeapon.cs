@@ -71,6 +71,20 @@ namespace TheWard.Combat
         public int Ammo => ammo;
         public int ReserveAmmo => reserveAmmo;
 
+        // adding the reload ammo when picking up the same gun weapon, but not exceeding the maximum reserve ammo limit
+        
+        public void RefillAmmo()
+        {
+            ammo = magazineSize;
+            reserveAmmo = startingReserveAmmo;
+
+            if (ammoUI != null)
+            {
+                ammoUI.UpdateAmmoState(ammo, reserveAmmo, magazineSize);
+            }
+        }
+
+
         protected override void Awake()
         {
             base.Awake();
