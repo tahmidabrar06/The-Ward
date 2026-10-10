@@ -9,7 +9,7 @@ namespace TheWard.Audio
         [SerializeField] private AudioSource suspicionSource;
         [SerializeField] private AudioSource combatSource;
         [SerializeField] private AudioSource waveDefenseSource;
-        [SerializeField] private float fadeSpeed = 0.12f;
+        [SerializeField] private float fadeSpeed = 0.4f;
 
         [SerializeField] private float explorationLevel, suspicionLevel, combatLevel, waveDefenseLevel;
         [SerializeField] private bool waveDefenseActive;
@@ -127,6 +127,8 @@ namespace TheWard.Audio
             suspicionSource.UnPause();
             combatSource.UnPause();
             waveDefenseSource.UnPause();
+            // The intro may have paused gameplay before any track started.
+            PlayMusic();
         }
 
         private void Update()
