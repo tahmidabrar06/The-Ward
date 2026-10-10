@@ -102,7 +102,7 @@ namespace TheWard.Audio
         public AudioClip suspicion;
         public AudioClip combat;
         public AudioClip waveDefense;
-        [Range(0f, 1f)] public float musicVolume = 0.18f;
+        [Range(0f, 1f)] public float musicVolume = 0.65f;
         [Range(0f, 1f)] public float effectsVolume = 0.8f;
 
         public Sound Find(AudioCue cue)

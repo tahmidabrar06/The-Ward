@@ -138,7 +138,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: b33d7e2e777ad3e4dbcb31bfacdd6b51, type: 3}
     - {fileID: 8300000, guid: a31dd82d8d9e74246b8a28e03beef790, type: 3}
   - cue: 15
-    volume: 0.35
+    volume: 0.15
     clips:
     - {fileID: 8300000, guid: f462d308fc6a648b288adb78161502a5, type: 3}
     - {fileID: 8300000, guid: 824a492d546744169b7e4460926ebb2a, type: 3}
@@ -147,7 +147,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 8b8be6e6b3dd044d782ae23b59519a28, type: 3}
     - {fileID: 8300000, guid: 50be8f631d6a14da58b3ef230ec1c022, type: 3}
   - cue: 16
-    volume: 0.7
+    volume: 0.32
     clips:
     - {fileID: 8300000, guid: 9e30c13965a36024280ee460e175fea2, type: 3}
     - {fileID: 8300000, guid: 420556c91096cd44a914a9c0211c8c7d, type: 3}
@@ -177,7 +177,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: d67305a8065b0eb40872d91cbb10d0a9, type: 3}
     - {fileID: 8300000, guid: a0b00c650f148774a956db6090ad71d4, type: 3}
   - cue: 17
-    volume: 0.6
+    volume: 0.28
     clips:
     - {fileID: 8300000, guid: 8fbdda83ee795ad489bd0c05cbbf4a81, type: 3}
     - {fileID: 8300000, guid: 7de28999b358ec547aad1a64ac01b20b, type: 3}
@@ -211,13 +211,13 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 4186ff9a010d06a4eab5e55adffbb879, type: 3}
     - {fileID: 8300000, guid: 77f9e966374d4cc4ab35bdbda86ff930, type: 3}
   - cue: 18
-    volume: 0.65
+    volume: 0.3
     clips:
     - {fileID: 8300000, guid: 326203e6dcd57467c92e2bcbf9c25e85, type: 3}
     - {fileID: 8300000, guid: 763a323b04dbb4cbf99082a82ef3cb54, type: 3}
     - {fileID: 8300000, guid: d8285c976a26141b7b956c30552425bb, type: 3}
   - cue: 19
-    volume: 0.28
+    volume: 0.18
     clips:
     - {fileID: 8300000, guid: cfaa31361f7ba4a23b747862467ff938, type: 3}
     - {fileID: 8300000, guid: dcfc7dfb0dfd04a50a68e5c5d29e67c0, type: 3}
@@ -248,5 +248,5 @@ MonoBehaviour:
   suspicion: {fileID: 8300000, guid: 0beb7c76abf7a48e1b7dc86620700c6e, type: 3}
   combat: {fileID: 8300000, guid: 0beb7c76abf7a48e1b7dc86620700c6e, type: 3}
   waveDefense: {fileID: 8300000, guid: 65828c3bbe94140b1be14a0715084f6a, type: 3}
-  musicVolume: 0.18
+  musicVolume: 0.65
   effectsVolume: 0.8

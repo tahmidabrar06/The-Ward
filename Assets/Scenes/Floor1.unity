@@ -23504,6 +23504,7 @@ GameObject:
   m_Component:
   - component: {fileID: 795342583}
   - component: {fileID: 795342582}
+  - component: {fileID: 900000000000002100}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -23529,6 +23530,7 @@ MonoBehaviour:
   victoryPanel: {fileID: 4607925905564632964, guid: 4f3cef260171f1a44a3bc49e53464661, type: 3}
   playerMovement: {fileID: 2075618049}
   cameraMovement: {fileID: 2075618046}
+  wakeUpIntro: {fileID: 900000000000002100}
 --- !u!4 &795342583
 Transform:
   m_ObjectHideFlags: 0
@@ -86643,3 +86645,23 @@ SceneRoots:
   - {fileID: 1497989558}
   - {fileID: 2090379991}
   - {fileID: 1591438688}
+--- !u!114 &900000000000002100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795342581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d4520555c1f41609959cdb308f63490, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::WakeUpIntro
+  tensionMusic: {fileID: 8300000, guid: 65828c3bbe94140b1be14a0715084f6a, type: 3}
+  musicVolume: 0.45
+  duration: 8
+  fadeDuration: 1.2
+  startingOffset: {x: 0, y: -0.45, z: 0}
+  startingTilt: {x: -25, y: 0, z: -8}
+  wakingText: "You wake up.\nThe hospital is compromised."
+  objectiveText: "Find the elevator\nand ascend to the next floor."

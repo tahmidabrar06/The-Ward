@@ -186,7 +186,7 @@ namespace TheWard.Audio
                 index = (index + Random.Range(1, clips.Length)) % clips.Length;
             }
             previousClip = index;
-            float volume = 0.7f;
+            float volume = 0.32f;
             GameAudioBank.Sound attackSound = audio.bank.Find(AudioCue.ZombieAttack);
             if (attackSound != null) volume = attackSound.volume;
             audio.PlayClip(clips[index], position, true, volume, owner);
