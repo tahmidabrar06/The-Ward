@@ -95,7 +95,6 @@ namespace TheWard.Audio
             public AudioClip[] clips;
         }
 
-        // Each zombie keeps one set; the remaining cues share the general sound list.
         public AttackVoice[] zombieAttackVoices;
         public Sound[] sounds;
         public Steps footsteps;

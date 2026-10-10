@@ -64440,11 +64440,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6370203747711728171, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: damage
-      value: 40
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 6480104010165871473, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: damage
-      value: 60
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 7064552132945535739, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
       propertyPath: m_IsActive
