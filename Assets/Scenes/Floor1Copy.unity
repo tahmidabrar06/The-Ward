@@ -19077,8 +19077,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsPanelController
   volumeSlider: {fileID: 151034359}
+  sfxSlider: {fileID: 0}
+  musicSlider: {fileID: 0}
+  cinematicSlider: {fileID: 0}
   sensitivitySlider: {fileID: 1800359529}
   volumeValueText: {fileID: 821737112}
+  sfxValueText: {fileID: 0}
+  musicValueText: {fileID: 0}
+  cinematicValueText: {fileID: 0}
   sensitivityValueText: {fileID: 2035630403}
   savedMessage: {fileID: 857507918}
 --- !u!114 &496221517
@@ -21532,7 +21538,7 @@ MonoBehaviour:
   ammoCountText: {fileID: 100232571}
   warningText: {fileID: 1426355494}
   lowAmmoThreshold: 3
-  showAmmoCount: 0
+  showAmmoCount: 1
 --- !u!4 &648239120 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4390537981582356, guid: 58f390f526d63fa4d86583592629af90, type: 3}
@@ -21768,8 +21774,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsPanelController
   volumeSlider: {fileID: 151034359}
+  sfxSlider: {fileID: 0}
+  musicSlider: {fileID: 0}
+  cinematicSlider: {fileID: 0}
   sensitivitySlider: {fileID: 1800359529}
   volumeValueText: {fileID: 821737112}
+  sfxValueText: {fileID: 0}
+  musicValueText: {fileID: 0}
+  cinematicValueText: {fileID: 0}
   sensitivityValueText: {fileID: 2035630403}
   savedMessage: {fileID: 857507918}
 --- !u!4 &670019062
@@ -70435,6 +70447,9 @@ MonoBehaviour:
   openRotAngle: {x: 0, y: 90, z: 0}
   closeRotAngle: {x: 0, y: 0, z: 0}
   speed: 1
+  isRotating: 0
+  direction: -1
+  interpolate: 0
 --- !u!4 &1874460563
 Transform:
   m_ObjectHideFlags: 0

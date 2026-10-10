@@ -42,6 +42,8 @@ public class EventManager : MonoBehaviour
         waveDefTrigger = GameObject.Find("WaveDefenseTrigger");
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         elevatorTrig = GameObject.Find("ElevatorOpenTrigger").GetComponent<TriggerElevator>();
+
+		
     }
 
     void Update()
@@ -63,7 +65,9 @@ public class EventManager : MonoBehaviour
         waveDefenceStarted = true;
         GameAudio.SetWaveDefense(true);
         ClearZombieContainer();
+		
 		TutorialManager.Instance.ShowBigPrompt("Defend against zombie waves");
+		TallyMarker.Instance.ShowHUD();
     }
 
     public void SpawnWaves()
@@ -71,6 +75,7 @@ public class EventManager : MonoBehaviour
         if (waveDefCountdown <= waveSpawnTimer && currentWave <= numberOfWaves)
         {
             SpawnZombie(baseZombieAmount);
+			TallyMarker.Instance.AddTally();
             waveSpawnTimer -= waveSpawnInterval;
             currentWave += 1;
         }
@@ -144,6 +149,7 @@ public class EventManager : MonoBehaviour
     {
 		TutorialManager.Instance.HideBigPrompt();
 		TutorialManager.Instance.ShowPrompt("Get in the elevator");
+		TallyMarker.Instance.HideHUD();
 
         if (waveDefenceCompleted) return;
         waveDefenceCompleted = true;
