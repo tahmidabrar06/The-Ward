@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class TallyMarker : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class TallyMarker : MonoBehaviour
     [Header("Wave HUD")]
     [SerializeField] private GameObject waveHUDContainer;
     [SerializeField] private GameObject[] tallyMarks;
+    [SerializeField] private TMP_Text ZombieCountText;
 
     private int currentTallyIndex = 0;
 
@@ -18,7 +20,14 @@ public class TallyMarker : MonoBehaviour
             return;
         }
         Instance = this;
-        ShowHUD();
+    }
+
+    public void UpdateZombieCount(int remainingZombies)
+    {
+        if (ZombieCountText != null)
+        {
+            ZombieCountText.text = remainingZombies.ToString();
+        }
     }
 
     public void AddTally()

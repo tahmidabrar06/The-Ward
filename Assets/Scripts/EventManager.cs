@@ -25,9 +25,10 @@ public class EventManager : MonoBehaviour
 
     [Header("Live Values For Testing")]
     [SerializeField]
-    private int currentWave = 1;
+    private int currentWave = 0;
     [SerializeField]
     private float waveSpawnInterval, waveSpawnTimer, waveDefCountdown;
+	private float uiUpdateTimer = 0f;
 
 
     void Start()
@@ -42,8 +43,6 @@ public class EventManager : MonoBehaviour
         waveDefTrigger = GameObject.Find("WaveDefenseTrigger");
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         elevatorTrig = GameObject.Find("ElevatorOpenTrigger").GetComponent<TriggerElevator>();
-
-		
     }
 
     void Update()
@@ -52,7 +51,17 @@ public class EventManager : MonoBehaviour
         {
             if (waveDefCountdown > 0)
             {
+				if(currentWave == 2) TutorialManager.Instance.RemoveBigPrompt();
                 waveDefCountdown -= Time.deltaTime;
+				uiUpdateTimer -= Time.deltaTime;
+                if (uiUpdateTimer <= 0f)
+                {
+                    if (TallyMarker.Instance != null)
+                    {
+                        TallyMarker.Instance.UpdateZombieCount(GetAliveZombieCount());
+                    }
+                    uiUpdateTimer = 0.5f; 
+                }
             }
             SpawnWaves();
         }
@@ -66,20 +75,20 @@ public class EventManager : MonoBehaviour
         GameAudio.SetWaveDefense(true);
         ClearZombieContainer();
 		
-		TutorialManager.Instance.ShowBigPrompt("Defend against zombie waves");
+		TutorialManager.Instance.ShowBigPrompt("Defend against 5 zombie waves");
 		TallyMarker.Instance.ShowHUD();
     }
 
     public void SpawnWaves()
     {
-        if (waveDefCountdown <= waveSpawnTimer && currentWave <= numberOfWaves)
+        if (waveDefCountdown <= waveSpawnTimer && currentWave < numberOfWaves)
         {
+			currentWave++;
             SpawnZombie(baseZombieAmount);
 			TallyMarker.Instance.AddTally();
             waveSpawnTimer -= waveSpawnInterval;
-            currentWave += 1;
         }
-        if (waveDefCountdown <= 0 && GetAliveZombieCount() == 0)
+        if (currentWave == numberOfWaves && GetAliveZombieCount() == 0)
         {
             Victory();
         }
