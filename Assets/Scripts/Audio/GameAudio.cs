@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace TheWard.Audio
 {
-    // Shared sound playback for the current scene. Player startup creates it on demand.
     public class GameAudio : MonoBehaviour
     {
-        // Reuse a fixed number of sources instead of creating an object for every sound.
         private const int SoundSourceCount = 32;
         private static GameAudio instance;
+        private float lastSfxVolume = -1f;
+        private float lastCinematicVolume = -1f;
         [SerializeField] private GameAudioBank bank;
         [SerializeField] private AudioSource[] soundSources = new AudioSource[SoundSourceCount];
         [SerializeField] private Object[] sourceOwners = new Object[SoundSourceCount];
@@ -91,7 +91,6 @@ namespace TheWard.Audio
             musicController.Setup(bank);
         }
 
-        // Both player controllers call this so every floor can start its music independently.
         public static void RegisterPlayer(Transform transform, Health health)
         {
             GameAudio audio = GetInstance();
@@ -106,7 +105,6 @@ namespace TheWard.Audio
             if (audio != null) audio.musicController.SetWaveDefense(active);
         }
 
-        // Only nearby zombies influence the music; distant encounters stay out of the mix.
         public static void ReportThreat(Vector3 position, bool attackingOrChasing)
         {
             if (instance == null || instance.player == null ||
@@ -188,7 +186,7 @@ namespace TheWard.Audio
                 index = (index + Random.Range(1, clips.Length)) % clips.Length;
             }
             previousClip = index;
-            float volume = 0.7f;
+            float volume = 0.32f;
             GameAudioBank.Sound attackSound = audio.bank.Find(AudioCue.ZombieAttack);
             if (attackSound != null) volume = attackSound.volume;
             audio.PlayClip(clips[index], position, true, volume, owner);
@@ -252,10 +250,14 @@ namespace TheWard.Audio
 
         private void Update()
         {
-            // Update active sounds too, including while the settings menu pauses gameplay.
-            for (int i = 0; i < soundSources.Length; i++)
-                soundSources[i].volume = sourceLevels[i] *
-                    (cinematicSources[i] ? AudioSettings.Cinematics : AudioSettings.Sfx);
+            if (lastSfxVolume != AudioSettings.Sfx || lastCinematicVolume != AudioSettings.Cinematics)
+            {
+                lastSfxVolume = AudioSettings.Sfx;
+                lastCinematicVolume = AudioSettings.Cinematics;
+                for (int i = 0; i < soundSources.Length; i++)
+                    soundSources[i].volume = sourceLevels[i] *
+                        (cinematicSources[i] ? lastCinematicVolume : lastSfxVolume);
+            }
 
             // Audio does not follow timeScale automatically; pause and resume sources explicitly.
             bool gamePaused = Time.timeScale <= 0f;

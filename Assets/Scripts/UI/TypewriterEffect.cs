@@ -15,7 +15,6 @@ public class TypewriterEffect : MonoBehaviour
     [SerializeField] private float typingSpeed = 0.05f;
 
     private string fullText;
-    private Coroutine typingCoroutine;
 
     private void Awake()
     {
@@ -34,7 +33,7 @@ public class TypewriterEffect : MonoBehaviour
         if (continueButton != null) continueButton.gameObject.SetActive(false);
         textComponent.text = "";
         
-        typingCoroutine = StartCoroutine(TypeText());
+        StartCoroutine(TypeText());
     }
 
     private IEnumerator TypeText()
@@ -47,5 +46,22 @@ public class TypewriterEffect : MonoBehaviour
         }
 
         if (continueButton != null) continueButton.gameObject.SetActive(true);
+    }
+    
+    
+    public void StartRemovingText()
+    {
+        StartCoroutine(RemoveText());
+    }
+
+    private IEnumerator RemoveText()
+    {
+        while (textComponent.text.Length > 0)
+        {
+            textComponent.text = textComponent.text.Substring(0, textComponent.text.Length - 1); // set the textcomponent to a substring of the fulltext until empty
+            
+            yield return new WaitForSecondsRealtime(typingSpeed);
+        }
+        //gameObject.SetActive(false);
     }
 }

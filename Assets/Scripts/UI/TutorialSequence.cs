@@ -72,7 +72,6 @@ public class TutorialSequence : MonoBehaviour
             if (torchAction.action.WasPressedThisFrame()){ 
                 currentStep = 0;   
                 TutorialManager.Instance.HidePrompt();
-                
                 TutorialManager.Instance.EndTutorialSequence();
                 Destroy(this); 
             }
