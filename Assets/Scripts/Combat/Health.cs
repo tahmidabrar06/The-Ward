@@ -57,5 +57,15 @@ namespace TheWard.Combat
             CurrentHealth = maxHealth;
             HealthChanged?.Invoke(CurrentHealth, maxHealth);
         }
+
+        // heal the player when colliding wiht the first aid kit
+        public void HealPlayer(float healValue)
+        {
+            float healedHealth = CurrentHealth + healValue;
+            // heal not over the max health value
+            CurrentHealth = Mathf.Min(healedHealth, maxHealth);
+            HealthChanged?.Invoke(CurrentHealth, maxHealth);
+
+        }
     }
 }
