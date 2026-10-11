@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject respawnPanel;
     [SerializeField] private GameObject victoryPanel;
+    [SerializeField] private GameObject floorVictoryPanel;
 
     [Header("Player Control")]
     [SerializeField] private PlayerCharacterController playerMovement;
@@ -17,6 +18,7 @@ public class UIManager : MonoBehaviour
 
     private bool isPaused = false;
     private bool isVictory = false;
+    private ElevatorManager currentElevator;
 
     private static bool hasSeenIntro = false;
     
@@ -200,6 +202,43 @@ public class UIManager : MonoBehaviour
         FreezeGameplay();
 
         Debug.Log("Victory screen shown. Game frozen.");
+    }
+
+    public void ShowFloorVictoryScreen(ElevatorManager elevator)
+    {
+        isVictory = true;
+        isPaused = false;
+
+        currentElevator = elevator;
+
+        SaveCurrentTransforms();
+
+        // Show FLOOR victory panel
+        if (floorVictoryPanel != null)
+            floorVictoryPanel.SetActive(true);
+
+        // Hide other screens
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        if (respawnPanel != null)
+            respawnPanel.SetActive(false);
+
+        if (victoryPanel != null)
+            victoryPanel.SetActive(false);
+
+        // Freeze gameplay
+        FreezeGameplay();
+
+        Debug.Log("Floor victory screen shown.");
+    }
+
+    public void ContinueToNextFloor()
+    {
+        if (currentElevator != null)
+        {
+            currentElevator.GoToNextFloor();
+        }
     }
 
     public void PlayAgain()

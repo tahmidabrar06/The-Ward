@@ -4,10 +4,10 @@ using UnityEngine.SceneManagement;
 public class ElevatorManager : MonoBehaviour
 {
     [SerializeField] private string nextFloorScene = "Floor2";
+    [SerializeField] private UIManager uiManager;
 
     private bool hasEntered = false;
 
-    //temporary, this needs to be called from victory screen, on button press - tahmid
     private void OnTriggerEnter(Collider other)
     {
         if (hasEntered)
@@ -16,13 +16,22 @@ public class ElevatorManager : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             hasEntered = true;
-            GoToNextFloor();
-            TutorialManager.Instance.HidePrompt();
+
+            if (uiManager != null)
+            {
+                uiManager.ShowFloorVictoryScreen(this);
+            }
+
+            if (TutorialManager.Instance != null)
+            {
+                TutorialManager.Instance.HidePrompt();
+            }
         }
     }
 
-    private void GoToNextFloor()
+    public void GoToNextFloor()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(nextFloorScene);
     }
 }
