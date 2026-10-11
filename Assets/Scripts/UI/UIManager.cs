@@ -6,6 +6,7 @@ public class UIManager : MonoBehaviour
 {
     [Header("Panels")]
     [SerializeField] private GameObject introPanel;
+    [SerializeField] private WakeUpIntro wakeUpIntro;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject respawnPanel;
     [SerializeField] private GameObject victoryPanel;
@@ -59,15 +60,23 @@ public class UIManager : MonoBehaviour
             introPanel.SetActive(true);
             SaveCurrentTransforms();
             FreezeGameplay();
+            if (wakeUpIntro != null)
+            {
+                Camera playerCamera = playerMovement != null
+                    ? playerMovement.GetComponentInChildren<Camera>(true) : Camera.main;
+                wakeUpIntro.Play(this, introPanel, playerCamera);
+            }
         }
         else
         {
+            if (introPanel != null) introPanel.SetActive(false);
             EnableGameplay();
         }    
     }
 
     private void Update()
     {
+        if (wakeUpIntro != null && (wakeUpIntro.IsPlaying || wakeUpIntro.FinishedThisFrame)) return;
         // Do nothing while victory screen is active
         if (isVictory)
         {
@@ -257,6 +266,11 @@ public class UIManager : MonoBehaviour
 
     public void StartGameAfterIntro()
     {
+        if (wakeUpIntro != null && wakeUpIntro.IsPlaying)
+        {
+            wakeUpIntro.Skip();
+            return;
+        }
         hasSeenIntro = true;
 
         if (introPanel != null)
@@ -264,7 +278,7 @@ public class UIManager : MonoBehaviour
 
         EnableGameplay();
         
-        TutorialManager.Instance.BeginTutorialSequence();
+        TutorialManager.Instance?.BeginTutorialSequence();
     }
 
     // =========================

@@ -2351,7 +2351,7 @@ MonoBehaviour:
   leftHandGrip: {fileID: 5395573114224753444}
   attackOrigin: {fileID: 9124333694323668972}
   triggerMode: 0
-  damage: 25
+  damage: 40
   cooldown: 0.25
   range: 60
   hitMask:
@@ -2360,7 +2360,7 @@ MonoBehaviour:
   impactForce: 4
   muzzlePoint: {fileID: 512994080897680442}
   magazineSize: 12
-  startingReserveAmmo: 48
+  startingReserveAmmo: 96
   muzzleFlash: {fileID: 0}
   bulletImpactPrefab: {fileID: 5238538877814813142, guid: 47096eff328e11a418ace7db2d72aa97, type: 3}
   showShotTracer: 1
@@ -6207,7 +6207,7 @@ MonoBehaviour:
   rightHandGrip: {fileID: 3583239966356818542}
   leftHandGrip: {fileID: 3286128196558568427}
   attackOrigin: {fileID: 9124333694323668972}
-  damage: 30
+  damage: 75
   cooldown: 0.5
   range: 2
   meleeRadius: 0.75
@@ -8796,7 +8796,7 @@ MonoBehaviour:
   rightHandGrip: {fileID: 1918293794352028305}
   leftHandGrip: {fileID: 1188273298166340895}
   attackOrigin: {fileID: 9124333694323668972}
-  damage: 15
+  damage: 50
   cooldown: 0.55
   range: 2
   meleeRadius: 0.75
@@ -9223,7 +9223,7 @@ MonoBehaviour:
   leftHandGrip: {fileID: 2109398387935798090}
   attackOrigin: {fileID: 9124333694323668972}
   triggerMode: 1
-  damage: 12
+  damage: 24
   cooldown: 0.1
   range: 75
   hitMask:
@@ -9232,7 +9232,7 @@ MonoBehaviour:
   impactForce: 6
   muzzlePoint: {fileID: 3686861473204421221}
   magazineSize: 30
-  startingReserveAmmo: 120
+  startingReserveAmmo: 240
   muzzleFlash: {fileID: 0}
   bulletImpactPrefab: {fileID: 5238538877814813142, guid: 47096eff328e11a418ace7db2d72aa97, type: 3}
   showShotTracer: 1
@@ -9388,7 +9388,7 @@ MonoBehaviour:
   maximumChargeTime: 1.5
   explosionRadius: 5
   explosionForce: 650
-  explosionDamage: 90
+  explosionDamage: 120
   explosionEffectPrefab: {fileID: 1998830269065593993, guid: b70fbea4bc8994749ba52e4f560f9f28, type: 3}
   throwAnimation: {fileID: -203655887218126122, guid: 550dfd97d0a6641c3a3643d5d88a3207, type: 3}
   throwDuration: 0.8
