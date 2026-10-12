@@ -50,7 +50,7 @@ public class TutorialSequence : MonoBehaviour
             if (sprintAction.action.WasPressedThisFrame())
             {
                 currentStep = 4;   
-                TutorialManager.Instance.ShowPrompt("Press [1 - 5] to Switch Weapons");
+                TutorialManager.Instance.ShowPrompt("Press [1 - 2] to Switch Weapons");
             }
         }
         else if (currentStep == 4)
@@ -58,10 +58,7 @@ public class TutorialSequence : MonoBehaviour
             Keyboard keyboard = Keyboard.current;
             if (keyboard != null && (
                     keyboard.digit1Key.wasPressedThisFrame ||
-                    keyboard.digit2Key.wasPressedThisFrame ||
-                    keyboard.digit3Key.wasPressedThisFrame ||
-                    keyboard.digit4Key.wasPressedThisFrame ||
-                    keyboard.digit5Key.wasPressedThisFrame))
+                    keyboard.digit2Key.wasPressedThisFrame ))
             {
                 currentStep = 5;
                 TutorialManager.Instance.ShowPrompt("Press [T] to Toggle Torch");
