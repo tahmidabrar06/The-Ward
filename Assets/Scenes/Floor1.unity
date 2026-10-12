@@ -6534,7 +6534,7 @@ GameObject:
   - component: {fileID: 87072131}
   - component: {fileID: 87072132}
   m_Layer: 0
-  m_Name: ZombieNavMesh
+  m_Name: ZombieNavMeshFloor1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
