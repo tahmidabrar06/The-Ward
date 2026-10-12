@@ -315,17 +315,21 @@ namespace TheWard.Combat
         private void OnTriggerEnter(Collider other)
         {
             WeaponPickup pickup = other.GetComponentInParent<WeaponPickup>();
-            if(!TutorialManager.Instance.IsSequenceActive) TutorialManager.Instance.ShowPrompt("Press [E] to pick up weapon");
             if (pickup != null)
+            {
                 nearbyPickup = pickup;
+                if(!TutorialManager.Instance.IsSequenceActive) TutorialManager.Instance.ShowPrompt("Press [E] to pick up weapon");
+            }
         }
 
         private void OnTriggerExit(Collider other)
         {
             WeaponPickup pickup = other.GetComponentInParent<WeaponPickup>();
-            if(!TutorialManager.Instance.IsSequenceActive) TutorialManager.Instance.HidePrompt();
             if (pickup != null && nearbyPickup == pickup)
+            {
                 nearbyPickup = null;
+                if(!TutorialManager.Instance.IsSequenceActive) TutorialManager.Instance.HidePrompt();
+            }
         }
 
     }
