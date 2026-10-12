@@ -86,7 +86,7 @@ public class EventManager : MonoBehaviour
             SpawnZombie(baseZombieAmount);
 			TallyMarker.Instance.AddTally();
             waveSpawnTimer -= waveSpawnInterval;
-			if(currentWave == 2) TutorialManager.Instance.RemoveBigPrompt();
+			if(currentWave == 3) TutorialManager.Instance.RemoveBigPrompt();
         }
         if (currentWave == numberOfWaves && GetAliveZombieCount() == 0)
         {
