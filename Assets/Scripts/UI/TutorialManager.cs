@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class TutorialManager : MonoBehaviour
@@ -61,7 +62,7 @@ public class TutorialManager : MonoBehaviour
 
     public void BeginTutorialSequence()
     {
-        if (tutorialSequence != null)
+        if (tutorialSequence != null && SceneManager.GetActiveScene().name == "Floor1")
         {
             IsSequenceActive = true; 
             tutorialSequence.BeginSequence();
