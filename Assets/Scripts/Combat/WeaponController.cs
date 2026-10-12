@@ -212,7 +212,8 @@ namespace TheWard.Combat
 
                 if (ActiveWeapon is GunWeapon gun)
                     gun.PlayEquipSound();
-
+                
+                TutorialManager.Instance.HidePrompt();
                 Debug.Log("Picked up: " + pickup.DisplayName);
                 return;
             }
