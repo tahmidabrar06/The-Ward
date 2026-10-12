@@ -30,9 +30,12 @@ public class EventManager : MonoBehaviour
     private float waveSpawnInterval, waveSpawnTimer, waveDefCountdown;
 	private float uiUpdateTimer = 0f;
 
+	private int startingWave;
+
 
     void Start()
     {
+		startingWave = currentWave;
         waveSpawnInterval = durationOfWaveDef / numberOfWaves;
         waveDefCountdown = durationOfWaveDef;
         waveSpawnTimer = durationOfWaveDef;
@@ -74,7 +77,7 @@ public class EventManager : MonoBehaviour
         GameAudio.SetWaveDefense(true);
         ClearZombieContainer();
 		
-		TutorialManager.Instance.ShowBigPrompt("Defend against 5 zombie waves");
+		TutorialManager.Instance.ShowBigPrompt($"Defend against {numberOfWaves - startingWave} zombie waves");		
 		TallyMarker.Instance.ShowHUD();
     }
 
@@ -82,11 +85,11 @@ public class EventManager : MonoBehaviour
     {
         if (waveDefCountdown <= waveSpawnTimer && currentWave < numberOfWaves)
         {
+			if(currentWave == startingWave+1) TutorialManager.Instance.RemoveBigPrompt();
 			currentWave++;
             SpawnZombie(baseZombieAmount);
 			TallyMarker.Instance.AddTally();
             waveSpawnTimer -= waveSpawnInterval;
-			if(currentWave == 3) TutorialManager.Instance.RemoveBigPrompt();
         }
         if (currentWave == numberOfWaves && GetAliveZombieCount() == 0)
         {
