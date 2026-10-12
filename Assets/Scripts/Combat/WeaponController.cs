@@ -190,6 +190,7 @@ namespace TheWard.Combat
                     ownedGun.RefillAmmo();
                     Debug.Log("Ammo refilled: " + pickup.DisplayName);
                     Destroy(pickup.gameObject);
+                    TutorialManager.Instance.HidePrompt();
                 }
                 else
                 {
@@ -225,6 +226,8 @@ namespace TheWard.Combat
             slots[activeSlot] = pickupIndex;
             Destroy(pickup.gameObject);
             ShowSelectedWeapon();
+            
+            TutorialManager.Instance.HidePrompt();
 
             if (ActiveWeapon is GunWeapon newGun)
                 newGun.PlayEquipSound();
@@ -312,7 +315,7 @@ namespace TheWard.Combat
         private void OnTriggerEnter(Collider other)
         {
             WeaponPickup pickup = other.GetComponentInParent<WeaponPickup>();
-
+            if(!TutorialManager.Instance.IsSequenceActive) TutorialManager.Instance.ShowPrompt("Press [E] to pick up weapon");
             if (pickup != null)
                 nearbyPickup = pickup;
         }
@@ -320,7 +323,7 @@ namespace TheWard.Combat
         private void OnTriggerExit(Collider other)
         {
             WeaponPickup pickup = other.GetComponentInParent<WeaponPickup>();
-
+            if(!TutorialManager.Instance.IsSequenceActive) TutorialManager.Instance.HidePrompt();
             if (pickup != null && nearbyPickup == pickup)
                 nearbyPickup = null;
         }

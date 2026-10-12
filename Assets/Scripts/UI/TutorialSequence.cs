@@ -69,12 +69,18 @@ public class TutorialSequence : MonoBehaviour
         }
         else if (currentStep == 5) 
         {
-            if (torchAction.action.WasPressedThisFrame()){ 
-                currentStep = 0;   
-                TutorialManager.Instance.HidePrompt();
+            if (torchAction.action.WasPressedThisFrame())
+            {
+                currentStep = 6;
+                TutorialManager.Instance.ShowPrompt("Walk to weapons to pick up");
                 TutorialManager.Instance.EndTutorialSequence();
-                Destroy(this); 
             }
+        }
+        else if (currentStep == 6)
+        {
+            if(Keyboard.current.eKey.wasPressedThisFrame || Keyboard.current.fKey.wasPressedThisFrame)
+            TutorialManager.Instance.HidePrompt();
+            Destroy(this); 
         }
     }
 }
