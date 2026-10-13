@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 97637a2a763b7f24b8da4e139e4144ca, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -43,7 +43,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 13
-  m_BakeOnSceneLoad: 0
+  m_BakeOnSceneLoad: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -93,8 +93,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 20201, guid: 0000000000000000f000000000000000, type: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 955473e997322f64c85ea9a2f61960b6, type: 2}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 9c43d529ceb804c44a2ed648798e563d, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -10329,6 +10329,7 @@ MonoBehaviour:
   doors:
   - {fileID: 1637341574}
   - {fileID: 163013846}
+  victory: 0
 --- !u!65 &1836727631
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11006,9 +11007,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aae1c8f01b477743aee08d40398bd51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  introPanel: {fileID: 0}
+  wakeUpIntro: {fileID: 0}
   pausePanel: {fileID: 0}
   respawnPanel: {fileID: 0}
   victoryPanel: {fileID: 1514823191}
+  floorVictoryPanel: {fileID: 0}
   playerMovement: {fileID: 0}
   cameraMovement: {fileID: 0}
 --- !u!4 &2028647538
