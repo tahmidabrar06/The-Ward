@@ -1,6 +1,7 @@
 using TheWard.Combat;
 using TheWard.Audio;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EventManager : MonoBehaviour
 {
@@ -50,6 +51,10 @@ public class EventManager : MonoBehaviour
 
     void Update()
     {
+        if(SceneManager.GetActiveScene().name == "Floor3")
+        {
+            return;
+        }
         if (waveDefenceStarted)
         {
             if (waveDefCountdown > 0)
