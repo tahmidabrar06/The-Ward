@@ -1929,7 +1929,7 @@ Light:
   m_GameObject: {fileID: 293203257}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -2412,7 +2412,7 @@ Light:
   m_GameObject: {fileID: 360971735}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -3283,7 +3283,7 @@ Light:
   m_GameObject: {fileID: 523304668}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -5874,7 +5874,7 @@ Light:
   m_GameObject: {fileID: 547383938}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -9707,7 +9707,7 @@ Light:
   m_GameObject: {fileID: 824075512}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -13661,7 +13661,7 @@ Light:
   m_GameObject: {fileID: 1565222953}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -14071,7 +14071,7 @@ Light:
   m_GameObject: {fileID: 1632476712}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -14806,7 +14806,7 @@ Light:
   m_GameObject: {fileID: 1690544914}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -15289,7 +15289,7 @@ Light:
   m_GameObject: {fileID: 1716673811}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -16020,7 +16020,7 @@ Light:
   m_GameObject: {fileID: 1925692375}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -16819,7 +16819,7 @@ Light:
   m_GameObject: {fileID: 2031307208}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -17674,7 +17674,7 @@ Light:
   m_GameObject: {fileID: 2124212482}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -17801,7 +17801,7 @@ Light:
   m_GameObject: {fileID: 2132765730}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 1
+  m_Type: 2
   m_Color: {r: 1, g: 0.035848916, b: 0.035848916, a: 1}
   m_Intensity: 0.5
   m_Range: 10
