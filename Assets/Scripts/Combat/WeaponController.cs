@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -32,15 +31,36 @@ namespace TheWard.Combat
 
         private readonly int[] slots = { 0, -1 };
         private int activeSlot;
+
+        public int ActiveSlot => activeSlot;
+
+        public Weapon GetWeaponInSlot(int slot)
+        {
+            if (slot < 0 || slot >= SlotCount)
+                return null;
+
+            int weaponIndex = slots[slot];
+
+            if (weaponIndex < 0 || weaponIndex >= weapons.Length)
+                return null;
+
+            return weapons[weaponIndex];
+        }
+
+        public int GetWeaponIndexInSlot(int slot)
+        {
+            if (slot < 0 || slot >= SlotCount)
+                return -1;
+
+            return slots[slot];
+        }
+                
         public Weapon ActiveWeapon =>
             activeSlot >= 0 && activeSlot < SlotCount &&
             slots[activeSlot] >= 0 &&
             slots[activeSlot] < weapons.Length
                 ? weapons[slots[activeSlot]]
                 : null;
-        
-        
-
     
         private void Awake()
         {
@@ -218,11 +238,17 @@ namespace TheWard.Combat
                 return;
             }
 
-            // Both slots are full: drop the currently held weapon first.
             int replacedIndex = slots[activeSlot];
 
-            if (!DropWeapon(replacedIndex))
+            if (!DropWeapon(
+                    replacedIndex,
+                    pickup.transform.position,
+                    pickup.transform.rotation))
+            {
                 return;
+            }
+
+            Debug.Log("Weapon dropped successfully.");
 
             slots[activeSlot] = pickupIndex;
             Destroy(pickup.gameObject);
@@ -274,30 +300,42 @@ namespace TheWard.Combat
         }
 
         
-        private bool DropWeapon(int weaponIndex)
+        
+        
+        private bool DropWeapon(
+            int weaponIndex,
+            Vector3 dropPosition,
+            Quaternion dropRotation)
         {
             if (weaponIndex < 0 || weaponIndex >= pickupPrefabs.Length)
-                return false;
-
-            WeaponPickup prefab = pickupPrefabs[weaponIndex];
-
-            if (prefab == null || playerCamera == null)
             {
-                Debug.LogWarning(
-                    "Cannot drop weapon: missing pickup prefab or camera.", this);
+                Debug.LogError($"Invalid weapon index: {weaponIndex}", this);
                 return false;
             }
 
-            Vector3 position =
-                playerCamera.transform.position +
-                playerCamera.transform.forward * 1.2f;
+            WeaponPickup prefab = pickupPrefabs[weaponIndex];
 
-            Quaternion rotation = Quaternion.Euler(
-                0f, playerCamera.transform.eulerAngles.y, 0f);
+            if (prefab == null)
+            {
+                Debug.LogError(
+                    $"Missing pickup prefab for weapon index {weaponIndex}.", this);
+                return false;
+            }
 
-            Instantiate(prefab, position, rotation);
+            // Spawn the outgoing weapon where the incoming pickup was located.
+            WeaponPickup dropped = Instantiate(
+                prefab,
+                dropPosition,
+                dropRotation);
+
+            Debug.Log(
+                $"Dropped {dropped.DisplayName} at the incoming pickup's position.",
+                dropped);
+
             return true;
         }
+
+
 
         private void ShowSelectedWeapon()
         {
