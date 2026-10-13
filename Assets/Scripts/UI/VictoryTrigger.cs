@@ -15,7 +15,7 @@ public class VictoryTrigger : MonoBehaviour
         {
             triggered = true;
 
-            uiManager.ShowVictoryScreen();
+            if(uiManager != null) uiManager.ShowVictoryScreen();
         }
     }
 }

@@ -17,9 +17,13 @@ public class ElevatorManager : MonoBehaviour
         {
             hasEntered = true;
 
-            if (uiManager != null)
+            if (uiManager != null && SceneManager.GetActiveScene().name != "Floor3")
             {
                 uiManager.ShowFloorVictoryScreen(this);
+            }
+            else if (uiManager != null && SceneManager.GetActiveScene().name == "Floor3")
+            {
+                uiManager.ShowVictoryScreen();
             }
 
             if (TutorialManager.Instance != null)
