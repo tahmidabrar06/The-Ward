@@ -17002,7 +17002,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a452528d64c687b479510dcf5d8763f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.WeaponInventoryHUD
-  weaponController: {fileID: 2075618051}
+  weaponController: {fileID: 1591438691}
   slot1Highlight: {fileID: 1785479504}
   slot1Icon: {fileID: 829627608}
   slot1Name: {fileID: 760684491}
@@ -27253,6 +27253,7 @@ MonoBehaviour:
   floorVictoryPanel: {fileID: 1733635198}
   playerMovement: {fileID: 2075618049}
   cameraMovement: {fileID: 2075618046}
+  weaponController: {fileID: 1591438691}
 --- !u!4 &795342583
 Transform:
   m_ObjectHideFlags: 0
@@ -73204,6 +73205,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21fc60e1083364fb5862ecbb6b782556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.Health
+--- !u!114 &1591438691 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5634817519465663803, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+  m_PrefabInstance: {fileID: 1591438688}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe80701bbf5840eb963739b76333d77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.WeaponController
 --- !u!1001 &1595075771
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -89769,17 +89781,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00f4b2a5e23334edcba4342572309239, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Character.PlayerCharacterController
---- !u!114 &2075618051 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5634817519465663803, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
-  m_PrefabInstance: {fileID: 1591438688}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fe80701bbf5840eb963739b76333d77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.WeaponController
 --- !u!4 &2089636472 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4811584749951484, guid: de73a68374813224d9a0717c5b75fc05, type: 3}

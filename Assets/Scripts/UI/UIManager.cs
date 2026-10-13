@@ -1,6 +1,7 @@
 using TheWard.Character;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TheWard.Combat;
 
 public class UIManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class UIManager : MonoBehaviour
     [Header("Player Control")]
     [SerializeField] private PlayerCharacterController playerMovement;
     [SerializeField] private PlayerLookController cameraMovement;
+    [SerializeField] private WeaponController weaponController;
 
     private bool isPaused = false;
     private bool isVictory = false;
@@ -316,6 +318,9 @@ public class UIManager : MonoBehaviour
         {
             cameraMovement.enabled = false;
         }
+        
+        // Disable attack and reload actions. 
+        if (weaponController != null) weaponController.enabled = false;
 
         // Unlock cursor for UI
         Cursor.lockState = CursorLockMode.None;
@@ -340,6 +345,7 @@ public class UIManager : MonoBehaviour
         {
             cameraMovement.enabled = true;
         }
+        if (weaponController != null) weaponController.enabled = true;
 
         // Lock cursor for gameplay
         Cursor.lockState = CursorLockMode.Locked;
