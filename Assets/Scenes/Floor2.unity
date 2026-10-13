@@ -10932,7 +10932,7 @@ PrefabInstance:
       propertyPath: m_text
       value: 'Ammo
 
-        Count'
+        Here'
       objectReference: {fileID: 0}
     - target: {fileID: 9110341893454285909, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
       propertyPath: m_margin.x
@@ -22044,6 +22044,17 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &655574019 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5634817519465663803, guid: 2ab09466c82f843709665c8c243d508f, type: 3}
+  m_PrefabInstance: {fileID: 498427880}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe80701bbf5840eb963739b76333d77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.WeaponController
 --- !u!1 &656517585 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1776119552327822, guid: 958521058a9c74341bcc8323137f68b1, type: 3}
@@ -61490,6 +61501,7 @@ MonoBehaviour:
   floorVictoryPanel: {fileID: 243631936}
   playerMovement: {fileID: 498427885}
   cameraMovement: {fileID: 498427882}
+  weaponController: {fileID: 655574019}
 --- !u!4 &1653513108
 Transform:
   m_ObjectHideFlags: 0
