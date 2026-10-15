@@ -11095,6 +11095,7 @@ MonoBehaviour:
   wakeUpIntro: {fileID: 1604661254}
   pausePanel: {fileID: 1407920568}
   respawnPanel: {fileID: 1407920567}
+  settingsPanel: {fileID: 1407920566}
   victoryPanel: {fileID: 600024844}
   floorVictoryPanel: {fileID: 1407920546}
   playerMovement: {fileID: 1229556053}
