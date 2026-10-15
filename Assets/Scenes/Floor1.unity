@@ -29196,6 +29196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ElevatorManager
   nextFloorScene: Floor2
   uiManager: {fileID: 795342582}
+  weaponController: {fileID: 1591438691}
 --- !u!65 &909190357
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34919,6 +34920,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   nextFloorScene: Floor2
   uiManager: {fileID: 795342582}
+  weaponController: {fileID: 0}
 --- !u!4 &1142775272
 Transform:
   m_ObjectHideFlags: 0

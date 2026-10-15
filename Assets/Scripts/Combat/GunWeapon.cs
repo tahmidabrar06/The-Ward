@@ -65,6 +65,10 @@ namespace TheWard.Combat
         private int ammo;
         private int reserveAmmo;
         private float nextAttackTime;
+        private bool hasPendingAmmoRestore;
+        private bool hasInitializedAmmo;
+        private int pendingAmmo;
+        private int pendingReserveAmmo;
         private Coroutine recoilRoutine;
         private Material tracerMaterial;
 
@@ -88,8 +92,20 @@ namespace TheWard.Combat
         protected override void Awake()
         {
             base.Awake();
-            ammo = magazineSize;
-            reserveAmmo = startingReserveAmmo;
+
+            if (hasPendingAmmoRestore)
+            {
+                ammo = Mathf.Clamp(pendingAmmo, 0, magazineSize);
+                reserveAmmo = Mathf.Max(0, pendingReserveAmmo);
+                hasPendingAmmoRestore = false;
+            }
+            else
+            {
+                ammo = magazineSize;
+                reserveAmmo = startingReserveAmmo;
+            }
+
+            hasInitializedAmmo = true;
         }
         
         private void OnEnable()
@@ -273,6 +289,29 @@ namespace TheWard.Combat
             if (ammoUI != null)
             {
                 ammoUI.DisableAmmoText();
+            }
+        }
+        public void RestoreAmmoState(int currentAmmo, int currentReserveAmmo)
+        {
+            pendingAmmo = Mathf.Clamp(currentAmmo, 0, magazineSize);
+            pendingReserveAmmo = Mathf.Max(0, currentReserveAmmo);
+
+            if (hasInitializedAmmo)
+            {
+                ammo = pendingAmmo;
+                reserveAmmo = pendingReserveAmmo;
+            }
+            else
+            {
+                hasPendingAmmoRestore = true;
+            }
+
+            if (ammoUI != null && hasInitializedAmmo)
+            {
+                ammoUI.UpdateAmmoState(
+                    ammo,
+                    reserveAmmo,
+                    magazineSize);
             }
         }
     }

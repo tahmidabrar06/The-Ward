@@ -31,6 +31,12 @@ namespace TheWard.Combat
 
         private readonly int[] slots = { 0, -1 };
         private int activeSlot;
+        //inventory stays while changing scenes
+        private static bool hasSavedInventory;
+        private static int[] savedSlots;
+        private static int savedActiveSlot;
+        private static int[] savedAmmo;
+        private static int[] savedReserveAmmo;
 
         public int ActiveSlot => activeSlot;
 
@@ -61,6 +67,40 @@ namespace TheWard.Combat
             slots[activeSlot] < weapons.Length
                 ? weapons[slots[activeSlot]]
                 : null;
+        
+        public void SaveInventoryForSceneChange()
+        {
+            savedSlots = new int[SlotCount];
+            for (int i = 0; i < SlotCount; i++)
+                savedSlots[i] = slots[i];
+
+            savedActiveSlot = activeSlot;
+
+            savedAmmo = new int[weapons.Length];
+            savedReserveAmmo = new int[weapons.Length];
+
+            for (int i = 0; i < weapons.Length; i++)
+            {
+                if (weapons[i] is GunWeapon gun)
+                {
+                    savedAmmo[i] = gun.Ammo;
+                    savedReserveAmmo[i] = gun.ReserveAmmo;
+                }
+            }
+
+            hasSavedInventory = true;
+            Debug.Log("Weapon inventory saved for scene transition.");
+        }
+
+        public static void ClearSavedInventory()
+        {
+            hasSavedInventory = false;
+            savedSlots = null;
+            savedAmmo = null;
+            savedReserveAmmo = null;
+            savedActiveSlot = 0;
+        }
+
     
         private void Awake()
         {
@@ -85,8 +125,15 @@ namespace TheWard.Combat
                 return;
             }
 
-            activeSlot = 0;
-            ShowSelectedWeapon();
+            if (hasSavedInventory)
+            {
+                RestoreSavedInventory();
+            }
+            else
+            {
+                activeSlot = 0;
+                ShowSelectedWeapon();
+            }
         }
 
         private void OnEnable()
@@ -103,6 +150,60 @@ namespace TheWard.Combat
             reloadAction?.action.Disable();
             previousWeaponAction?.action.Disable();
             nextWeaponAction?.action.Disable();
+        }
+ 
+        private void RestoreSavedInventory()
+        {
+            if (savedSlots == null || savedSlots.Length != SlotCount)
+            {
+                activeSlot = 0;
+                ShowSelectedWeapon();
+                hasSavedInventory = false;
+                return;
+            }
+
+            for (int i = 0; i < SlotCount; i++)
+            {
+                int index = savedSlots[i];
+
+                slots[i] = index >= 0 &&
+                        index < weapons.Length &&
+                        weapons[index] != null
+                    ? index
+                    : -1;
+            }
+
+            activeSlot = savedActiveSlot;
+
+            if (activeSlot < 0 ||
+                activeSlot >= SlotCount ||
+                slots[activeSlot] < 0)
+            {
+                activeSlot = slots[0] >= 0 ? 0 : 1;
+            }
+
+            if (savedAmmo != null && savedReserveAmmo != null)
+            {
+                int count = Mathf.Min(
+                    weapons.Length,
+                    savedAmmo.Length,
+                    savedReserveAmmo.Length);
+
+                for (int i = 0; i < count; i++)
+                {
+                    if (weapons[i] is GunWeapon gun)
+                    {
+                        gun.RestoreAmmoState(
+                            savedAmmo[i],
+                            savedReserveAmmo[i]);
+                    }
+                }
+            }
+
+            hasSavedInventory = false;
+            ShowSelectedWeapon();
+
+            Debug.Log("Weapon inventory restored after scene transition.");
         }
 
         
