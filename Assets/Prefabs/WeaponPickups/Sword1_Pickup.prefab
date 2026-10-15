@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 285690387532521039}
   - component: {fileID: -1686758973893053212}
   - component: {fileID: 4037036769550187575}
+  - component: {fileID: 1338484825261983743}
   m_Layer: 3
   m_Name: Sword1_Pickup
   m_TagString: Untagged
@@ -189,6 +190,35 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.22360863, y: 1.1717528, z: 0.03848693}
   m_Center: {x: 0.00076740904, y: 0.43670446, z: -0.010272344}
+--- !u!114 &1338484825261983743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7006937650502870916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bc005968ab7a6547879f75e85698284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ITISKIRUHERE.AdvancedOutline
+  _outlineMaskShader: {fileID: 4800000, guid: c2f5089722420f44ea03b3dbb08dca7e, type: 3}
+  _outlineFillShader: {fileID: 4800000, guid: 6cdd088550bc7e6478ae291e0e83fabb, type: 3}
+  _outlineMode: 1
+  _outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  _outlineWidth: 4
+  _pulseWidth: 0
+  _pulseSpeed: 2
+  _pulseMinWidth: 1.5
+  _pulseMaxWidth: 5
+  _rainbowColor: 0
+  _rainbowSpeed: 0.5
+  _dashedPattern: 0
+  _dashScale: 0.03
+  _dashSpeed: 15
+  _precomputeOutline: 0
+  _bakeKeys: []
+  _bakeValues: []
 --- !u!1 &8595616694055411294
 GameObject:
   m_ObjectHideFlags: 0
