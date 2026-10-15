@@ -62538,6 +62538,7 @@ MonoBehaviour:
   wakeUpIntro: {fileID: 1653513109}
   pausePanel: {fileID: 243631959}
   respawnPanel: {fileID: 243631958}
+  settingsPanel: {fileID: 243631957}
   victoryPanel: {fileID: 4607925905564632964, guid: 4f3cef260171f1a44a3bc49e53464661, type: 3}
   floorVictoryPanel: {fileID: 243631936}
   playerMovement: {fileID: 498427885}

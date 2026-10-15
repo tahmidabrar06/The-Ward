@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private WakeUpIntro wakeUpIntro;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject respawnPanel;
+    [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject victoryPanel;
     [SerializeField] private GameObject floorVictoryPanel;
 
@@ -91,7 +92,10 @@ public class UIManager : MonoBehaviour
         {
             if (respawnPanel != null && respawnPanel.activeSelf)
                 return;
-
+            if (settingsPanel != null && settingsPanel.activeSelf)
+            {
+                settingsPanel.SetActive(false);
+            }
             if (isPaused)
                 ResumeGame();
             else
