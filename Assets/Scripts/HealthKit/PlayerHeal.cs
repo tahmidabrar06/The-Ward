@@ -66,7 +66,7 @@ public class PlayerHeal : MonoBehaviour
         }
 
         kitAmount++;
-        Debug.Log($"Health kits amount: {kitAmount}");
+        Debug.Log($"Health kits amount in inventory: {kitAmount}");
         return true;
     }
 
@@ -85,6 +85,7 @@ public class PlayerHeal : MonoBehaviour
 
         health.HealPlayer(healValue);
         kitAmount--;
+        Debug.Log("Pressed [H] to Heal");
 
         Debug.Log($"Health kits remianing after use: {kitAmount}");
     }
