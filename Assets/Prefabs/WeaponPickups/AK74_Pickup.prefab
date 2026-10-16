@@ -273,10 +273,11 @@ MonoBehaviour:
   impactForce: 6
   muzzlePoint: {fileID: 2116989969647476968}
   magazineSize: 30
-  startingReserveAmmo: 120
+  startingReserveAmmo: 480
   muzzleFlash: {fileID: 0}
   bulletImpactPrefab: {fileID: 5238538877814813142, guid: 47096eff328e11a418ace7db2d72aa97, type: 3}
   showShotTracer: 1
+  tracerMaterial: {fileID: 2100000, guid: 8abaf5abf67e4c04a28942e91d45926a, type: 2}
   gunRecoilDistance: 0.025
   gunRecoilAngle: 3
   reloadDuration: 1.9

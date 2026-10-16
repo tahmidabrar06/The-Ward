@@ -1,6 +1,14 @@
 # Combat setup
 
-Open `Assets/Scenes/TestCharWeapons.unity`. Use WASD to move, Shift to sprint, 1–5 to switch weapons, left click to attack, and R to reload. Hold and release left click to throw a grenade.
+Open `Assets/Scenes/Floor1.unity`. Use WASD to move, Shift to sprint, E to pick up a weapon, 1–2 or the mouse wheel to switch inventory slots, left click to attack, and R to reload. Hold and release left click to throw a grenade.
+
+## Ammunition and cooldowns
+
+The pistol holds 12 rounds with 192 in reserve; the AK74 holds 30 with 480 in reserve. Both player prefabs and their world pickup prefabs use these values. Duplicate gun pickups refill the magazine and reserve through `RefillAmmo`; scene transitions retain the current ammunition.
+
+Grenades are unlimited in the current inventory system. Throws have a 2-second cooldown from the start of the throw animation, including the 0.8-second animation. Switching away and back does not reset this cooldown.
+
+Both guns reference `Assets/Visual Effects/Combat/ShotTracer.mat`, which uses the URP particle unlit shader with additive blending. Keep this material assigned on each gun so the shader is included in builds. Tracers run from the muzzle to the hitscan endpoint and disappear after 0.12 seconds.
 
 ## Animations
 
