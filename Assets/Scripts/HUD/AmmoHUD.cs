@@ -60,6 +60,7 @@ namespace TheWard.Combat
         public void DisableAmmoText()
         {
             ammoCountText.gameObject.SetActive(false);
+            warningText.gameObject.SetActive(false);
         }
     }
 }
