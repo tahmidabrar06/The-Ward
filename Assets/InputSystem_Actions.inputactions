@@ -37,7 +37,7 @@
                     "name": "Interact",
                     "type": "Button",
                     "id": "852140f2-7766-474d-8707-702459ba45f3",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "Hold",
                     "initialStateCheck": false
@@ -100,6 +100,15 @@
                     "name": "ToggleTorch",
                     "type": "Button",
                     "id": "1ed139c0-649f-4867-ad36-256efb5a5d27",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Heal",
+                    "type": "Button",
+                    "id": "1d44bd7a-0737-4ee5-9bb5-fbe8cdec8a10",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -423,6 +432,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "ToggleTorch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e21a628-7d66-45c0-8a7e-254c9de1b79c",
+                    "path": "<Keyboard>/#(H)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Heal",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
