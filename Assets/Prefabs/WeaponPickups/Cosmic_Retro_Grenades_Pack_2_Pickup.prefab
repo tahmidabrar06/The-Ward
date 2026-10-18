@@ -143,7 +143,7 @@ MonoBehaviour:
   rightHandGrip: {fileID: 2723115552717856486}
   leftHandGrip: {fileID: 0}
   attackOrigin: {fileID: 0}
-  cooldown: 0.5
+  cooldown: 2
   grenadePrefab: {fileID: 170235399627381868, guid: e2cdf96b699d513419c48b5c06bdf1d0, type: 3}
   minimumThrowForce: 6
   maximumThrowForce: 18

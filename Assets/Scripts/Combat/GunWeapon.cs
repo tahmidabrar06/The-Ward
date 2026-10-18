@@ -22,10 +22,11 @@ namespace TheWard.Combat
         [SerializeField] private float impactForce = 4f;
         [SerializeField] private Transform muzzlePoint;
         [SerializeField] private int magazineSize = 12;
-        [SerializeField] private int startingReserveAmmo = 48;
+        [SerializeField] private int startingReserveAmmo = 192;
         [SerializeField] private ParticleSystem muzzleFlash;
         [SerializeField] private GameObject bulletImpactPrefab;
         [SerializeField] private bool showShotTracer = true;
+        [SerializeField] private Material tracerMaterial;
 
         [Header("Recoil and Reload")]
         [SerializeField] private float gunRecoilDistance = 0.05f;
@@ -70,7 +71,6 @@ namespace TheWard.Combat
         private int pendingAmmo;
         private int pendingReserveAmmo;
         private Coroutine recoilRoutine;
-        private Material tracerMaterial;
 
         public int Ammo => ammo;
         public int ReserveAmmo => reserveAmmo;
@@ -254,30 +254,22 @@ namespace TheWard.Combat
 
         private void ShowShotTracer(Vector3 endPoint)
         {
-            if (tracerMaterial == null)
-            {
-                Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
-                if (shader == null) return;
-                tracerMaterial = new Material(shader);
-                tracerMaterial.color = new Color(1f, 0.85f, 0.25f);
-            }
+            if (tracerMaterial == null) return;
 
             GameObject tracer = new GameObject("Shot Tracer");
             LineRenderer line = tracer.AddComponent<LineRenderer>();
             line.sharedMaterial = tracerMaterial;
+            line.useWorldSpace = true;
             line.positionCount = 2;
-            line.startWidth = 0.018f;
-            line.endWidth = 0.003f;
-            line.startColor = Color.yellow;
-            line.endColor = Color.yellow;
+            line.startWidth = 0.022f;
+            line.endWidth = 0.004f;
+            line.startColor = new Color(1f, 0.85f, 0.4f);
+            line.endColor = new Color(1f, 0.85f, 0.4f, 0f);
+            line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            line.receiveShadows = false;
             line.SetPosition(0, muzzlePoint != null ? muzzlePoint.position : transform.position);
             line.SetPosition(1, endPoint);
-            Destroy(tracer, 0.08f);
-        }
-
-        private void OnDestroy()
-        {
-            if (tracerMaterial != null) Destroy(tracerMaterial);
+            Destroy(tracer, 0.12f);
         }
 
         protected override void OnDisable()

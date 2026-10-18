@@ -6,7 +6,7 @@ namespace TheWard.Combat
     public sealed class GrenadeWeapon : Weapon
     {
         [Header("Throw")]
-        [SerializeField] private float cooldown = 0.35f;
+        [SerializeField] private float cooldown = 2f;
         [SerializeField] private GameObject grenadePrefab;
         [SerializeField] private float minimumThrowForce = 6f;
         [SerializeField] private float maximumThrowForce = 18f;

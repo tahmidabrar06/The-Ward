@@ -625,10 +625,11 @@ MonoBehaviour:
   impactForce: 6
   muzzlePoint: {fileID: 2384026287128471553}
   magazineSize: 30
-  startingReserveAmmo: 120
+  startingReserveAmmo: 480
   muzzleFlash: {fileID: 0}
   bulletImpactPrefab: {fileID: 5238538877814813142, guid: 47096eff328e11a418ace7db2d72aa97, type: 3}
   showShotTracer: 1
+  tracerMaterial: {fileID: 2100000, guid: 8abaf5abf67e4c04a28942e91d45926a, type: 2}
   gunRecoilDistance: 0.025
   gunRecoilAngle: 3
   reloadDuration: 1.9
@@ -1847,10 +1848,11 @@ MonoBehaviour:
   impactForce: 4
   muzzlePoint: {fileID: 3748438846823722567}
   magazineSize: 12
-  startingReserveAmmo: 48
+  startingReserveAmmo: 192
   muzzleFlash: {fileID: 0}
   bulletImpactPrefab: {fileID: 5238538877814813142, guid: 47096eff328e11a418ace7db2d72aa97, type: 3}
   showShotTracer: 1
+  tracerMaterial: {fileID: 2100000, guid: 8abaf5abf67e4c04a28942e91d45926a, type: 2}
   gunRecoilDistance: 0.025
   gunRecoilAngle: 3
   reloadDuration: 1.65
@@ -5256,7 +5258,7 @@ MonoBehaviour:
   rightHandGrip: {fileID: 4406233510111504369}
   leftHandGrip: {fileID: 3538815964933255473}
   attackOrigin: {fileID: 1074603033962079727}
-  cooldown: 0.5
+  cooldown: 2
   grenadePrefab: {fileID: 170235399627381868, guid: e2cdf96b699d513419c48b5c06bdf1d0, type: 3}
   minimumThrowForce: 6
   maximumThrowForce: 18
