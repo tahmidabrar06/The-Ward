@@ -214,7 +214,7 @@ namespace TheWard.Combat
             if (Keyboard.current != null &&
                 Keyboard.current[pickupKey].wasPressedThisFrame)
             {
-                if (nearbyPickup != null)
+                if (nearbyPickup != null && !TutorialManager.Instance.IsSequenceActive)
                     TryPickup(nearbyPickup);
                 else
                     Debug.Log("No weapon nearby to pick up.");
