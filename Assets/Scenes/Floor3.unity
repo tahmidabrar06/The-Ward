@@ -130,7 +130,6 @@ GameObject:
   - component: {fileID: 11446643}
   - component: {fileID: 11446645}
   - component: {fileID: 11446644}
-  - component: {fileID: 11446646}
   m_Layer: 5
   m_Name: TutorialPanel
   m_TagString: Untagged
@@ -197,29 +196,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 11446642}
   m_CullTransparentMesh: 1
---- !u!223 &11446646
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 11446642}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 1
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1001 &57052491
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3551,6 +3527,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1407920547}
     m_Modifications:
+    - target: {fileID: 3675266858224559743, guid: 4f3cef260171f1a44a3bc49e53464661, type: 3}
+      propertyPath: m_CullTransparentMesh
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4335987503562177358, guid: 4f3cef260171f1a44a3bc49e53464661, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -3678,10 +3658,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4607925905564632964, guid: 4f3cef260171f1a44a3bc49e53464661, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 600024847}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f3cef260171f1a44a3bc49e53464661, type: 3}
 --- !u!224 &600024843 stripped
 RectTransform:
@@ -3693,29 +3670,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4607925905564632964, guid: 4f3cef260171f1a44a3bc49e53464661, type: 3}
   m_PrefabInstance: {fileID: 600024842}
   m_PrefabAsset: {fileID: 0}
---- !u!223 &600024847
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 600024844}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 1
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 99
-  m_TargetDisplay: 0
 --- !u!1 &666509807
 GameObject:
   m_ObjectHideFlags: 0
@@ -7176,34 +7130,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1095100637}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!1 &866350348 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4331900725942100989, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
-  m_PrefabInstance: {fileID: 1407920545}
-  m_PrefabAsset: {fileID: 0}
---- !u!223 &866350349
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 866350348}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 1
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &891649473
 GameObject:
   m_ObjectHideFlags: 0
@@ -10218,6 +10144,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 6081760187651307671, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
+      propertyPath: m_CullTransparentMesh
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6366908751361862372, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -10455,13 +10385,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7839717952133847986, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
       insertIndex: 10
       addedObject: {fileID: 1786992933}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4331900725942100989, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 866350349}
-    - targetCorrespondingSourceObject: {fileID: 8996252091474641899, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1407920570}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad55d3e8a09124f128c0536cf9a73f17, type: 3}
 --- !u!1 &1407920546 stripped
 GameObject:
@@ -10661,29 +10585,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1607a07796a1a4d89a0e7be67dcf6078, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheWard.Combat.AmmoHUD
---- !u!223 &1407920570
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1407920566}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 1
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 100
-  m_TargetDisplay: 0
 --- !u!1 &1438004980
 GameObject:
   m_ObjectHideFlags: 0
@@ -12565,7 +12466,6 @@ GameObject:
   - component: {fileID: 1786992936}
   - component: {fileID: 1786992935}
   - component: {fileID: 1786992934}
-  - component: {fileID: 1786992937}
   m_Layer: 5
   m_Name: InventoryPanel
   m_TagString: Untagged
@@ -12659,29 +12559,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1786992932}
   m_CullTransparentMesh: 1
---- !u!223 &1786992937
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1786992932}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 1
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1001 &1793929952
 PrefabInstance:
   m_ObjectHideFlags: 0
