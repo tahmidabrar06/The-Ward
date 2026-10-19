@@ -197,12 +197,7 @@ public class UIManager : MonoBehaviour
         if (victoryPanel != null)
             victoryPanel.SetActive(true);
 
-        // Hide other screens
-        if (pausePanel != null)
-            pausePanel.SetActive(false);
-
-        if (respawnPanel != null)
-            respawnPanel.SetActive(false);
+        HideAllPanels();
 
         // Completely freeze gameplay
         FreezeGameplay();
@@ -223,16 +218,10 @@ public class UIManager : MonoBehaviour
         if (floorVictoryPanel != null)
             floorVictoryPanel.SetActive(true);
 
-        // Hide other screens
-        if (pausePanel != null)
-            pausePanel.SetActive(false);
-
-        if (respawnPanel != null)
-            respawnPanel.SetActive(false);
-
         if (victoryPanel != null)
             victoryPanel.SetActive(false);
 
+        HideAllPanels();
         // Freeze gameplay
         FreezeGameplay();
 
@@ -386,5 +375,23 @@ public class UIManager : MonoBehaviour
         {
             cameraTransform.rotation = savedCameraRotation;
         }
+    }
+
+    void HideAllPanels()
+    {
+        // Hide other screens
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        if (respawnPanel != null)
+            respawnPanel.SetActive(false);
+
+        GameObject inventoryPanel = GameObject.Find("InventoryPanel");
+        if (inventoryPanel != null)
+            inventoryPanel.SetActive(false);
+        
+        GameObject ammoPanel = GameObject.Find("Ammo");
+        if (ammoPanel != null)
+            ammoPanel.SetActive(false);
     }
 }
